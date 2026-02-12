@@ -24,3 +24,4 @@
 4. `http://localhost:8083/investmentTrust` にブラウザでアクセス
 
 test
+test639
