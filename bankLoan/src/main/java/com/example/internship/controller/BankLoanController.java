@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
+
 
 @Controller
 public class BankLoanController {
@@ -16,18 +20,27 @@ public class BankLoanController {
     @Autowired
     private ApplyBankLoanService applyBankLoanService;
 
+    private static final List<String> BANK_NAME_OPTIONS = Arrays.asList(
+            "山陰共同銀行",
+            "ながれぼし銀行",
+            "はまなす銀行"
+    );
+
     @GetMapping("/bankLoan")
     public String bankTransfer(Model model) {
         model.addAttribute("bankLoanApplication", new BankLoanForm());
-        model.addAttribute("nameOptions", "山陰共同銀行");
+        model.addAttribute("nameOptions", BANK_NAME_OPTIONS);
         return "bankLoanMain";
     }
 
     @PostMapping("/bankLoanConfirmation")
     public String confirmation(@ModelAttribute BankLoanForm bankLoanForm, Model model) {
-        bankLoanForm.setBankName("ながれぼし銀行");
-        model.addAttribute("bankName", bankLoanForm.getBankName());
-        model.addAttribute("bankAccountNum", bankLoanForm.getBankAccountNum());
+        BigDecimal interestRate = calculateInterestRate(
+                bankLoanForm.getBankName(),
+                bankLoanForm.getLoanAmount(),
+                bankLoanForm.getAnnualIncome()
+        );
+        bankLoanForm.setInterestRate(interestRate);
         model.addAttribute("bankLoanApplication", bankLoanForm);
         return "bankLoanConfirmation";
     }
@@ -36,6 +49,32 @@ public class BankLoanController {
     public String completion(@ModelAttribute BankLoanForm bankLoanForm, Model model) {
         applyBankLoanService.applyBankLoan(bankLoanForm);
         return "bankLoanCompletion";
+    }
+
+    private BigDecimal calculateInterestRate(String bankName, Integer loanAmount, Integer annualIncome) {
+        BigDecimal baseRate;
+        if ("山陰共同銀行".equals(bankName)) {
+            baseRate = new BigDecimal("1.2");
+        } else if ("ながれぼし銀行".equals(bankName)) {
+            baseRate = new BigDecimal("1.5");
+        } else if ("はまなす銀行".equals(bankName)) {
+            baseRate = new BigDecimal("1.8");
+        } else {
+            baseRate = new BigDecimal("2.0");
+        }
+
+        if (loanAmount == null || annualIncome == null || annualIncome == 0) {
+            return baseRate;
+        }
+
+        BigDecimal ratio = new BigDecimal(loanAmount).divide(new BigDecimal(annualIncome), 2, BigDecimal.ROUND_HALF_UP);
+        if (ratio.compareTo(new BigDecimal("1.0")) >= 0) {
+            return baseRate.add(new BigDecimal("0.5"));
+        }
+        if (ratio.compareTo(new BigDecimal("0.5")) >= 0) {
+            return baseRate.add(new BigDecimal("0.2"));
+        }
+        return baseRate;
     }
 
 }
