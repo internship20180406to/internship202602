@@ -11,12 +11,13 @@ public class BankLoanRepository {
     JdbcTemplate jdbcTemplate;
 
     public void create(BankLoanForm bankLoanForm) {
-        String sql = "INSERT INTO bankLoan_table(bankName, bankAccountNum, debtorName, loanAmount, annualIncome, interestRate) VALUES(?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO bankLoan_table(bankName, bankAccountType, bankAccountNum, name, loanAmount, annualIncome, interestRate) VALUES(?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(
                 sql,
                 bankLoanForm.getBankName(),
+                bankLoanForm.getBankAccountType(),
                 bankLoanForm.getBankAccountNum(),
-                bankLoanForm.getDebtorName(),
+                bankLoanForm.getName(),
                 bankLoanForm.getLoanAmount(),
                 bankLoanForm.getAnnualIncome(),
                 bankLoanForm.getInterestRate()
