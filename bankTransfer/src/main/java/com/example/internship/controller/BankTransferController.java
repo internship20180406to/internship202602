@@ -8,7 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-
+import java.util.List;
+import java.util.Map;
 
 @Controller
 public class BankTransferController {
@@ -19,7 +20,13 @@ public class BankTransferController {
     @GetMapping("/bankTransfer")
     public String bankTransfer(Model model) {
         model.addAttribute("bankTransferApplication", new BankTransferForm());
-        model.addAttribute("nameOptions", "山陰共同銀行");
+        model.addAttribute("nameOptions", List.of("山陰共同銀行", "ながれぼし銀行"));
+        Map<Integer, String> accountTypeOptions = Map.of(
+                1, "普通",
+                2, "当座"
+        );
+        model.addAttribute("accountTypeOptions", accountTypeOptions);
+
         return "bankTransferMain";
     }
 
