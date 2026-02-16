@@ -27,10 +27,10 @@ public class BankLoanForm {
     public String getBranchName() {
         return branchName;
     }
-
     public void setBranchName(String branchName) {
         this.branchName = branchName;
     }
+
     public Integer getBankAccountNum() {
         return bankAccountNum;
     }

@@ -72,7 +72,7 @@
             </select></p>
         <p><label class="ml-1">支店名: <small class="text-danger ml-1">※</small></label><br>
             <select th:field="*{branchName}" class="form-control">
-                <option th:each="option : ${nameOptions}"
+                <option th:each="option : ${nameOptions1}"
                         th:value="${option}"
                         th:text="${option}">選択肢
                 </option>

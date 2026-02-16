@@ -10,7 +10,9 @@
     <p>金融機関名: <span th:text="*{bankName}"></span></p>
     <p>口座番号: <span th:text="*{bankAccountNum}"></span></p>
     <input type="hidden" name="bankAccountNum" th:value="*{bankAccountNum}"/>
+    <input type="hidden" name="branchName" th:value="*{branchName}"/>
     <input type="hidden" name="bankName" th:value="*{bankName}"/>
+
     <p>
         <input type="submit" id="submit" value="申込"/>
         <input type="button" value="キャンセル" onclick="window.location='/bankLoan';"/>
