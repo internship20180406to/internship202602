@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-
+import java.util.List;
 
 @Controller
 public class BankLoanController {
@@ -19,9 +19,10 @@ public class BankLoanController {
     @GetMapping("/bankLoan")
     public String bankTransfer(Model model) {
         model.addAttribute("bankLoanApplication", new BankLoanForm());
-        model.addAttribute("nameOptions", "山陰共同銀行");
+        model.addAttribute("nameOptions", List.of("A銀行", "B銀行", "C銀行"));
         return "bankLoanMain";
     }
+
 
     @PostMapping("/bankLoanConfirmation")
     public String confirmation(@ModelAttribute BankLoanForm bankLoanForm, Model model) {
