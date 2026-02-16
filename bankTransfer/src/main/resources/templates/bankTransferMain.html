@@ -83,7 +83,7 @@
         <p><label class="ml-1">口座名義: <small class="text-danger ml-1">※</small></label><br>
             <input type="text" th:field="*{name}" class="form-control" required/></p>
         <p><label class="ml-1">金額: <small class="text-danger ml-1">※</small></label><br>
-            <input type="number" th:field="*{money}" class="form-control" required/></p>
+            <input type="text" th:field="*{money}" class="form-control"  pattern = "^[0-9]+$" required/></p>
         <p><label class="ml-1">振込指定日: <small class="text-danger ml-1">※</small></label><br>
             <input type="datetime-local"
                    th:field="*{transferDateTime}"

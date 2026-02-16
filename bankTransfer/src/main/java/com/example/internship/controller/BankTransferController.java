@@ -21,7 +21,7 @@ public class BankTransferController {
     @GetMapping("/bankTransfer")
     public String bankTransfer(Model model) {
         model.addAttribute("bankTransferApplication", new BankTransferForm());
-        model.addAttribute("nameOptions", List.of("こども銀行", "ながれぼし銀行", "おにぎり銀行", "お金持ち銀行"));
+        model.addAttribute("nameOptions", List.of("こども銀行", "ながれぼし銀行", "おにぎり銀行", "お金持ち銀行", "うおのめ銀行"));
         List<String> accountTypeOptions = List.of(
                 "普通",
                 "当座",

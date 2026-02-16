@@ -24,6 +24,8 @@ public class BankTransferForm{
     @NonNull
     private Integer money;
     @NonNull
+    private Integer transFee;
+    @NonNull
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime transferDateTime;
 
@@ -73,6 +75,23 @@ public class BankTransferForm{
 
     public void setMoney(Integer money) {
         this.money = money;
+    }
+
+    public Integer getTransFee() {
+        int fee = 0;
+        if(!bankName.equals("こども銀行")&&!bankName.equals("おにぎり銀行")&&!bankName.equals("ながれぼし銀行")){
+            if(money > 30000){
+                fee = 220;
+            }else{
+                fee = 440;
+            }
+
+        }
+        return fee;
+    }
+
+    public void setTransFee(Integer transFee) {
+        this.transFee = transFee;
     }
 
     public LocalDateTime getTransferDateTime() {
