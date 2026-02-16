@@ -2,6 +2,7 @@ package com.example.internship.controller;
 
 import com.example.internship.entity.BankTransferForm;
 import com.example.internship.service.ApplyBankTransferService;
+import com.example.internship.repository.BankTransferRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,15 +16,18 @@ import java.util.Map;
 public class BankTransferController {
 
     @Autowired
-    private ApplyBankTransferService applyBankTransferService;
+    private BankTransferRepository repository;
 
     @GetMapping("/bankTransfer")
     public String bankTransfer(Model model) {
         model.addAttribute("bankTransferApplication", new BankTransferForm());
-        model.addAttribute("nameOptions", List.of("山陰共同銀行", "ながれぼし銀行"));
+        model.addAttribute("nameOptions", List.of("山陰共同銀行", "ながれぼし銀行", "こども銀行"));
         Map<Integer, String> accountTypeOptions = Map.of(
                 1, "普通",
-                2, "当座"
+                2, "定期",
+                3, "当座",
+                4, "貯蓄",
+                5, "総合"
         );
         model.addAttribute("accountTypeOptions", accountTypeOptions);
 
@@ -32,7 +36,6 @@ public class BankTransferController {
 
     @PostMapping("/bankTransferConfirmation")
     public String confirmation(@ModelAttribute BankTransferForm bankTransferForm, Model model) {
-        bankTransferForm.setBankName("ながれぼし銀行");
         model.addAttribute("bankName", bankTransferForm.getBankName());
         model.addAttribute("bankAccountNum", bankTransferForm.getBankAccountNum());
         model.addAttribute("bankTransferApplication", bankTransferForm);
@@ -41,7 +44,7 @@ public class BankTransferController {
 
     @PostMapping("/bankTransferCompletion")
     public String completion(@ModelAttribute BankTransferForm bankTransferForm, Model model) {
-        applyBankTransferService.applyBankTransfer(bankTransferForm);
+        repository.create(bankTransferForm);
         return "bankTransferCompletion";
     }
 

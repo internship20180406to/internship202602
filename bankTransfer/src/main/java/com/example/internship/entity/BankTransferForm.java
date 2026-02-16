@@ -10,7 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BankTransferForm {
+public class BankTransferForm{
     @NonNull
     private String bankName;
     @NonNull
@@ -20,7 +20,7 @@ public class BankTransferForm {
     @NonNull
     private Integer bankAccountType;
     @NonNull
-    private String nameVarchar;
+    private String name;
     @NonNull
     private Integer money;
     @NonNull
@@ -59,12 +59,12 @@ public class BankTransferForm {
         this.bankAccountType = bankAccountType;
     }
 
-    public String getNameVarchar() {
-        return nameVarchar;
+    public String getName() {
+        return name;
     }
 
-    public void setNameVarchar(String nameVarchar) {
-        this.nameVarchar = nameVarchar;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Integer getMoney() {
