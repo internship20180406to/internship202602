@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>銀行振込情報入力画面</title>
+    <title>銀行振込申込情報入力画面</title>
     <style>
         body {
         background-color: #f0f0f0;
@@ -61,7 +61,7 @@
 </head>
 <body>
 <div class="content">
-    <h1>銀行振込情報入力</h1>
+    <h1>こども銀行振込申込情報入力</h1>
     <form action="#" th:action="@{/bankTransferConfirmation}" th:object="${bankTransferApplication}" method="post">
         <p><label class="ml-1">金融機関名: <small class="text-danger ml-1">※</small></label><br>
             <select th:field="*{bankName}" class="form-control">
@@ -79,7 +79,7 @@
                         th:text="${entry}"></option>
             </select></p>
         <p><label class="ml-1">口座番号: <small class="text-danger ml-1">※</small></label><br>
-            <input type="number" th:field="*{bankAccountNum}" class="form-control" placeholder="1234567" required/></p>
+            <input type="text" th:field="*{bankAccountNum}" class="form-control" pattern="[0-9]{7}" title="7桁の数字を入力してください" required/></p>
         <p><label class="ml-1">口座名義: <small class="text-danger ml-1">※</small></label><br>
             <input type="text" th:field="*{name}" class="form-control" required/></p>
         <p><label class="ml-1">金額: <small class="text-danger ml-1">※</small></label><br>
