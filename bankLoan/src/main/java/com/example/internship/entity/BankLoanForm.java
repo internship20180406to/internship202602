@@ -12,6 +12,8 @@ public class BankLoanForm {
     @NonNull
     private String bankName;
     @NonNull
+    private String branchName;
+    @NonNull
     private Integer bankAccountNum;
 
     public String getBankName() {
@@ -22,6 +24,13 @@ public class BankLoanForm {
         this.bankName = bankName;
     }
 
+    public String getBranchName() {
+        return branchName;
+    }
+
+    public void setBranchName(String branchName) {
+        this.branchName = branchName;
+    }
     public Integer getBankAccountNum() {
         return bankAccountNum;
     }

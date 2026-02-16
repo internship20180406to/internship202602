@@ -20,6 +20,7 @@ public class BankLoanController {
     public String bankTransfer(Model model) {
         model.addAttribute("bankLoanApplication", new BankLoanForm());
         model.addAttribute("nameOptions", List.of("A銀行", "B銀行", "C銀行"));
+        model.addAttribute("nameOptions", List.of("A銀行", "B銀行", "C銀行"));
         return "bankLoanMain";
     }
 
