@@ -18,7 +18,7 @@ public class BankTransferForm{
     @NonNull
     private String branchName;//支店名
     @NonNull
-    private Integer bankAccountType;
+    private String bankAccountType;
     @NonNull
     private String name;
     @NonNull
@@ -51,11 +51,11 @@ public class BankTransferForm{
         this.branchName = branchName;
     }
 
-    public Integer getBankAccountType() {
+    public String getBankAccountType() {
         return bankAccountType;
     }
 
-    public void setBankAccountType(Integer bankAccountType) {
+    public void setBankAccountType(String bankAccountType) {
         this.bankAccountType = bankAccountType;
     }
 

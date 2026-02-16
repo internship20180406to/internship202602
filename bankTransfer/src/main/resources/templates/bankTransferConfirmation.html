@@ -1,10 +1,85 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>銀行振込確認画面</title>
+    <meta charset="UTF-8"/>
+    <title>銀行振込情報確認画面</title>
+    <style>
+        body {
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        padding-top: 40px;
+        padding-bottom: 40px;
+        justify-content: center;
+        align-items: center;
+        min-height: 85vh;
+        overflow: auto;
+        }
+        .content {
+         background-color: #ffffff;
+         width: 80%;
+         padding: 20px;
+         border-radius: 10px;
+         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+         min-height: 50vh;
+         overflow: auto;
+        }
+        .form-control {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            box-sizing: border-box;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .text-danger {
+        color: red;
+        }
+        .from-control-neo-button{
+        width: 100px;
+        padding: 10px 20px;
+        margin-top: 10px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        }
+        .form-control-button {
+        width: 80px;
+        padding: 10px 20px;
+        margin-top: 10px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        }
+        .from-control-neo-button:hover {
+            background-color: #45a049;
+        }
+        .form-confirmation-button{
+        color: white;
+        background-color: #2185D0;
+        }
+        .form-confirmation-button:hover {
+        background-color: #1678c2;
+        }
+        .form-clear-button{
+        color: black;
+        background-color: #E0E1E2;
+        }
+        .form-clear-button:hover {
+        background-color: #CCCCCC;
+        }
+
+    </style>
 </head>
 <body>
+<div class="content">
 <h1>銀行振込確認画面</h1>
 <form action="#" th:action="@{/bankTransferCompletion}" th:object="${bankTransferApplication}" method="post">
     <p>金融機関名: <span th:text="*{bankName}"></span></p>
@@ -22,10 +97,11 @@
     <input type="hidden" name="money" th:value="*{money}"/>
     <input type="hidden" name="transferDateTime" th:value="*{transferDateTime}"/>
     <p><form th:action="@{/bankTransferCompletion}" method="post">
-        <input type="submit" id="submit" value="振込"/>
-        <input type="button" value="キャンセル" onclick="window.location='/bankTransfer';"/>
+        <input type="submit" id="submit" value="振込" class="form-control-button form-confirmation-button" />
+        <input type="button" value="キャンセル" onclick="window.location='/bankTransfer';" class="from-control-neo-button form-clear-button " />
     </form></p>
 </form>
 <script th:inline="javascript" src="/js/bankTransferConfirmation.js"></script>
+</div>
 </body>
 </html>
