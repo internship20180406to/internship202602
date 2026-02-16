@@ -11,8 +11,8 @@
     <p>口座種別: <span th:text="*{bankAccountType}"></span></p>
     <p>口座番号: <span th:text="*{bankAccountNum}"></span></p>
     <p>申込者名: <span th:text="*{name}"></span></p>
-    <p>借入金額(円): <span th:text="*{loanAmount}"></span></p>
-    <p>借入年収(円): <span th:text="*{annualIncome}"></span></p>
+    <p>借入金額(円): <span id="displayLoanAmount" th:text="*{loanAmount}"></span></p>
+    <p>借入年収(円): <span id="displayAnnualIncome" th:text="*{annualIncome}"></span></p>
     <p>金利(%): <span th:text="*{interestRate}"></span></p>
     <input type="hidden" name="bankAccountNum" th:value="*{bankAccountNum}"/>
     <input type="hidden" name="bankName" th:value="*{bankName}"/>
@@ -27,5 +27,20 @@
     </p>
 </form>
 <script th:inline="javascript" src="/js/bankLoanConfirmation.js"></script>
+<script>
+    // 確認画面で数値をフォーマット表示
+    document.addEventListener('DOMContentLoaded', function() {
+        const loanAmountSpan = document.getElementById('displayLoanAmount');
+        const annualIncomeSpan = document.getElementById('displayAnnualIncome');
+
+        if (loanAmountSpan && loanAmountSpan.textContent) {
+            loanAmountSpan.textContent = formatNumberWithComma(loanAmountSpan.textContent);
+        }
+
+        if (annualIncomeSpan && annualIncomeSpan.textContent) {
+            annualIncomeSpan.textContent = formatNumberWithComma(annualIncomeSpan.textContent);
+        }
+    });
+</script>
 </body>
 </html>
