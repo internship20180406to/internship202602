@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import java.util.Arrays;
 
 
 @Controller
@@ -19,7 +20,32 @@ public class InvestmentTrustController {
     @GetMapping("/investmentTrust")
     public String bankTransfer(Model model) {
         model.addAttribute("investmentTrustApplication", new InvestmentTrustForm());
-        model.addAttribute("nameOptions", "山陰共同銀行");
+        model.addAttribute("bankNameOptions", Arrays.asList(
+                "山陰共同銀行",
+                "大迫銀行",
+                "しゅら銀行"
+        ));
+
+        model.addAttribute("branchNameOptions", Arrays.asList(
+                "鹿児島支店",
+                "南さつま支店",
+                "名古屋支店"
+        ));
+
+        model.addAttribute("accountTypeOptions", Arrays.asList(
+                "普通預金",
+                "当座預金",
+                "貯蓄預金",
+                "総合口座"
+        ));
+
+        model.addAttribute("fundNameOptions", Arrays.asList(
+                "Google",
+                "Amazon",
+                "Meta",
+                "Apple"
+        ));
+
         return "investmentTrustMain";
     }
 

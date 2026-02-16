@@ -3,19 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <title>投資信託注文確認画面</title>
+    <link rel="stylesheet" th:href="@{/css/investmentTrustMain.css}">
 </head>
 <body>
-<h1>投資信託注文確認画面</h1>
-<form action="#" th:action="@{/investmentTrustCompletion}" th:object="${investmentTrustApplication}" method="post">
-    <p>金融機関名: <span th:text="*{bankName}"></span></p>
-    <p>口座番号: <span th:text="*{bankAccountNum}"></span></p>
-    <input type="hidden" name="bankAccountNum" th:value="*{bankAccountNum}"/>
-    <input type="hidden" name="bankName" th:value="*{bankName}"/>
-    <p>
-        <input type="submit" id="submit" value="申込"/>
-        <input type="button" value="キャンセル" onclick="window.location='/investmentTrust';"/>
-    </p>
-</form>
-<script th:inline="javascript" src="/js/investmentTrustConfirmation.js"></script>
+<div class="content">
+    <h1>投資信託注文確認画面</h1>
+    <form action="#" th:action="@{/investmentTrustCompletion}" th:object="${investmentTrustApplication}" method="post">
+
+        <p><label class="ml-1">金融機関名:</label><br>
+            <span th:text="*{bankName}" class="form-control"></span></p>
+
+        <p><label class="ml-1">支店名:</label><br>
+            <span th:text="*{branchName}" class="form-control"></span></p>
+
+        <p><label class="ml-1">科目名:</label><br>
+            <span th:text="*{accountType}" class="form-control"></span></p>
+
+        <p><label class="ml-1">口座番号:</label><br>
+            <span th:text="*{bankAccountNum}" class="form-control"></span></p>
+
+        <p><label class="ml-1">購入者名:</label><br>
+            <span th:text="*{purchaserName}" class="form-control"></span></p>
+
+        <p><label class="ml-1">銘柄選択:</label><br>
+            <span th:text="*{fundName}" class="form-control"></span></p>
+
+        <p><label class="ml-1">購入金額:</label><br>
+            <span th:text="*{purchaseAmount}" class="form-control"></span>円</p>
+
+        <input type="hidden" name="bankName" th:value="*{bankName}"/>
+        <input type="hidden" name="branchName" th:value="*{branchName}"/>
+        <input type="hidden" name="accountType" th:value="*{accountType}"/>
+        <input type="hidden" name="bankAccountNum" th:value="*{bankAccountNum}"/>
+        <input type="hidden" name="purchaserName" th:value="*{purchaserName}"/>
+        <input type="hidden" name="fundName" th:value="*{fundName}"/>
+        <input type="hidden" name="purchaseAmount" th:value="*{purchaseAmount}"/>
+
+        <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
+            <input type="button" value="キャンセル" class="form-control-button form-clear-button" onclick="history.back()"/>
+            <input type="submit" id="submit" value="申し込み" class="form-control-button form-confirmation-button"/>
+        </div>
+    </form>
+</div>
+<script th:src="@{/js/investmentTrustConfirmation.js}"></script>
 </body>
 </html>
