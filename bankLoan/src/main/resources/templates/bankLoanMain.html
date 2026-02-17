@@ -138,7 +138,7 @@
             <ul id="errorList"></ul>
         </div>
         <p><label class="ml-1">金融機関名: <small class="text-danger ml-1">※</small></label><br>
-            <select th:field="*{bankName}" id="bankNameSelect" class="form-control" onchange="updateBranchOptions()" required>
+            <select th:field="*{bankName}" id="bankNameSelect" class="form-control" onchange="updateBranchOptions()">
                 <option value="" disabled hidden>金融機関名を選択してください</option>
                 <option th:each="option : ${nameOptions}"
                         th:value="${option}"
@@ -147,12 +147,12 @@
             </select></p>
         <div id="branchNameContainer">
             <p><label class="ml-1">支店名: <small class="text-danger ml-1">※</small></label><br>
-                <select th:field="*{branchName}" id="branchNameSelect" class="form-control" required>
+                <select th:field="*{branchName}" id="branchNameSelect" class="form-control">
                     <option value="" disabled hidden>支店を選択してください</option>
                 </select></p>
         </div>
         <p><label class="ml-1">口座種別: <small class="text-danger ml-1">※</small></label><br>
-            <select th:field="*{bankAccountType}" class="form-control" required>
+            <select th:field="*{bankAccountType}" class="form-control">
                 <option value="" disabled hidden>口座種別を選択してください</option>
                 <option value="普通">普通</option>
                 <option value="当座">当座</option>
