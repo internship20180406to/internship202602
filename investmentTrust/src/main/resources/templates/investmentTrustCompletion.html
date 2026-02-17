@@ -9,12 +9,28 @@
     <h1>お申し込みが完了しました</h1>
     <p>ご注文ありがとうございました。</p>
 
-    <!-- 受付番号の表示 -->
     <div style="background-color: #f8f9fa; padding: 15px; border: 1px solid #ddd; margin: 20px 0;">
         受付番号：<strong th:text="${receiptNo}" style="color: #2185D0; font-size: 1.2em;"></strong>
     </div>
 <p><input type="button" value="申し込み画面に戻る" onclick="window.location='/investmentTrust';"/></p>
-    <img th:src="@{/images/ojigi_animal_kuma.png}" alt="完了イラスト" style="width: 200px; height: auto;">
+    <!-- 横並びにするための外枠（d-flex） -->
+    <div style="display: flex; justify-content: center; align-items: center; gap: 30px; margin: 30px 0;">
+
+        <!-- 左側：イラスト -->
+        <img th:src="@{/images/ojigi_animal_kuma.png}" alt="完了イラスト" style="width: 150px; height: auto;" />
+
+        <!-- 右側：アプリへの誘導エリア -->
+        <div style="text-align: left; background-color: #eef9ff; padding: 20px; border-radius: 10px; border: 1px dashed #2185D0;">
+            <p style="font-weight: bold; margin-bottom: 10px; color: #2185D0;">＼ アプリでもっと便利に！ ／</p>
+            <p style="font-size: 0.9em; margin-bottom: 15px;">残高確認や振込がスマホで完結。<br>今すぐ公式アプリをチェック！</p>
+            <a th:href="@{/bankAppIntro}"
+               style="background-color: #2185D0; color: white; padding: 8px 15px; text-decoration: none; border-radius: 5px;">
+                アプリの詳細を見る
+            </a>
+        </div>
+
+    </div>
+
 </div>
 </body>
 </html>

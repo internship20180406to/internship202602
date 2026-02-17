@@ -70,5 +70,11 @@ public class InvestmentTrustController {
         orderInvestmentTrustService.orderInvestmentTrust(investmentTrustForm);
         return "investmentTrustCompletion";
     }
+    // アプリ紹介ページを表示する
+    @GetMapping("/bankAppIntro")
+    public String showAppIntro() {
+        return "bankAppIntro"; // HTMLファイル名を指定
+    }
+
 
 }
