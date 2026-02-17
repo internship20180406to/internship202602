@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,6 +21,12 @@ public class BankLoanForm {
     private Integer bankAccountNum;
     @NonNull
     private String name;
+    @NonNull
+    private Integer loanAmount;
+    @NonNull
+    private Integer annualIncome;
+    @NonNull
+    private BigDecimal interestRate;
 
     public String getBankName() {
         return bankName;
@@ -39,6 +47,10 @@ public class BankLoanForm {
     public String getName() {
         return name;
     }
+
+    public Integer getLoanAmount() {return loanAmount;}
+    public Integer getAnnualIncome() {return annualIncome;}
+    public BigDecimal getInterestRate() {return interestRate;}
 
     public void setBankAccountNum(Integer bankAccountNum) {
         this.bankAccountNum = bankAccountNum;
