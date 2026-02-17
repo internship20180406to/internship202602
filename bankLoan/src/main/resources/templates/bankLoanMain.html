@@ -143,22 +143,21 @@
         </div>
         <p><label class="ml-1">金融機関名:</label><br>
             <input type="text" id="bankNameSelect" th:field="*{bankName}" class="form-control" value="かわらそば銀行" readonly/></p>
-        <p><label class="ml-1">都道府県:<small class="text-danger ml-1 required-mark" data-required-for="prefectureSelect">※</small></label><br>
-            <select id="prefectureSelect" class="form-control">
-                <option value="" disabled hidden>都道府県を選択してください</option>
-                <option value="福岡県">福岡県</option>
-                <option value="佐賀県">佐賀県</option>
-                <option value="長崎県">長崎県</option>
-                <option value="熊本県">熊本県</option>
-                <option value="大分県">大分県</option>
-                <option value="宮崎県">宮崎県</option>
-                <option value="鹿児島県">鹿児島県</option>
-            </select></p>
-        <div id="branchNameContainer">
-            <p><label class="ml-1">支店名:<small class="text-danger ml-1 required-mark" data-required-for="branchNameSelect">※</small></label><br>
-                <select th:field="*{branchName}" id="branchNameSelect" class="form-control">
-                    <option value="" disabled hidden>支店名を選択してください</option>
-                </select></p>
+        <p><label class="ml-1">支店名:<small class="text-danger ml-1 required-mark" data-required-for="branchNameInput">※</small></label><br>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <div style="flex: 1;">
+                    <input type="text" id="branchNameInput" th:field="*{branchName}" class="form-control" placeholder="支店名を入力またはエリアで探す"
+                           list="branchNameList" autocomplete="off"/>
+                    <datalist id="branchNameList"></datalist>
+                    <span id="branchNameWarning" class="warning-text" style="display:none; margin-top: 4px;">該当する支店が見つかりません（警告）</span>
+                </div>
+                <button type="button" id="searchByAreaBtn" class="form-control-button" style="width: auto; background-color: #2185D0; color: white; margin: 5px 0;">エリアで探す</button>
+            </div>
+        </p>
+        <div id="areaSearchContainer" style="display: none; background-color: #f9f9f9; padding: 15px; border-radius: 4px; margin: 10px 0; border: 1px solid #ddd;">
+            <h4 style="margin-top: 0;">都道府県から探す</h4>
+            <div id="prefectureButtonsContainer" style="display: flex; flex-wrap: wrap; gap: 8px;">
+            </div>
         </div>
         <p><label class="ml-1">口座種別:<small class="text-danger ml-1 required-mark" data-required-for="bankAccountTypeSelect">※</small></label><br>
             <select th:field="*{bankAccountType}" id="bankAccountTypeSelect" class="form-control">
@@ -186,6 +185,20 @@
     </form>
 </div>
 <script th:inline="javascript">
+    // ページ初期化時に口座種別を確実にリセット（DOMContentLoaded前に実行）
+    document.addEventListener('DOMContentLoaded', function() {
+        const bankAccountTypeSelect = document.getElementById('bankAccountTypeSelect');
+
+        // セッションストレージにデータがない場合のみリセット
+        if (!sessionStorage.getItem('bankLoanFormData')) {
+            if (bankAccountTypeSelect) {
+                // 確実に最初のoption（disabled hidden）に設定
+                bankAccountTypeSelect.selectedIndex = 0;
+                bankAccountTypeSelect.value = '';
+            }
+        }
+    }, true); // キャプチャフェーズで実行（バブリング前に実行）
+
     // Thymeleafから支店情報をJavaScriptオブジェクトに変換
     const branchOptions = /*[[${branchOptions}]]*/;
 
@@ -194,42 +207,8 @@
 
     // 金融機関変更時に支店オプションを更新
     function updateBranchOptions() {
-        const prefectureSelect = document.getElementById('prefectureSelect');
-        const branchNameSelect = document.getElementById('branchNameSelect');
-        const branchNameContainer = document.getElementById('branchNameContainer');
-        const selectedPrefecture = prefectureSelect ? prefectureSelect.value : '';
-
-        if (selectedPrefecture) {
-            branchNameContainer.classList.add('show');
-        } else {
-            branchNameContainer.classList.remove('show');
-            updateRequiredMarks();
-            return;
-        }
-
-        branchNameSelect.innerHTML = '';
-
-        const placeholderOption = document.createElement('option');
-        placeholderOption.value = '';
-        placeholderOption.textContent = '支店名を選択してください';
-        placeholderOption.disabled = true;
-        placeholderOption.hidden = true;
-        branchNameSelect.appendChild(placeholderOption);
-
-        if (branchOptions && branchOptions[selectedPrefecture]) {
-            const branches = branchOptions[selectedPrefecture];
-            if (Array.isArray(branches)) {
-                branches.forEach(function(branch) {
-                    const option = document.createElement('option');
-                    option.value = branch;
-                    option.textContent = branch;
-                    branchNameSelect.appendChild(option);
-                });
-            }
-        }
-
-        branchNameSelect.value = '';
-        updateRequiredMarks();
+        // 都道府県selectが削除されているため、この関数は実質不要
+        // 互換性のため空関数として保持
     }
 
     function updateRequiredMarks() {
@@ -254,8 +233,7 @@
 
     function attachRequiredMarkListeners() {
         const targets = [
-            'prefectureSelect',
-            'branchNameSelect',
+            'branchNameInput',
             'bankAccountTypeSelect',
             'bankAccountNum',
             'applicantName',
@@ -276,14 +254,10 @@
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function() {
             const bankAccountTypeSelect = document.querySelector('[name="bankAccountType"]');
-            const prefectureSelect = document.getElementById('prefectureSelect');
 
             if (!sessionStorage.getItem('bankLoanFormData')) {
                 if (bankAccountTypeSelect && bankAccountTypeSelect.value !== '') {
                     bankAccountTypeSelect.value = '';
-                }
-                if (prefectureSelect) {
-                    prefectureSelect.value = '';
                 }
                 updateBranchOptions();
             }
@@ -292,14 +266,15 @@
             if (clearButton) {
                 clearButton.addEventListener('click', function() {
                     setTimeout(function() {
-                        document.getElementById('branchNameSelect').value = '';
-                        document.querySelector('[name="bankAccountType"]').value = '';
-                        const prefSelect = document.getElementById('prefectureSelect');
-                        if (prefSelect) {
-                            prefSelect.value = '';
+                        document.getElementById('branchNameInput').value = '';
+
+                        // 口座種別selectをリセット
+                        const bankAccountTypeSelect = document.getElementById('bankAccountTypeSelect');
+                        if (bankAccountTypeSelect) {
+                            bankAccountTypeSelect.value = '';
+                            bankAccountTypeSelect.selectedIndex = 0;
                         }
 
-                        updateBranchOptions();
                         if (typeof updateBankAccountNumWarning === 'function') {
                             updateBankAccountNumWarning();
                         }
@@ -310,22 +285,30 @@
                         if (errorMessageContainer) {
                             errorMessageContainer.classList.remove('show');
                         }
+
+                        // すべての「※」を表示させる
+                        updateRequiredMarks();
                     }, 0);
                 });
             }
             attachRequiredMarkListeners();
             updateRequiredMarks();
+
+            // エリアで探すボタンのイベントリスナー
+            const searchByAreaBtn = document.getElementById('searchByAreaBtn');
+            if (searchByAreaBtn) {
+                searchByAreaBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    toggleAreaSearch();
+                });
+            }
         });
     } else {
         const bankAccountTypeSelect = document.querySelector('[name="bankAccountType"]');
-        const prefectureSelect = document.getElementById('prefectureSelect');
 
         if (!sessionStorage.getItem('bankLoanFormData')) {
             if (bankAccountTypeSelect && bankAccountTypeSelect.value !== '') {
                 bankAccountTypeSelect.value = '';
-            }
-            if (prefectureSelect) {
-                prefectureSelect.value = '';
             }
             updateBranchOptions();
         }
@@ -334,14 +317,15 @@
         if (clearButton) {
             clearButton.addEventListener('click', function() {
                 setTimeout(function() {
-                    document.getElementById('branchNameSelect').value = '';
-                    document.querySelector('[name="bankAccountType"]').value = '';
-                    const prefSelect = document.getElementById('prefectureSelect');
-                    if (prefSelect) {
-                        prefSelect.value = '';
+                    document.getElementById('branchNameInput').value = '';
+
+                    // 口座種別selectをリセット
+                    const bankAccountTypeSelect = document.getElementById('bankAccountTypeSelect');
+                    if (bankAccountTypeSelect) {
+                        bankAccountTypeSelect.value = '';
+                        bankAccountTypeSelect.selectedIndex = 0;
                     }
 
-                    updateBranchOptions();
                     if (typeof updateBankAccountNumWarning === 'function') {
                         updateBankAccountNumWarning();
                     }
@@ -352,6 +336,9 @@
                     if (errorMessageContainer) {
                         errorMessageContainer.classList.remove('show');
                     }
+
+                    // すべての「※」を表示させる
+                    updateRequiredMarks();
                 }, 0);
             });
         }
@@ -363,4 +350,6 @@
 </body>
 
 </html>
+
+
 

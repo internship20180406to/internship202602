@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
@@ -25,37 +24,51 @@ public class BankLoanController {
     @Autowired
     private ApplyBankLoanService applyBankLoanService;
 
-    private static final List<String> BANK_NAME_OPTIONS = Arrays.asList(
-            "山陰共同銀行",
-            "ながれぼし銀行",
-            "はまなす銀行"
-    );
+    private static final String FIXED_BANK_NAME = "かわらそば銀行";
 
     private static final Map<String, List<String>> BRANCH_NAMES = new HashMap<String, List<String>>() {{
-        put("山陰共同銀行", Arrays.asList(
-                "松江支店",
-                "出雲支店",
-                "米子支店",
-                "益田支店"
+        put("福岡県", Arrays.asList(
+                "福岡支店",
+                "博多支店",
+                "北九州支店"
         ));
-        put("ながれぼし銀行", Arrays.asList(
-                "札幌支店",
-                "旭川支店",
-                "函館支店",
-                "帯広支店"
+        put("佐賀県", Arrays.asList(
+                "佐賀支店",
+                "唐津支店",
+                "鳥栖支店"
         ));
-        put("はまなす銀行", Arrays.asList(
-                "青森支店",
-                "弘前支店",
-                "八戸支店",
-                "五所川原支店"
+        put("長崎県", Arrays.asList(
+                "長崎支店",
+                "佐世保支店",
+                "諫早支店"
+        ));
+        put("熊本県", Arrays.asList(
+                "熊本支店",
+                "八代支店",
+                "天草支店"
+        ));
+        put("大分県", Arrays.asList(
+                "大分支店",
+                "別府支店",
+                "中津支店"
+        ));
+        put("宮崎県", Arrays.asList(
+                "宮崎支店",
+                "都城支店",
+                "延岡支店"
+        ));
+        put("鹿児島県", Arrays.asList(
+                "鹿児島支店",
+                "霧島支店",
+                "薩摩川内支店"
         ));
     }};
 
     @GetMapping("/bankLoan")
     public String bankTransfer(Model model) {
-        model.addAttribute("bankLoanApplication", new BankLoanForm());
-        model.addAttribute("nameOptions", BANK_NAME_OPTIONS);
+        BankLoanForm bankLoanForm = new BankLoanForm();
+        bankLoanForm.setBankName(FIXED_BANK_NAME);
+        model.addAttribute("bankLoanApplication", bankLoanForm);
         model.addAttribute("branchOptions", BRANCH_NAMES);
         return "bankLoanMain";
     }
@@ -95,14 +108,36 @@ public class BankLoanController {
         return response;
     }
 
+    @GetMapping("/validateBranch")
+    @ResponseBody
+    public Map<String, Object> validateBranch(@RequestParam String branchName) {
+        boolean isValid = false;
+
+        // すべての支店リストから検索
+        for (List<String> branches : BRANCH_NAMES.values()) {
+            if (branches.contains(branchName)) {
+                isValid = true;
+                break;
+            }
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("valid", isValid);
+        return response;
+    }
+
+    @GetMapping("/getAllBranches")
+    @ResponseBody
+    public Map<String, Object> getAllBranches() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("branches", BRANCH_NAMES);
+        return response;
+    }
+
     private BigDecimal calculateInterestRate(String bankName, Integer loanAmount, Integer annualIncome, Integer loanPeriod) {
         BigDecimal baseRate;
-        if ("山陰共同銀行".equals(bankName)) {
-            baseRate = new BigDecimal("1.2");
-        } else if ("ながれぼし銀行".equals(bankName)) {
-            baseRate = new BigDecimal("1.5");
-        } else if ("はまなす銀行".equals(bankName)) {
-            baseRate = new BigDecimal("1.8");
+        if (FIXED_BANK_NAME.equals(bankName)) {
+            baseRate = new BigDecimal("1.4");
         } else {
             baseRate = new BigDecimal("2.0");
         }
