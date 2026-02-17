@@ -5,6 +5,7 @@
     <title>投資信託注文情報入力画面</title>
     <link rel="stylesheet" th:href="@{/css/common.css}">
     <link rel="stylesheet" th:href="@{/css/form.css}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <div class="content">
@@ -82,17 +83,25 @@
 
             <div id="fundInfoCard" class="fund-info-card" style="display: none;">
                 <div class="fund-info-row">
-                    <span class="fund-info-label">基準価額</span>
+                    <span class="fund-info-label">株価（終値）</span>
                     <span id="fundBasePrice" class="fund-info-value"></span>
                 </div>
                 <div class="fund-info-row">
-                    <span class="fund-info-label">騰落率（1ヶ月）</span>
+                    <span class="fund-info-label">前日比</span>
                     <span id="fundChangeRate" class="fund-info-value"></span>
                 </div>
                 <div class="fund-info-row">
-                    <span class="fund-info-label">純資産総額</span>
+                    <span class="fund-info-label">売買代金</span>
                     <span id="fundNetAssets" class="fund-info-value"></span>
                 </div>
+                <div class="fund-info-row">
+                    <span class="fund-info-label">手数料</span>
+                    <span id="fundFee" class="fund-info-value"></span>
+                </div>
+            </div>
+
+            <div id="stockChartContainer" class="chart-container" style="display: none;">
+                <canvas id="stockChart"></canvas>
             </div>
 
             <p><label class="ml-1">購入金額: <small class="text-danger ml-1">※</small></label><br>
@@ -106,6 +115,21 @@
                       th:errors="*{money}"
                       class="error-message"></span>
             </p>
+
+            <div id="feeCalcCard" class="fund-info-card" style="display: none;">
+                <div class="fund-info-row">
+                    <span class="fund-info-label">購入金額</span>
+                    <span id="calcMoney" class="fund-info-value"></span>
+                </div>
+                <div class="fund-info-row">
+                    <span class="fund-info-label">手数料（<span id="calcFeeRate"></span>）</span>
+                    <span id="calcFeeAmount" class="fund-info-value fee-negative"></span>
+                </div>
+                <div class="fund-info-row fee-result-row">
+                    <span class="fund-info-label">実質投資額</span>
+                    <span id="calcActual" class="fund-info-value fee-result"></span>
+                </div>
+            </div>
         </div>
 
         <p class="button-area button-area-wide">
@@ -150,6 +174,33 @@
     const moneyDisplay = document.getElementById('moneyDisplay');
     const moneyHidden = document.getElementById('moneyHidden');
 
+    // 計算ロジック
+    const feeCalcCard = document.getElementById('feeCalcCard');
+    const calcMoney = document.getElementById('calcMoney');
+    const calcFeeRate = document.getElementById('calcFeeRate');
+    const calcFeeAmount = document.getElementById('calcFeeAmount');
+    const calcActual = document.getElementById('calcActual');
+
+    function updateFeeCalc() {
+        const raw = moneyHidden.value;
+        const fund = fundNameSelect.value;
+        const info = fundInfoMap[fund];
+        if (!raw || !info) {
+            feeCalcCard.style.display = 'none';
+            return;
+        }
+        const money = Number(raw);
+        const feeRate = parseFloat(info.fee);
+        const feeAmount = Math.floor(money * feeRate / 100);
+        const actual = money - feeAmount;
+
+        calcMoney.textContent = money.toLocaleString() + '円';
+        calcFeeRate.textContent = feeRate + '%';
+        calcFeeAmount.textContent = '-' + feeAmount.toLocaleString() + '円';
+        calcActual.textContent = actual.toLocaleString() + '円';
+        feeCalcCard.style.display = 'block';
+    }
+
     moneyDisplay.addEventListener('input', function () {
         const raw = this.value.replace(/[^0-9]/g, '');
         moneyHidden.value = raw;
@@ -158,6 +209,7 @@
         } else {
             this.value = '';
         }
+        updateFeeCalc();
     });
 
     document.querySelector('input[type="reset"]').addEventListener('click', function () {
@@ -168,19 +220,25 @@
             updateBranches();
             fundNameSelect.value = '';
             fundInfoCard.style.display = 'none';
+            feeCalcCard.style.display = 'none';
+            updateChart('');
         }, 0);
     });
 
     // ファンド情報の動的表示
     const fundInfoMap = /*[[${fundInfoMap}]]*/ {};
+    const fundChartDataMap = /*[[${fundChartDataMap}]]*/ {};
     const fundNameSelect = document.getElementById('fundName');
     const fundInfoCard = document.getElementById('fundInfoCard');
     const fundBasePrice = document.getElementById('fundBasePrice');
     const fundChangeRate = document.getElementById('fundChangeRate');
     const fundNetAssets = document.getElementById('fundNetAssets');
+    const fundFee = document.getElementById('fundFee');
+    const stockChartContainer = document.getElementById('stockChartContainer');
+    const stockChartCanvas = document.getElementById('stockChart');
+    let stockChart = null;
 
-    fundNameSelect.addEventListener('change', function () {
-        const fund = this.value;
+    function showFundInfo(fund) {
         const info = fundInfoMap[fund];
         if (info) {
             fundBasePrice.textContent = info.basePrice + '円';
@@ -188,24 +246,82 @@
             const rate = parseFloat(info.changeRate);
             fundChangeRate.style.color = rate >= 0 ? '#00B53C' : '#dc2626';
             fundNetAssets.textContent = info.netAssets + '億円';
+            fundFee.textContent = info.fee + '%';
             fundInfoCard.style.display = 'block';
         } else {
             fundInfoCard.style.display = 'none';
         }
+        updateFeeCalc();
+    }
+
+    function updateChart(fund) {
+        const chartData = fundChartDataMap[fund];
+        if (!chartData) {
+            stockChartContainer.style.display = 'none';
+            if (stockChart) {
+                stockChart.destroy();
+                stockChart = null;
+            }
+            return;
+        }
+        stockChartContainer.style.display = 'block';
+        if (stockChart) {
+            stockChart.destroy();
+        }
+        stockChart = new Chart(stockChartCanvas, {
+            type: 'line',
+            data: {
+                labels: chartData.dates,
+                datasets: [{
+                    label: fund + ' 株価推移',
+                    data: chartData.prices.map(Number),
+                    borderColor: '#4579FF',
+                    backgroundColor: 'rgba(69, 121, 255, 0.1)',
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 2,
+                    pointHoverRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return Number(context.raw).toLocaleString() + '円';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: { maxTicksLimit: 10 }
+                    },
+                    y: {
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    fundNameSelect.addEventListener('change', function () {
+        const fund = this.value;
+        showFundInfo(fund);
+        updateChart(fund);
     });
 
     // 初期表示時に銘柄が選択済みの場合（バリデーションエラー後など）
     (function () {
         const fund = fundNameSelect.value;
-        const info = fundInfoMap[fund];
-        if (info) {
-            fundBasePrice.textContent = info.basePrice + '円';
-            fundChangeRate.textContent = info.changeRate + '%';
-            const rate = parseFloat(info.changeRate);
-            fundChangeRate.style.color = rate >= 0 ? '#00B53C' : '#dc2626';
-            fundNetAssets.textContent = info.netAssets + '億円';
-            fundInfoCard.style.display = 'block';
-        }
+        showFundInfo(fund);
+        updateChart(fund);
     })();
 </script>
 </body>
