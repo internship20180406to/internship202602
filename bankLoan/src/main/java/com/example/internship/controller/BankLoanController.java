@@ -8,6 +8,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -62,7 +65,8 @@ public class BankLoanController {
         BigDecimal interestRate = calculateInterestRate(
                 bankLoanForm.getBankName(),
                 bankLoanForm.getLoanAmount(),
-                bankLoanForm.getAnnualIncome()
+                bankLoanForm.getAnnualIncome(),
+                bankLoanForm.getLoanPeriod()
         );
         bankLoanForm.setInterestRate(interestRate);
         model.addAttribute("bankLoanApplication", bankLoanForm);
@@ -75,7 +79,23 @@ public class BankLoanController {
         return "bankLoanCompletion";
     }
 
-    private BigDecimal calculateInterestRate(String bankName, Integer loanAmount, Integer annualIncome) {
+    @GetMapping("/calculateInterestRate")
+    @ResponseBody
+    public Map<String, Object> calculateInterestRateApi(
+            @RequestParam String bankName,
+            @RequestParam Integer loanAmount,
+            @RequestParam Integer annualIncome,
+            @RequestParam Integer loanPeriod) {
+
+        BigDecimal interestRate = calculateInterestRate(bankName, loanAmount, annualIncome, loanPeriod);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("interestRate", interestRate.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
+
+        return response;
+    }
+
+    private BigDecimal calculateInterestRate(String bankName, Integer loanAmount, Integer annualIncome, Integer loanPeriod) {
         BigDecimal baseRate;
         if ("山陰共同銀行".equals(bankName)) {
             baseRate = new BigDecimal("1.2");
@@ -88,17 +108,41 @@ public class BankLoanController {
         }
 
         if (loanAmount == null || annualIncome == null || annualIncome == 0) {
-            return baseRate;
+            return applyLoanPeriodDiscount(baseRate, loanPeriod);
         }
 
         BigDecimal ratio = new BigDecimal(loanAmount).divide(new BigDecimal(annualIncome), 2, BigDecimal.ROUND_HALF_UP);
+        BigDecimal adjustedRate;
         if (ratio.compareTo(new BigDecimal("1.0")) >= 0) {
-            return baseRate.add(new BigDecimal("0.5"));
+            adjustedRate = baseRate.add(new BigDecimal("0.5"));
+        } else if (ratio.compareTo(new BigDecimal("0.5")) >= 0) {
+            adjustedRate = baseRate.add(new BigDecimal("0.2"));
+        } else {
+            adjustedRate = baseRate;
         }
-        if (ratio.compareTo(new BigDecimal("0.5")) >= 0) {
-            return baseRate.add(new BigDecimal("0.2"));
+
+        // 借入期間による割引を適用
+        return applyLoanPeriodDiscount(adjustedRate, loanPeriod);
+    }
+
+    // 借入期間に基づいて金利を割引するメソッド
+    private BigDecimal applyLoanPeriodDiscount(BigDecimal rate, Integer loanPeriod) {
+        if (loanPeriod == null || loanPeriod < 1) {
+            return rate;
         }
-        return baseRate;
+
+        BigDecimal discount;
+        if (loanPeriod >= 30) {
+            discount = new BigDecimal("0.4"); // 30年以上で0.4%割引
+        } else if (loanPeriod >= 20) {
+            discount = new BigDecimal("0.3"); // 20年以上で0.3%割引
+        } else if (loanPeriod >= 10) {
+            discount = new BigDecimal("0.1"); // 10年以上で0.1%割引
+        } else {
+            discount = new BigDecimal("0.0"); // 10年未満で割引なし
+        }
+
+        return rate.subtract(discount);
     }
 
 }

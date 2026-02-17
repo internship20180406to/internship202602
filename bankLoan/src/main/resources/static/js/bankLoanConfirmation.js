@@ -76,6 +76,55 @@ function restoreFormDataFromSessionStorage() {
     }
 }
 
+// リアルタイム金利計算関数
+function calculateAndDisplayInterestRate() {
+    const bankName = document.querySelector('[name="bankName"]');
+    const loanAmount = document.getElementById('loanAmount');
+    const annualIncome = document.getElementById('annualIncome');
+    const loanPeriod = document.getElementById('loanPeriod');
+    const displayInterestRate = document.getElementById('displayInterestRate');
+
+    // 必須項目が入力されているか確認
+    if (!bankName || !bankName.value ||
+        !loanAmount || !loanAmount.value ||
+        !annualIncome || !annualIncome.value ||
+        !loanPeriod || !loanPeriod.value) {
+        // 未入力の場合は---を表示
+        if (displayInterestRate) {
+            displayInterestRate.textContent = '---';
+        }
+        return;
+    }
+
+    // カンマを除いて数値に変換
+    const loanAmountValue = parseInt(loanAmount.value.replace(/,/g, ''));
+    const annualIncomeValue = parseInt(annualIncome.value.replace(/,/g, ''));
+    const loanPeriodValue = parseInt(loanPeriod.value);
+
+    // 数値チェック
+    if (isNaN(loanAmountValue) || isNaN(annualIncomeValue) || isNaN(loanPeriodValue)) {
+        if (displayInterestRate) {
+            displayInterestRate.textContent = '---';
+        }
+        return;
+    }
+
+    // API呼び出し
+    fetch(`/calculateInterestRate?bankName=${encodeURIComponent(bankName.value)}&loanAmount=${loanAmountValue}&annualIncome=${annualIncomeValue}&loanPeriod=${loanPeriodValue}`)
+        .then(response => response.json())
+        .then(data => {
+            if (displayInterestRate && data.interestRate) {
+                displayInterestRate.textContent = data.interestRate;
+            }
+        })
+        .catch(error => {
+            console.error('金利計算エラー:', error);
+            if (displayInterestRate) {
+                displayInterestRate.textContent = '---';
+            }
+        });
+}
+
 // 入力フィールドの数値をリアルタイムでフォーマット
 function setupNumberFormatting() {
     const loanAmountInput = document.getElementById('loanAmount');
@@ -89,6 +138,8 @@ function setupNumberFormatting() {
             this.value = formatNumberWithComma(value);
             // リアルタイムで保存
             saveFormDataToSessionStorage();
+            // リアルタイムで金利計算
+            calculateAndDisplayInterestRate();
         });
     }
 
@@ -100,6 +151,8 @@ function setupNumberFormatting() {
             this.value = formatNumberWithComma(value);
             // リアルタイムで保存
             saveFormDataToSessionStorage();
+            // リアルタイムで金利計算
+            calculateAndDisplayInterestRate();
         });
     }
 
@@ -111,7 +164,10 @@ function setupNumberFormatting() {
     const nameInput = document.querySelector('[name="name"]');
 
     if (bankName) {
-        bankName.addEventListener('change', saveFormDataToSessionStorage);
+        bankName.addEventListener('change', function() {
+            saveFormDataToSessionStorage();
+            calculateAndDisplayInterestRate();
+        });
     }
     if (branchName) {
         branchName.addEventListener('change', saveFormDataToSessionStorage);
@@ -129,7 +185,10 @@ function setupNumberFormatting() {
     // 借入期間の変更も検知
     const loanPeriodInput = document.getElementById('loanPeriod');
     if (loanPeriodInput) {
-        loanPeriodInput.addEventListener('input', saveFormDataToSessionStorage);
+        loanPeriodInput.addEventListener('input', function() {
+            saveFormDataToSessionStorage();
+            calculateAndDisplayInterestRate();
+        });
     }
 }
 
