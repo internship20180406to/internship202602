@@ -117,6 +117,55 @@ function removeCommasBeforeSubmit() {
     }
 }
 
+// フォーム送信時のバリデーション
+function validateFormBeforeSubmit(event) {
+    const bankName = document.querySelector('[name="bankName"]');
+    const bankAccountType = document.querySelector('[name="bankAccountType"]');
+    const bankAccountNum = document.querySelector('[name="bankAccountNum"]');
+    const name = document.querySelector('[name="name"]');
+    const loanAmountInput = document.getElementById('loanAmount');
+    const annualIncomeInput = document.getElementById('annualIncome');
+
+    // バリデーション結果格納用
+    let errorMessages = [];
+
+    // 各フィールドのバリデーション
+    if (!bankName || !bankName.value || bankName.value.trim() === '') {
+        errorMessages.push('金融機関名を選択してください');
+    }
+
+    if (!bankAccountType || !bankAccountType.value || bankAccountType.value.trim() === '') {
+        errorMessages.push('口座種別を選択してください');
+    }
+
+    if (!bankAccountNum || !bankAccountNum.value || bankAccountNum.value.trim() === '') {
+        errorMessages.push('口座番号を入力してください');
+    }
+
+    if (!name || !name.value || name.value.trim() === '') {
+        errorMessages.push('申込者名を入力してください');
+    }
+
+    if (!loanAmountInput || !loanAmountInput.value || loanAmountInput.value.replace(/,/g, '').trim() === '') {
+        errorMessages.push('借入金額を入力してください');
+    }
+
+    if (!annualIncomeInput || !annualIncomeInput.value || annualIncomeInput.value.replace(/,/g, '').trim() === '') {
+        errorMessages.push('借入年収を入力してください');
+    }
+
+    // エラーがある場合は送信を中止してアラート表示
+    if (errorMessages.length > 0) {
+        event.preventDefault();
+        alert('以下の項目を入力してください：\n\n' + errorMessages.join('\n'));
+        return false;
+    }
+
+    // バリデーション成功時はカンマを削除
+    removeCommasBeforeSubmit();
+    return true;
+}
+
 // 確認画面の送信ボタンの処理
 const submitButton = document.getElementById("submit");
 if (submitButton) {
