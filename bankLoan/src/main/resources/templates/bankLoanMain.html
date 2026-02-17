@@ -79,20 +79,15 @@
                 </option>
             </select></p>
         <p><label class="ml-1">口座番号(半角数字): <small class="text-danger ml-1">※</small></label><br>
-            <input type="text" oninput="changeNum(this)"
+            <input  id="inputBankAccountNum" type="text" oninput="changeNum(this)"
                 th:field="*{bankAccountNum}" class="form-control" placeholder="1234567"/></p>
         <p style="text-align: center;"><input type="submit" value="確認"
                                               class="form-control-button form-confirmation-button"/>
             <input type="reset" value="クリア" class="form-control-button form-clear-button"/></p>
     </form>
 </div>
-<script>
-    function changeNum(a){
-    a.value=a.value.replace(/[^0-9０-９]/g,'').replace('０','0').replace('１','1').replace('２','2').replace('３','3').replace('４','4').replace('５','5').replace('６','6').replace('７','7').replace('８','8').replace('９','9')
-    if (a.value.length >=7){
-        a.value=a.value.slice(0,7)
-        }
-    }
+<script th:inline="javascript" src="/js/bankLoanMain.js">
+
 </script>
 </body>
 
