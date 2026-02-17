@@ -4,6 +4,20 @@ function formatNumberWithComma(num) {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
+function updateBankAccountNumWarning() {
+    const bankAccountNumInput = document.getElementById('bankAccountNum');
+    const warning = document.getElementById('bankAccountNumWarning');
+    if (!bankAccountNumInput || !warning) {
+        return;
+    }
+    const digits = (bankAccountNumInput.value || '').replace(/\D/g, '');
+    if (!digits) {
+        warning.style.display = 'none';
+        return;
+    }
+    warning.style.display = digits.length === 7 ? 'none' : 'inline';
+}
+
 // フォームデータをセッションストレージに保存
 function saveFormDataToSessionStorage() {
     const bankName = document.querySelector('[name="bankName"]');
@@ -14,6 +28,7 @@ function saveFormDataToSessionStorage() {
     const loanAmountInput = document.getElementById('loanAmount');
     const annualIncomeInput = document.getElementById('annualIncome');
     const loanPeriodInput = document.getElementById('loanPeriod');
+    const prefectureSelect = document.getElementById('prefectureSelect');
 
     const formData = {
         bankName: bankName ? bankName.value : '',
@@ -23,7 +38,8 @@ function saveFormDataToSessionStorage() {
         name: name ? name.value : '',
         loanAmount: loanAmountInput ? loanAmountInput.value.replace(/,/g, '') : '',
         annualIncome: annualIncomeInput ? annualIncomeInput.value.replace(/,/g, '') : '',
-        loanPeriod: loanPeriodInput ? loanPeriodInput.value : ''
+        loanPeriod: loanPeriodInput ? loanPeriodInput.value : '',
+        prefecture: prefectureSelect ? prefectureSelect.value : ''
     };
 
     sessionStorage.setItem('bankLoanFormData', JSON.stringify(formData));
@@ -45,13 +61,18 @@ function restoreFormDataFromSessionStorage() {
             const loanAmountInput = document.getElementById('loanAmount');
             const annualIncomeInput = document.getElementById('annualIncome');
             const loanPeriodInput = document.getElementById('loanPeriod');
+            const prefectureSelect = document.getElementById('prefectureSelect');
 
             // 金融機関名を先に復元
             if (bankName && formData.bankName) bankName.value = formData.bankName;
 
-            // 金融機関が復元されたら、支店オプションを生成
-            if (typeof updateBranchOptions === 'function') {
-                updateBranchOptions();
+            // 都道府県が復元されたら、支店オプションを生成
+            if (prefectureSelect && formData.prefecture) {
+                prefectureSelect.value = formData.prefecture;
+
+                if (typeof updateBranchOptions === 'function') {
+                    updateBranchOptions();
+                }
             }
 
             // その後で支店名を復元
@@ -70,6 +91,7 @@ function restoreFormDataFromSessionStorage() {
             if (loanPeriodInput && formData.loanPeriod) {
                 loanPeriodInput.value = formData.loanPeriod;
             }
+            updateBankAccountNumWarning();
         } catch (e) {
             console.error('フォームデータの復元に失敗しました:', e);
         }
@@ -162,6 +184,7 @@ function setupNumberFormatting() {
     const bankAccountType = document.querySelector('[name="bankAccountType"]');
     const bankAccountNum = document.querySelector('[name="bankAccountNum"]');
     const nameInput = document.querySelector('[name="name"]');
+    const prefectureSelect = document.getElementById('prefectureSelect');
 
     if (bankName) {
         bankName.addEventListener('change', function() {
@@ -175,8 +198,14 @@ function setupNumberFormatting() {
     if (bankAccountType) {
         bankAccountType.addEventListener('change', saveFormDataToSessionStorage);
     }
+    if (prefectureSelect) {
+        prefectureSelect.addEventListener('change', saveFormDataToSessionStorage);
+    }
     if (bankAccountNum) {
-        bankAccountNum.addEventListener('input', saveFormDataToSessionStorage);
+        bankAccountNum.addEventListener('input', function() {
+            saveFormDataToSessionStorage();
+            updateBankAccountNumWarning();
+        });
     }
     if (nameInput) {
         nameInput.addEventListener('input', saveFormDataToSessionStorage);
@@ -216,6 +245,7 @@ function validateFormBeforeSubmit(event) {
     const loanAmountInput = document.getElementById('loanAmount');
     const annualIncomeInput = document.getElementById('annualIncome');
     const loanPeriodInput = document.getElementById('loanPeriod');
+    const prefectureSelect = document.getElementById('prefectureSelect');
 
     // バリデーション結果格納用
     let errorMessages = [];
@@ -223,6 +253,10 @@ function validateFormBeforeSubmit(event) {
     // 各フィールドのバリデーション
     if (!bankName || !bankName.value || bankName.value.trim() === '') {
         errorMessages.push('金融機関名を選択してください');
+    }
+
+    if (!prefectureSelect || !prefectureSelect.value || prefectureSelect.value.trim() === '') {
+        errorMessages.push('都道府県を選択してください');
     }
 
     if (!branchName || !branchName.value || branchName.value.trim() === '') {
@@ -322,6 +356,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('loanAmount')) {
         restoreFormDataFromSessionStorage();
         setupNumberFormatting();
+        updateBankAccountNumWarning();
     }
 
     // 確認画面の場合は既存の処理を継続

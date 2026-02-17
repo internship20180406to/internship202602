@@ -126,6 +126,10 @@
         #branchNameContainer.show p {
             margin: 0;
         }
+        .warning-text {
+            color: #b36b00;
+            font-size: 12px;
+        }
 
     </style>
 </head>
@@ -137,18 +141,23 @@
             <h3>⚠️ 入力エラー</h3>
             <ul id="errorList"></ul>
         </div>
-        <p><label class="ml-1">金融機関名:<small class="text-danger ml-1 required-mark" data-required-for="bankNameSelect">※</small></label><br>
-            <select th:field="*{bankName}" id="bankNameSelect" class="form-control" onchange="updateBranchOptions()">
-                <option value="" disabled hidden>金融機関名を選択してください</option>
-                <option th:each="option : ${nameOptions}"
-                        th:value="${option}"
-                        th:text="${option}">選択肢
-                </option>
+        <p><label class="ml-1">金融機関名:</label><br>
+            <input type="text" id="bankNameSelect" th:field="*{bankName}" class="form-control" value="かわらそば銀行" readonly/></p>
+        <p><label class="ml-1">都道府県:<small class="text-danger ml-1 required-mark" data-required-for="prefectureSelect">※</small></label><br>
+            <select id="prefectureSelect" class="form-control">
+                <option value="" disabled hidden>都道府県を選択してください</option>
+                <option value="福岡県">福岡県</option>
+                <option value="佐賀県">佐賀県</option>
+                <option value="長崎県">長崎県</option>
+                <option value="熊本県">熊本県</option>
+                <option value="大分県">大分県</option>
+                <option value="宮崎県">宮崎県</option>
+                <option value="鹿児島県">鹿児島県</option>
             </select></p>
         <div id="branchNameContainer">
             <p><label class="ml-1">支店名:<small class="text-danger ml-1 required-mark" data-required-for="branchNameSelect">※</small></label><br>
                 <select th:field="*{branchName}" id="branchNameSelect" class="form-control">
-                    <option value="" disabled hidden>支店を選択してください</option>
+                    <option value="" disabled hidden>支店名を選択してください</option>
                 </select></p>
         </div>
         <p><label class="ml-1">口座種別:<small class="text-danger ml-1 required-mark" data-required-for="bankAccountTypeSelect">※</small></label><br>
@@ -158,7 +167,9 @@
                 <option value="当座">当座</option>
             </select></p>
         <p><label class="ml-1">口座番号:<small class="text-danger ml-1 required-mark" data-required-for="bankAccountNum">※</small></label><br>
-            <input type="number" id="bankAccountNum" th:field="*{bankAccountNum}" class="form-control" placeholder="1234567"/></p>
+            <input type="number" id="bankAccountNum" th:field="*{bankAccountNum}" class="form-control" placeholder="1234567"/>
+            <span id="bankAccountNumWarning" class="warning-text" style="display:none;">口座番号が7桁ではありません（警告）</span>
+        </p>
         <p><label class="ml-1">申込者名:<small class="text-danger ml-1 required-mark" data-required-for="applicantName">※</small></label><br>
             <input type="text" id="applicantName" th:field="*{name}" class="form-control" placeholder="山田 太郎"/></p>
         <p><label class="ml-1">借入金額(円):<small class="text-danger ml-1 required-mark" data-required-for="loanAmount">※</small></label><br>
@@ -183,12 +194,12 @@
 
     // 金融機関変更時に支店オプションを更新
     function updateBranchOptions() {
-        const bankNameSelect = document.getElementById('bankNameSelect');
+        const prefectureSelect = document.getElementById('prefectureSelect');
         const branchNameSelect = document.getElementById('branchNameSelect');
         const branchNameContainer = document.getElementById('branchNameContainer');
-        const selectedBank = bankNameSelect.value;
+        const selectedPrefecture = prefectureSelect ? prefectureSelect.value : '';
 
-        if (selectedBank) {
+        if (selectedPrefecture) {
             branchNameContainer.classList.add('show');
         } else {
             branchNameContainer.classList.remove('show');
@@ -196,20 +207,17 @@
             return;
         }
 
-        // 支店選択肢をすべてクリア
         branchNameSelect.innerHTML = '';
 
-        // 最初のoption要素（「支店を選択してください」）を作成して追加
         const placeholderOption = document.createElement('option');
         placeholderOption.value = '';
-        placeholderOption.textContent = '支店を選択してください';
+        placeholderOption.textContent = '支店名を選択してください';
         placeholderOption.disabled = true;
         placeholderOption.hidden = true;
         branchNameSelect.appendChild(placeholderOption);
 
-        // 選択された金融機関の支店を追加
-        if (selectedBank && branchOptions && branchOptions[selectedBank]) {
-            const branches = branchOptions[selectedBank];
+        if (branchOptions && branchOptions[selectedPrefecture]) {
+            const branches = branchOptions[selectedPrefecture];
             if (Array.isArray(branches)) {
                 branches.forEach(function(branch) {
                     const option = document.createElement('option');
@@ -220,7 +228,6 @@
             }
         }
 
-        // 支店選択肢を完全にリセット（「支店を選択してください」を表示）
         branchNameSelect.value = '';
         updateRequiredMarks();
     }
@@ -247,7 +254,7 @@
 
     function attachRequiredMarkListeners() {
         const targets = [
-            'bankNameSelect',
+            'prefectureSelect',
             'branchNameSelect',
             'bankAccountTypeSelect',
             'bankAccountNum',
@@ -268,40 +275,37 @@
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function() {
-            // ページリロード後にselect要素が最初の選択肢を選んでいないか確認
-            const bankNameSelect = document.getElementById('bankNameSelect');
             const bankAccountTypeSelect = document.querySelector('[name="bankAccountType"]');
+            const prefectureSelect = document.getElementById('prefectureSelect');
 
-            // セッションストレージにデータがない場合、select要素を初期化
             if (!sessionStorage.getItem('bankLoanFormData')) {
-                // 金融機関名を空に設定
-                if (bankNameSelect && bankNameSelect.value !== '') {
-                    bankNameSelect.value = '';
-                }
-                // 口座種別を空に設定
                 if (bankAccountTypeSelect && bankAccountTypeSelect.value !== '') {
                     bankAccountTypeSelect.value = '';
+                }
+                if (prefectureSelect) {
+                    prefectureSelect.value = '';
                 }
                 updateBranchOptions();
             }
 
-            // クリアボタンのイベントリスナーを設定
             const clearButton = document.getElementById('clearButton');
             if (clearButton) {
                 clearButton.addEventListener('click', function() {
-                    // フォームがリセットされた後に、select要素の値を明示的に空に設定
                     setTimeout(function() {
-                        document.getElementById('bankNameSelect').value = '';
                         document.getElementById('branchNameSelect').value = '';
                         document.querySelector('[name="bankAccountType"]').value = '';
+                        const prefSelect = document.getElementById('prefectureSelect');
+                        if (prefSelect) {
+                            prefSelect.value = '';
+                        }
 
-                        // 支店オプションもリセット
                         updateBranchOptions();
+                        if (typeof updateBankAccountNumWarning === 'function') {
+                            updateBankAccountNumWarning();
+                        }
 
-                        // セッションストレージもクリア
                         sessionStorage.removeItem('bankLoanFormData');
 
-                        // エラーメッセージを消す
                         const errorMessageContainer = document.getElementById('errorMessageContainer');
                         if (errorMessageContainer) {
                             errorMessageContainer.classList.remove('show');
@@ -313,40 +317,37 @@
             updateRequiredMarks();
         });
     } else {
-        // スクリプトが遅延実行される場合
-        // ページリロード後にselect要素が最初の選択肢を選んでいないか確認
-        const bankNameSelect = document.getElementById('bankNameSelect');
         const bankAccountTypeSelect = document.querySelector('[name="bankAccountType"]');
+        const prefectureSelect = document.getElementById('prefectureSelect');
 
         if (!sessionStorage.getItem('bankLoanFormData')) {
-            // 金融機関名を空に設定
-            if (bankNameSelect && bankNameSelect.value !== '') {
-                bankNameSelect.value = '';
-            }
-            // 口座種別を空に設定
             if (bankAccountTypeSelect && bankAccountTypeSelect.value !== '') {
                 bankAccountTypeSelect.value = '';
+            }
+            if (prefectureSelect) {
+                prefectureSelect.value = '';
             }
             updateBranchOptions();
         }
 
-        // クリアボタンのイベントリスナーを設定
         const clearButton = document.getElementById('clearButton');
         if (clearButton) {
             clearButton.addEventListener('click', function() {
-                // フォームがリセットされた後に、select要素の値を明示的に空に設定
                 setTimeout(function() {
-                    document.getElementById('bankNameSelect').value = '';
                     document.getElementById('branchNameSelect').value = '';
                     document.querySelector('[name="bankAccountType"]').value = '';
+                    const prefSelect = document.getElementById('prefectureSelect');
+                    if (prefSelect) {
+                        prefSelect.value = '';
+                    }
 
-                    // 支店オプションもリセット
                     updateBranchOptions();
+                    if (typeof updateBankAccountNumWarning === 'function') {
+                        updateBankAccountNumWarning();
+                    }
 
-                    // セッションストレージもクリア
                     sessionStorage.removeItem('bankLoanFormData');
 
-                    // エラーメッセージを消す
                     const errorMessageContainer = document.getElementById('errorMessageContainer');
                     if (errorMessageContainer) {
                         errorMessageContainer.classList.remove('show');
