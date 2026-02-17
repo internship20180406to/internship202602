@@ -29,7 +29,7 @@
             <span th:text="*{fundName}" class="form-control"></span></p>
 
         <p><label class="ml-1">購入金額:</label><br>
-            <span th:text="*{money}" class="form-control"></span>円</p>
+            <span class="form-control"><span th:text="${#numbers.formatInteger(investmentTrustApplication.money, 1, 'COMMA')}"></span>円</span></p>
 
         <input type="hidden" name="bankName" th:value="*{bankName}"/>
         <input type="hidden" name="branchName" th:value="*{branchName}"/>

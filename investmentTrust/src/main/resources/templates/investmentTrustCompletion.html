@@ -14,27 +14,27 @@
         以下の内容で注文が完了しました。
     </p>
 
-    <div class="confirmation-section">
-        <p><label class="ml-1">金融機関名:</label><br>
-            <span th:text="${investmentTrustApplication.bankName}" class="form-control">しゅら銀行</span></p>
+    <div class="confirmation-section" style="text-align: center;">
+        <p><label>金融機関名:</label><br>
+            <span th:text="${investmentTrustApplication.bankName}"></span></p>
 
-        <p><label class="ml-1">支店名:</label><br>
-            <span th:text="${investmentTrustApplication.branchName}" class="form-control">鹿児島支店</span></p>
+        <p><label>支店名:</label><br>
+            <span th:text="${investmentTrustApplication.branchName}"></span></p>
 
-        <p><label class="ml-1">科目名:</label><br>
-            <span th:text="${investmentTrustApplication.bankAccountType}" class="form-control">普通預金</span></p>
+        <p><label>科目名:</label><br>
+            <span th:text="${investmentTrustApplication.bankAccountType}"></span></p>
 
-        <p><label class="ml-1">口座番号:</label><br>
-            <span th:text="${investmentTrustApplication.bankAccountNum}" class="form-control">1234567</span></p>
+        <p><label>口座番号:</label><br>
+            <span th:text="${investmentTrustApplication.bankAccountNum}"></span></p>
 
-        <p><label class="ml-1">購入者名:</label><br>
-            <span th:text="${investmentTrustApplication.name}" class="form-control">山田太郎</span></p>
+        <p><label>購入者名:</label><br>
+            <span th:text="${investmentTrustApplication.name}"></span></p>
 
-        <p><label class="ml-1">銘柄選択:</label><br>
-            <span th:text="${investmentTrustApplication.fundName}" class="form-control">Google</span></p>
+        <p><label>銘柄選択:</label><br>
+            <span th:text="${investmentTrustApplication.fundName}"></span></p>
 
-        <p><label class="ml-1">購入金額:</label><br>
-            <span th:text="${investmentTrustApplication.money}" class="form-control">50000</span>円</p>
+        <p><label>購入金額:</label><br>
+            <span><span th:text="${#numbers.formatInteger(investmentTrustApplication.money, 1, 'COMMA')}"></span>円</span></p>
     </div>
 
     <p style="text-align: center;">

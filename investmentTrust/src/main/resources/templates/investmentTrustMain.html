@@ -12,44 +12,81 @@
 
         <p><label class="ml-1">金融機関名: <small class="text-danger ml-1">※</small></label><br>
             <select th:field="*{bankName}" class="form-control">
+                <option value="">-- 選択してください --</option>
                 <option th:each="option : ${bankNameOptions}"
                         th:value="${option}"
                         th:text="${option}">選択肢
                 </option>
-            </select></p>
+            </select>
+            <span th:if="${#fields.hasErrors('bankName')}"
+                  th:errors="*{bankName}"
+                  class="error-message"></span>
+        </p>
 
         <p><label class="ml-1">支店名: <small class="text-danger ml-1">※</small></label><br>
             <select th:field="*{branchName}" class="form-control">
+                <option value="">-- 選択してください --</option>
                 <option th:each="option : ${branchNameOptions}"
                         th:value="${option}"
                         th:text="${option}">選択肢
                 </option>
-            </select></p>
+            </select>
+            <span th:if="${#fields.hasErrors('branchName')}"
+                  th:errors="*{branchName}"
+                  class="error-message"></span>
+        </p>
 
         <p><label class="ml-1">科目名: <small class="text-danger ml-1">※</small></label><br>
             <select th:field="*{bankAccountType}" class="form-control">
+                <option value="">-- 選択してください --</option>
                 <option th:each="option : ${bankAccountTypeOptions}"
                         th:value="${option}"
                         th:text="${option}">選択肢
                 </option>
-            </select></p>
+            </select>
+            <span th:if="${#fields.hasErrors('bankAccountType')}"
+                  th:errors="*{bankAccountType}"
+                  class="error-message"></span>
+        </p>
 
         <p><label class="ml-1">口座番号: <small class="text-danger ml-1">※</small></label><br>
-            <input type="number" th:field="*{bankAccountNum}" class="form-control" placeholder="1234567"/></p>
+            <input type="text" th:field="*{bankAccountNum}" class="form-control" placeholder="1234567" pattern="[0-9]{7}" maxlength="7" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'')"/>
+            <span th:if="${#fields.hasErrors('bankAccountNum')}"
+                  th:errors="*{bankAccountNum}"
+                  class="error-message"></span>
+        </p>
 
         <p><label class="ml-1">購入者名: <small class="text-danger ml-1">※</small></label><br>
-            <input type="text" th:field="*{name}" class="form-control" placeholder="山田太郎"/></p>
+            <input type="text" th:field="*{name}" class="form-control" placeholder="山田太郎"/>
+            <span th:if="${#fields.hasErrors('name')}"
+                  th:errors="*{name}"
+                  class="error-message"></span>
+        </p>
 
         <p><label class="ml-1">銘柄選択: <small class="text-danger ml-1">※</small></label><br>
             <select th:field="*{fundName}" class="form-control">
+                <option value="">-- 選択してください --</option>
                 <option th:each="option : ${fundNameOptions}"
                         th:value="${option}"
                         th:text="${option}">選択肢
                 </option>
-            </select></p>
+            </select>
+            <span th:if="${#fields.hasErrors('fundName')}"
+                  th:errors="*{fundName}"
+                  class="error-message"></span>
+        </p>
 
         <p><label class="ml-1">購入金額: <small class="text-danger ml-1">※</small></label><br>
-            <input type="number" th:field="*{money}" class="form-control" placeholder="10000"/></p>
+            <span style="display: flex; align-items: center; gap: 8px;">
+                <input type="text" id="moneyDisplay" class="form-control" placeholder="10,000" inputmode="numeric"
+                       th:value="${investmentTrustApplication.money != null ? #numbers.formatInteger(investmentTrustApplication.money, 1, 'COMMA') : ''}"/>
+                <input type="hidden" th:field="*{money}" id="moneyHidden"/>
+                <span>円</span>
+            </span>
+            <span th:if="${#fields.hasErrors('money')}"
+                  th:errors="*{money}"
+                  class="error-message"></span>
+        </p>
 
         <p style="text-align: center;">
             <input type="submit" value="確認" class="form-control-button form-confirmation-button"/>
@@ -57,5 +94,26 @@
         </p>
     </form>
 </div>
+<script>
+    const moneyDisplay = document.getElementById('moneyDisplay');
+    const moneyHidden = document.getElementById('moneyHidden');
+
+    moneyDisplay.addEventListener('input', function () {
+        const raw = this.value.replace(/[^0-9]/g, '');
+        moneyHidden.value = raw;
+        if (raw) {
+            this.value = Number(raw).toLocaleString();
+        } else {
+            this.value = '';
+        }
+    });
+
+    document.querySelector('input[type="reset"]').addEventListener('click', function () {
+        setTimeout(function () {
+            moneyDisplay.value = '';
+            moneyHidden.value = '';
+        }, 0);
+    });
+</script>
 </body>
 </html>
