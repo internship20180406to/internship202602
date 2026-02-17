@@ -137,7 +137,7 @@
             <h3>⚠️ 入力エラー</h3>
             <ul id="errorList"></ul>
         </div>
-        <p><label class="ml-1">金融機関名:<small class="text-danger ml-1">※</small></label><br>
+        <p><label class="ml-1">金融機関名:<small class="text-danger ml-1 required-mark" data-required-for="bankNameSelect">※</small></label><br>
             <select th:field="*{bankName}" id="bankNameSelect" class="form-control" onchange="updateBranchOptions()">
                 <option value="" disabled hidden>金融機関名を選択してください</option>
                 <option th:each="option : ${nameOptions}"
@@ -146,26 +146,26 @@
                 </option>
             </select></p>
         <div id="branchNameContainer">
-            <p><label class="ml-1">支店名:<small class="text-danger ml-1">※</small></label><br>
+            <p><label class="ml-1">支店名:<small class="text-danger ml-1 required-mark" data-required-for="branchNameSelect">※</small></label><br>
                 <select th:field="*{branchName}" id="branchNameSelect" class="form-control">
                     <option value="" disabled hidden>支店を選択してください</option>
                 </select></p>
         </div>
-        <p><label class="ml-1">口座種別:<small class="text-danger ml-1">※</small></label><br>
-            <select th:field="*{bankAccountType}" class="form-control">
+        <p><label class="ml-1">口座種別:<small class="text-danger ml-1 required-mark" data-required-for="bankAccountTypeSelect">※</small></label><br>
+            <select th:field="*{bankAccountType}" id="bankAccountTypeSelect" class="form-control">
                 <option value="" disabled hidden>口座種別を選択してください</option>
                 <option value="普通">普通</option>
                 <option value="当座">当座</option>
             </select></p>
-        <p><label class="ml-1">口座番号:<small class="text-danger ml-1">※</small></label><br>
-            <input type="number" th:field="*{bankAccountNum}" class="form-control" placeholder="1234567"/></p>
-        <p><label class="ml-1">申込者名:<small class="text-danger ml-1">※</small></label><br>
-            <input type="text" th:field="*{name}" class="form-control" placeholder="山田 太郎"/></p>
-        <p><label class="ml-1">借入金額(円):<small class="text-danger ml-1">※</small></label><br>
+        <p><label class="ml-1">口座番号:<small class="text-danger ml-1 required-mark" data-required-for="bankAccountNum">※</small></label><br>
+            <input type="number" id="bankAccountNum" th:field="*{bankAccountNum}" class="form-control" placeholder="1234567"/></p>
+        <p><label class="ml-1">申込者名:<small class="text-danger ml-1 required-mark" data-required-for="applicantName">※</small></label><br>
+            <input type="text" id="applicantName" th:field="*{name}" class="form-control" placeholder="山田 太郎"/></p>
+        <p><label class="ml-1">借入金額(円):<small class="text-danger ml-1 required-mark" data-required-for="loanAmount">※</small></label><br>
             <input type="text" id="loanAmount" th:field="*{loanAmount}" class="form-control" placeholder="3000000"/></p>
-        <p><label class="ml-1">借入年収(円):<small class="text-danger ml-1">※</small></label><br>
+        <p><label class="ml-1">借入年収(円):<small class="text-danger ml-1 required-mark" data-required-for="annualIncome">※</small></label><br>
             <input type="text" id="annualIncome" th:field="*{annualIncome}" class="form-control" placeholder="5000000"/></p>
-        <p><label class="ml-1">借入期間(年):<small class="text-danger ml-1">※</small></label><br>
+        <p><label class="ml-1">借入期間(年):<small class="text-danger ml-1 required-mark" data-required-for="loanPeriod">※</small></label><br>
             <input type="number" id="loanPeriod" th:field="*{loanPeriod}" class="form-control" placeholder="20" min="1" max="50"/></p>
         <p><label class="ml-1">金利(%): </label><br>
             <span id="displayInterestRate" style="font-size: 18px; font-weight: bold; color: #2185D0;">---</span></p>
@@ -188,13 +188,11 @@
         const branchNameContainer = document.getElementById('branchNameContainer');
         const selectedBank = bankNameSelect.value;
 
-        // 金融機関が選択されているかチェック
         if (selectedBank) {
-            // 支店名コンテナを表示（showクラスを追加してアニメーション効果を適用）
             branchNameContainer.classList.add('show');
         } else {
-            // 金融機関が未選択の場合は支店名コンテナを非表示
             branchNameContainer.classList.remove('show');
+            updateRequiredMarks();
             return;
         }
 
@@ -224,10 +222,50 @@
 
         // 支店選択肢を完全にリセット（「支店を選択してください」を表示）
         branchNameSelect.value = '';
+        updateRequiredMarks();
     }
 
-    // ページ読み込み時に初期支店を設定（最初の読み込み時のみ）
-    // 外部スクリプト読み込み前に実行
+    function updateRequiredMarks() {
+        const marks = document.querySelectorAll('.required-mark');
+        marks.forEach(function(mark) {
+            const targetId = mark.getAttribute('data-required-for');
+            const target = document.getElementById(targetId);
+            if (!target) {
+                return;
+            }
+            if (targetId === 'branchNameSelect') {
+                const container = document.getElementById('branchNameContainer');
+                if (container && !container.classList.contains('show')) {
+                    mark.style.display = 'none';
+                    return;
+                }
+            }
+            const value = (target.value || '').trim();
+            mark.style.display = value ? 'none' : 'inline';
+        });
+    }
+
+    function attachRequiredMarkListeners() {
+        const targets = [
+            'bankNameSelect',
+            'branchNameSelect',
+            'bankAccountTypeSelect',
+            'bankAccountNum',
+            'applicantName',
+            'loanAmount',
+            'annualIncome',
+            'loanPeriod'
+        ];
+        targets.forEach(function(id) {
+            const el = document.getElementById(id);
+            if (!el) {
+                return;
+            }
+            const eventName = el.tagName.toLowerCase() === 'select' ? 'change' : 'input';
+            el.addEventListener(eventName, updateRequiredMarks);
+        });
+    }
+
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function() {
             // ページリロード後にselect要素が最初の選択肢を選んでいないか確認
@@ -271,6 +309,8 @@
                     }, 0);
                 });
             }
+            attachRequiredMarkListeners();
+            updateRequiredMarks();
         });
     } else {
         // スクリプトが遅延実行される場合
@@ -314,9 +354,12 @@
                 }, 0);
             });
         }
+        attachRequiredMarkListeners();
+        updateRequiredMarks();
     }
 </script>
 <script src="/js/bankLoanConfirmation.js"></script>
 </body>
 
 </html>
+
