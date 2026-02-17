@@ -1,0 +1,82 @@
+/* === フォーム入力コントロール === */
+
+.form-control {
+    width: 100%;
+    padding: 14px 16px;
+    margin: 5px 0;
+    box-sizing: border-box;
+    background: #FFFFFF;
+    border: 3px solid #E5E7EB;
+    border-radius: 16px;
+    font-family: 'Noto Sans Thai', 'Noto Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #000000;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.form-control::placeholder {
+    color: #888888;
+}
+
+/* === セクション === */
+
+.form-section {
+    background-color: rgba(245, 245, 245, 0.37);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 16px 20px;
+}
+
+.form-section-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0 0 12px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #4579FF;
+    color: #000000;
+}
+
+/* === ファンド情報カード === */
+
+.fund-info-card {
+    background-color: #FBFBFB;
+    border: 1px solid #E5E5E5;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin: 8px 0 16px 0;
+}
+
+.fund-info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #E8E8E8;
+}
+
+.fund-info-row:last-child {
+    border-bottom: none;
+}
+
+.fund-info-label {
+    color: #888888;
+    font-family: 'Noto Sans JP', 'Noto Sans', sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.fund-info-value {
+    font-family: 'Noto Sans', sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    color: #000000;
+}
+
+/* === 購入金額の入力行 === */
+
+.money-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}

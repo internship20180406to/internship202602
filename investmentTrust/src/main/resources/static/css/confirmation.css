@@ -1,0 +1,48 @@
+/* === 確認・完了画面テーブル === */
+
+.confirmation-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.confirmation-table th,
+.confirmation-table td {
+    border: 1px solid #ddd;
+    padding: 12px 16px;
+    text-align: left;
+}
+
+.confirmation-table th {
+    background-color: #f8f9fa;
+    width: 40%;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.confirmation-table td {
+    width: 60%;
+}
+
+/* === テーブル囲み === */
+
+.table-wrapper {
+    margin: 0 30px;
+}
+
+/* === 案内メッセージ === */
+
+.confirmation-message {
+    text-align: center;
+    margin: 24px 20px 16px;
+    font-weight: bold;
+    font-size: 1.0em;
+    color: #000;
+}
+
+.completion-message {
+    text-align: center;
+    color: green;
+    font-weight: bold;
+    font-size: 1.2em;
+}

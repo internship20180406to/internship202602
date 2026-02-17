@@ -1,0 +1,107 @@
+/* === 共通レイアウト・ベーススタイル === */
+
+body {
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    justify-content: center;
+    align-items: center;
+    min-height: 85vh;
+    overflow: auto;
+    font-family: 'Noto Sans', 'Noto Sans JP', sans-serif;
+}
+
+.content {
+    background-color: #ffffff;
+    width: 430px;
+    max-width: 95%;
+    padding: 0 0 20px 0;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    min-height: 50vh;
+    overflow: auto;
+}
+
+h1 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #4579FF;
+    text-align: center;
+    margin: 0;
+    padding: 20px 0;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+/* === ラベル・テキスト === */
+
+label {
+    font-family: 'Noto Sans Thai', 'Noto Sans', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: #000000;
+}
+
+.text-danger {
+    color: red;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.9em;
+    display: block;
+    margin-top: 5px;
+}
+
+/* === ボタン === */
+
+.form-control-button {
+    padding: 16px 40px;
+    margin-top: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 20px;
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 16px;
+}
+
+.form-confirmation-button {
+    color: #FFFFFF;
+    background-color: #00AAFF;
+    font-weight: 600;
+}
+
+.form-confirmation-button:hover {
+    background-color: #0095e0;
+}
+
+.form-clear-button {
+    color: #000000;
+    background-color: #D5D5D5;
+    font-weight: 400;
+}
+
+.form-clear-button:hover {
+    background-color: #C0C0C0;
+}
+
+/* === ボタンエリア === */
+
+.button-area {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 24px;
+    gap: 16px;
+}
+
+.button-area-wide {
+    gap: 30px;
+}
+
+.button-wide {
+    width: 300px;
+}
