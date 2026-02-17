@@ -32,7 +32,7 @@ public class InvestmentTrustController {
                 "名古屋支店"
         ));
 
-        model.addAttribute("accountTypeOptions", Arrays.asList(
+        model.addAttribute("bankAccountTypeOptions", Arrays.asList(
                 "普通預金",
                 "当座預金",
                 "貯蓄預金",
@@ -51,7 +51,6 @@ public class InvestmentTrustController {
 
     @PostMapping("/investmentTrustConfirmation")
     public String confirmation(@ModelAttribute InvestmentTrustForm investmentTrustForm, Model model) {
-        investmentTrustForm.setBankName("ながれぼし銀行");
         model.addAttribute("bankName", investmentTrustForm.getBankName());
         model.addAttribute("bankAccountNum", investmentTrustForm.getBankAccountNum());
         model.addAttribute("investmentTrustApplication", investmentTrustForm);
@@ -61,6 +60,7 @@ public class InvestmentTrustController {
     @PostMapping("/investmentTrustCompletion")
     public String completion(@ModelAttribute InvestmentTrustForm investmentTrustForm, Model model) {
         orderInvestmentTrustService.orderInvestmentTrust(investmentTrustForm);
+        model.addAttribute("investmentTrustApplication", investmentTrustForm);
         return "investmentTrustCompletion";
     }
 

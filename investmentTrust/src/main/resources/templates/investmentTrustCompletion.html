@@ -1,12 +1,45 @@
 <!doctype html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>注文完了画面</title>
+    <title>投資信託注文完了画面</title>
+    <link rel="stylesheet" th:href="@{/css/investmentTrustMain.css}">
 </head>
 <body>
-<h1>注文完了</h1>
-<p><input type="button" value="注文に戻る" onclick="window.location='/investmentTrust';"/></p>
-</body>
+<div class="content">
+    <h1>投資信託注文完了</h1>
 
+    <p style="text-align: center; color: green; font-weight: bold; font-size: 1.2em;">
+        ご注文ありがとうございました。<br>
+        以下の内容で注文が完了しました。
+    </p>
+
+    <div class="confirmation-section">
+        <p><label class="ml-1">金融機関名:</label><br>
+            <span th:text="${investmentTrustApplication.bankName}" class="form-control">しゅら銀行</span></p>
+
+        <p><label class="ml-1">支店名:</label><br>
+            <span th:text="${investmentTrustApplication.branchName}" class="form-control">鹿児島支店</span></p>
+
+        <p><label class="ml-1">科目名:</label><br>
+            <span th:text="${investmentTrustApplication.bankAccountType}" class="form-control">普通預金</span></p>
+
+        <p><label class="ml-1">口座番号:</label><br>
+            <span th:text="${investmentTrustApplication.bankAccountNum}" class="form-control">1234567</span></p>
+
+        <p><label class="ml-1">購入者名:</label><br>
+            <span th:text="${investmentTrustApplication.name}" class="form-control">山田太郎</span></p>
+
+        <p><label class="ml-1">銘柄選択:</label><br>
+            <span th:text="${investmentTrustApplication.fundName}" class="form-control">Google</span></p>
+
+        <p><label class="ml-1">購入金額:</label><br>
+            <span th:text="${investmentTrustApplication.money}" class="form-control">50000</span>円</p>
+    </div>
+
+    <p style="text-align: center;">
+        <input type="button" value="新規注文" class="form-control-button form-confirmation-button" onclick="window.location='/investmentTrust';"/>
+    </p>
+</div>
+</body>
 </html>

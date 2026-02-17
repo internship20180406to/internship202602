@@ -11,8 +11,19 @@ public class InvestmentTrustRepository {
     JdbcTemplate jdbcTemplate;
 
     public void create(InvestmentTrustForm investmentTrustForm) {
-        String sql = "INSERT INTO investmentTrust_table(bankName, bankAccountNum) VALUES(?, ?)";
-        jdbcTemplate.update(sql, investmentTrustForm.getBankName(), investmentTrustForm.getBankAccountNum());
-    }
+        String sql = "INSERT INTO investmentTrust_table(" +
+                "bankName, branchName, bankAccountType, bankAccountNum, " +
+                "name, fundName, money) " +
+                "VALUES(?, ?, ?, ?, ?, ?, ?)";
 
+        jdbcTemplate.update(sql,
+                investmentTrustForm.getBankName(),
+                investmentTrustForm.getBranchName(),
+                investmentTrustForm.getBankAccountType(),
+                investmentTrustForm.getBankAccountNum(),
+                investmentTrustForm.getName(),
+                investmentTrustForm.getFundName(),
+                investmentTrustForm.getMoney()
+        );
+    }
 }

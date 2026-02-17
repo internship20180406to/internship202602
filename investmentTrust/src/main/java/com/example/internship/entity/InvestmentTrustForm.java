@@ -14,13 +14,13 @@ public class InvestmentTrustForm {
     @NonNull
     private String branchName;      // 支店名
     @NonNull
-    private String accountType;     // 科目名
+    private String bankAccountType;     // 科目名
     @NonNull
-    private String bankAccountNum;  // 口座番号
+    private Integer bankAccountNum;  // 口座番号
     @NonNull
-    private String purchaserName;   // 購入者名
+    private String name;   // 購入者名
     @NonNull
     private String fundName;        // 銘柄選択
     @NonNull
-    private Integer purchaseAmount; // 購入金額
+    private Integer money; // 購入金額
 }

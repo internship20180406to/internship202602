@@ -17,32 +17,32 @@
             <span th:text="*{branchName}" class="form-control"></span></p>
 
         <p><label class="ml-1">科目名:</label><br>
-            <span th:text="*{accountType}" class="form-control"></span></p>
+            <span th:text="*{bankAccountType}" class="form-control"></span></p>
 
         <p><label class="ml-1">口座番号:</label><br>
             <span th:text="*{bankAccountNum}" class="form-control"></span></p>
 
         <p><label class="ml-1">購入者名:</label><br>
-            <span th:text="*{purchaserName}" class="form-control"></span></p>
+            <span th:text="*{name}" class="form-control"></span></p>
 
         <p><label class="ml-1">銘柄選択:</label><br>
             <span th:text="*{fundName}" class="form-control"></span></p>
 
         <p><label class="ml-1">購入金額:</label><br>
-            <span th:text="*{purchaseAmount}" class="form-control"></span>円</p>
+            <span th:text="*{money}" class="form-control"></span>円</p>
 
         <input type="hidden" name="bankName" th:value="*{bankName}"/>
         <input type="hidden" name="branchName" th:value="*{branchName}"/>
-        <input type="hidden" name="accountType" th:value="*{accountType}"/>
+        <input type="hidden" name="bankAccountType" th:value="*{bankAccountType}"/>
         <input type="hidden" name="bankAccountNum" th:value="*{bankAccountNum}"/>
-        <input type="hidden" name="purchaserName" th:value="*{purchaserName}"/>
+        <input type="hidden" name="name" th:value="*{name}"/>
         <input type="hidden" name="fundName" th:value="*{fundName}"/>
-        <input type="hidden" name="purchaseAmount" th:value="*{purchaseAmount}"/>
+        <input type="hidden" name="money" th:value="*{money}"/>
 
-        <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
+        <p style="text-align: center; display: flex; justify-content: center; gap: 50px;">
             <input type="button" value="キャンセル" class="form-control-button form-clear-button" onclick="history.back()"/>
             <input type="submit" id="submit" value="申し込み" class="form-control-button form-confirmation-button"/>
-        </div>
+        </p>
     </form>
 </div>
 <script th:src="@{/js/investmentTrustConfirmation.js}"></script>
