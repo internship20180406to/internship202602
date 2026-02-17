@@ -11,7 +11,7 @@
     <form action="#" th:action="@{/investmentTrustConfirmation}" th:object="${investmentTrustApplication}" method="post">
 
         <p><label class="ml-1">金融機関名: <small class="text-danger ml-1">※</small></label><br>
-            <select th:field="*{bankName}" class="form-control">
+            <select th:field="*{bankName}" class="form-control" id="bankName">
                 <option value="">-- 選択してください --</option>
                 <option th:each="option : ${bankNameOptions}"
                         th:value="${option}"
@@ -24,12 +24,8 @@
         </p>
 
         <p><label class="ml-1">支店名: <small class="text-danger ml-1">※</small></label><br>
-            <select th:field="*{branchName}" class="form-control">
-                <option value="">-- 選択してください --</option>
-                <option th:each="option : ${branchNameOptions}"
-                        th:value="${option}"
-                        th:text="${option}">選択肢
-                </option>
+            <select th:field="*{branchName}" class="form-control" id="branchName">
+                <option value="">-- 金融機関を先に選択してください --</option>
             </select>
             <span th:if="${#fields.hasErrors('branchName')}"
                   th:errors="*{branchName}"
@@ -94,7 +90,39 @@
         </p>
     </form>
 </div>
-<script>
+<script th:inline="javascript">
+    // 支店名の連動
+    const bankBranchMap = /*[[${bankBranchMap}]]*/ {};
+    const bankNameSelect = document.getElementById('bankName');
+    const branchNameSelect = document.getElementById('branchName');
+    const selectedBranch = /*[[${investmentTrustApplication.branchName}]]*/ '';
+
+    function updateBranches() {
+        const bank = bankNameSelect.value;
+        branchNameSelect.innerHTML = '';
+        if (!bank) {
+            branchNameSelect.innerHTML = '<option value="">-- 金融機関を先に選択してください --</option>';
+            return;
+        }
+        branchNameSelect.innerHTML = '<option value="">-- 選択してください --</option>';
+        const branches = bankBranchMap[bank] || [];
+        branches.forEach(function (branch) {
+            const option = document.createElement('option');
+            option.value = branch;
+            option.text = branch;
+            if (branch === selectedBranch) {
+                option.selected = true;
+            }
+            branchNameSelect.appendChild(option);
+        });
+    }
+
+    bankNameSelect.addEventListener('change', function () {
+        updateBranches();
+    });
+
+    updateBranches();
+
     const moneyDisplay = document.getElementById('moneyDisplay');
     const moneyHidden = document.getElementById('moneyHidden');
 
@@ -112,6 +140,8 @@
         setTimeout(function () {
             moneyDisplay.value = '';
             moneyHidden.value = '';
+            bankNameSelect.value = '';
+            updateBranches();
         }, 0);
     });
 </script>

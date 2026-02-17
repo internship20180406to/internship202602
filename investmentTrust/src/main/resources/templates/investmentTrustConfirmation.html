@@ -10,26 +10,36 @@
     <h1>投資信託注文確認画面</h1>
     <form action="#" th:action="@{/investmentTrustCompletion}" th:object="${investmentTrustApplication}" method="post">
 
-        <p><label class="ml-1">金融機関名:</label><br>
-            <span th:text="*{bankName}" class="form-control"></span></p>
-
-        <p><label class="ml-1">支店名:</label><br>
-            <span th:text="*{branchName}" class="form-control"></span></p>
-
-        <p><label class="ml-1">科目名:</label><br>
-            <span th:text="*{bankAccountType}" class="form-control"></span></p>
-
-        <p><label class="ml-1">口座番号:</label><br>
-            <span th:text="*{bankAccountNum}" class="form-control"></span></p>
-
-        <p><label class="ml-1">購入者名:</label><br>
-            <span th:text="*{name}" class="form-control"></span></p>
-
-        <p><label class="ml-1">銘柄選択:</label><br>
-            <span th:text="*{fundName}" class="form-control"></span></p>
-
-        <p><label class="ml-1">購入金額:</label><br>
-            <span class="form-control"><span th:text="${#numbers.formatInteger(investmentTrustApplication.money, 1, 'COMMA')}"></span>円</span></p>
+        <table class="confirmation-table">
+            <tr>
+                <th>金融機関名</th>
+                <td th:text="*{bankName}"></td>
+            </tr>
+            <tr>
+                <th>支店名</th>
+                <td th:text="*{branchName}"></td>
+            </tr>
+            <tr>
+                <th>科目名</th>
+                <td th:text="*{bankAccountType}"></td>
+            </tr>
+            <tr>
+                <th>口座番号</th>
+                <td th:text="*{bankAccountNum}"></td>
+            </tr>
+            <tr>
+                <th>購入者名</th>
+                <td th:text="*{name}"></td>
+            </tr>
+            <tr>
+                <th>銘柄選択</th>
+                <td th:text="*{fundName}"></td>
+            </tr>
+            <tr>
+                <th>購入金額</th>
+                <td><span th:text="${#numbers.formatInteger(investmentTrustApplication.money, 1, 'COMMA')}"></span>円</td>
+            </tr>
+        </table>
 
         <input type="hidden" name="bankName" th:value="*{bankName}"/>
         <input type="hidden" name="branchName" th:value="*{branchName}"/>

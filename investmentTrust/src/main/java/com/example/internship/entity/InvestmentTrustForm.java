@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -32,5 +34,7 @@ public class InvestmentTrustForm {
     @NotNull(message = "購入金額を入力してください")
     @Min(value = 1000, message = "購入金額は1,000円以上で入力してください")
     @Max(value = 100000000, message = "購入金額は1億円以下で入力してください")
-    private Integer money;
+    private Long money;
+
+    private LocalDateTime orderDateTime;
 }

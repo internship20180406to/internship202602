@@ -14,28 +14,40 @@
         以下の内容で注文が完了しました。
     </p>
 
-    <div class="confirmation-section" style="text-align: center;">
-        <p><label>金融機関名:</label><br>
-            <span th:text="${investmentTrustApplication.bankName}"></span></p>
-
-        <p><label>支店名:</label><br>
-            <span th:text="${investmentTrustApplication.branchName}"></span></p>
-
-        <p><label>科目名:</label><br>
-            <span th:text="${investmentTrustApplication.bankAccountType}"></span></p>
-
-        <p><label>口座番号:</label><br>
-            <span th:text="${investmentTrustApplication.bankAccountNum}"></span></p>
-
-        <p><label>購入者名:</label><br>
-            <span th:text="${investmentTrustApplication.name}"></span></p>
-
-        <p><label>銘柄選択:</label><br>
-            <span th:text="${investmentTrustApplication.fundName}"></span></p>
-
-        <p><label>購入金額:</label><br>
-            <span><span th:text="${#numbers.formatInteger(investmentTrustApplication.money, 1, 'COMMA')}"></span>円</span></p>
-    </div>
+    <table class="confirmation-table">
+        <tr>
+            <th>金融機関名</th>
+            <td th:text="${investmentTrustApplication.bankName}"></td>
+        </tr>
+        <tr>
+            <th>支店名</th>
+            <td th:text="${investmentTrustApplication.branchName}"></td>
+        </tr>
+        <tr>
+            <th>科目名</th>
+            <td th:text="${investmentTrustApplication.bankAccountType}"></td>
+        </tr>
+        <tr>
+            <th>口座番号</th>
+            <td th:text="${investmentTrustApplication.bankAccountNum}"></td>
+        </tr>
+        <tr>
+            <th>購入者名</th>
+            <td th:text="${investmentTrustApplication.name}"></td>
+        </tr>
+        <tr>
+            <th>銘柄選択</th>
+            <td th:text="${investmentTrustApplication.fundName}"></td>
+        </tr>
+        <tr>
+            <th>購入金額</th>
+            <td><span th:text="${#numbers.formatInteger(investmentTrustApplication.money, 1, 'COMMA')}"></span>円</td>
+        </tr>
+        <tr>
+            <th>注文日時</th>
+            <td th:text="${#temporals.format(investmentTrustApplication.orderDateTime, 'yyyy年MM月dd日 HH:mm:ss')}"></td>
+        </tr>
+    </table>
 
     <p style="text-align: center;">
         <input type="button" value="新規注文" class="form-control-button form-confirmation-button" onclick="window.location='/investmentTrust';"/>

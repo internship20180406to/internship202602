@@ -12,8 +12,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.validation.BindingResult;
 import jakarta.validation.Valid;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -22,18 +25,20 @@ public class InvestmentTrustController {
     @Autowired
     private OrderInvestmentTrustService orderInvestmentTrustService;
 
-    private static final List<String> BANK_NAME_OPTIONS = Arrays.asList(
-            "山陰共同銀行", "大迫銀行", "しゅら銀行");
-    private static final List<String> BRANCH_NAME_OPTIONS = Arrays.asList(
-            "鹿児島支店", "南さつま支店", "名古屋支店");
+    private static final Map<String, List<String>> BANK_BRANCH_MAP = new LinkedHashMap<>();
+    static {
+        BANK_BRANCH_MAP.put("山陰共同銀行", Arrays.asList("松江支店", "出雲支店", "米子支店"));
+        BANK_BRANCH_MAP.put("大迫銀行", Arrays.asList("東京支店", "大阪支店", "福岡支店"));
+        BANK_BRANCH_MAP.put("しゅら銀行", Arrays.asList("鹿児島支店", "南さつま支店", "名古屋支店"));
+    }
     private static final List<String> BANK_ACCOUNT_TYPE_OPTIONS = Arrays.asList(
             "普通預金", "当座預金", "貯蓄預金", "総合口座");
     private static final List<String> FUND_NAME_OPTIONS = Arrays.asList(
             "Google", "Amazon", "Meta", "Apple");
 
     private void addSelectOptions(Model model) {
-        model.addAttribute("bankNameOptions", BANK_NAME_OPTIONS);
-        model.addAttribute("branchNameOptions", BRANCH_NAME_OPTIONS);
+        model.addAttribute("bankNameOptions", BANK_BRANCH_MAP.keySet());
+        model.addAttribute("bankBranchMap", BANK_BRANCH_MAP);
         model.addAttribute("bankAccountTypeOptions", BANK_ACCOUNT_TYPE_OPTIONS);
         model.addAttribute("fundNameOptions", FUND_NAME_OPTIONS);
     }
@@ -61,6 +66,7 @@ public class InvestmentTrustController {
     @PostMapping("/investmentTrustCompletion")
     public String completion(@ModelAttribute InvestmentTrustForm investmentTrustForm,
                              RedirectAttributes redirectAttributes) {
+        investmentTrustForm.setOrderDateTime(LocalDateTime.now());
         orderInvestmentTrustService.orderInvestmentTrust(investmentTrustForm);
         redirectAttributes.addFlashAttribute("investmentTrustApplication", investmentTrustForm);
         return "redirect:/investmentTrustCompletion";
