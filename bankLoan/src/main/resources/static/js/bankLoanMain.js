@@ -4,21 +4,24 @@
     if (a.value.length >=7){
         a.value=a.value.slice(0,7)
         }
+    return a
     }
-// セレクトボックスの値が変更されたときに呼ばれる関数
-    function validBankAccountNum(a) {
-        var input=a.value
+// 口座番号
+    function validBankAccountNum(i,where) {
+        var input=i.value
         //console.log(`inputBankAccountNum=${input},input.length=${input.length}`)
 
         // バリデーション処理
         if (input.length === 7) {
         　　//ボタンを有効化
             document.getElementById("submitButton").disabled = false;
+            document.getElementById(where).classList.remove("backgroundRed")
             //console.log("abled")
             //changeAction(selectedName);
         } else {
-            //「選択してください」が選ばれた場合はボタンを無効化
+            //ボタンを無効化
             document.getElementById("submitButton").disabled = true;
+            document.getElementById(where).classList.add("backgroundRed")
             //console.log("disabled")
         }
     }
