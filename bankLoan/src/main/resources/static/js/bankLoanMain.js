@@ -7,32 +7,18 @@
     }
 // セレクトボックスの値が変更されたときに呼ばれる関数
     function validBankAccountNum(a) {
-        //var input =document.getElementById(inputBankAccountNum).value
         var input=a.value
-        console.log(`inputBankAccountNum=${input},input.length=${input.length}`)
+        //console.log(`inputBankAccountNum=${input},input.length=${input.length}`)
 
         // バリデーション処理
         if (input.length === 7) {
         　　//ボタンを有効化
             document.getElementById("submitButton").disabled = false;
-            console.log("abled")
+            //console.log("abled")
             //changeAction(selectedName);
         } else {
             //「選択してください」が選ばれた場合はボタンを無効化
             document.getElementById("submitButton").disabled = true;
-            console.log("disabled")
+            //console.log("disabled")
         }
     }
-
-// セレクトボックスの変更後の値が「選択してください」以外だとhandlePlaceChange関数から呼ばれる
-       // function changeAction(selectedName) {
-       //     const form = document.getElementById('tutorialForm');
-       //     form.addEventListener('submit', function(event) {
-                // ここでURLパラメータを追加
-        //        const params = new URLSearchParams();
-        //        params.append('Name', selectedName);
-
-                // フォームのアクションにパラメータを付け加える
-        //        form.action = '/tutorial?' + params.toString();
-       //     });
-      //  };
