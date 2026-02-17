@@ -26,8 +26,9 @@ public class BankTransferForm{
     @NonNull
     private int transFee;
     @NonNull
-    @DateTimeFormat(pattern = "yyyy'年'MM'月'dd'日'HH'時'mm'分'")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime transferDateTime;
+
 
     public String getBankName() {
         return bankName;

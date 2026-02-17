@@ -64,7 +64,7 @@
             <td th:text="${transfer.name}"></td>
             <td th:text="${transfer.money}"></td>
             <td th:text="${transfer.transFee}"></td>
-            <td th:text="${transfer.transferDateTime}"></td>
+            <td th:text="${#temporals.format(transfer.transferDateTime, 'yyyy年MM月dd日HH時mm分')}"></td>
         </tr>
         </tbody>
     </table>
