@@ -1,3 +1,10 @@
+//1. Controller（コントローラー）：指令塔・司令官
+//「どの画面を表示するか」「どの処理を呼び出すか」を決める場所です。
+//たとえ： レストランの「店員（オーダー取り）」
+//ユーザーがボタンを押したときに「はい、次は確認画面ですね！」と案内する。
+//画面から届いたデータを「これ、保存しておいて」とService（キッチン）に渡す。
+//「受付番号」などの新しい情報を生成して、画面に届ける準備をする。
+//コードの特徴： @Controller や @PostMapping がついている。
 package com.example.internship.controller;
 
 import com.example.internship.entity.InvestmentTrustForm;

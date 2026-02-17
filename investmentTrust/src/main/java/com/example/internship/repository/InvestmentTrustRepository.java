@@ -1,3 +1,8 @@
+//データベース（DB）と直接やり取りして、データを出し入れする場所です。
+//たとえ： 「倉庫の出し入れ担当者」
+//SQL文（INSERT INTO...）を使って、データをガチャンとDBに書き込む。
+//「これまでの注文を全部見せて」と言われたらDBから取ってくる。
+//コードの特徴： @Repository がついていて、JdbcTemplate などを使う。
 package com.example.internship.repository;
 
 import com.example.internship.entity.InvestmentTrustForm;
