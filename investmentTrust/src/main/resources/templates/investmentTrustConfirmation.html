@@ -3,43 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <title>投資信託注文確認画面</title>
-    <link rel="stylesheet" th:href="@{/css/investmentTrustMain.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/confirmation.css}">
 </head>
 <body>
 <div class="content">
-    <h1>投資信託注文確認画面</h1>
+    <h1>投資信託注文確認</h1>
     <form action="#" th:action="@{/investmentTrustCompletion}" th:object="${investmentTrustApplication}" method="post">
 
-        <table class="confirmation-table">
-            <tr>
-                <th>金融機関名</th>
-                <td th:text="*{bankName}"></td>
-            </tr>
-            <tr>
-                <th>支店名</th>
-                <td th:text="*{branchName}"></td>
-            </tr>
-            <tr>
-                <th>科目名</th>
-                <td th:text="*{bankAccountType}"></td>
-            </tr>
-            <tr>
-                <th>口座番号</th>
-                <td th:text="*{bankAccountNum}"></td>
-            </tr>
-            <tr>
-                <th>購入者名</th>
-                <td th:text="*{name}"></td>
-            </tr>
-            <tr>
-                <th>銘柄選択</th>
-                <td th:text="*{fundName}"></td>
-            </tr>
-            <tr>
-                <th>購入金額</th>
-                <td><span th:text="${#numbers.formatInteger(investmentTrustApplication.money, 1, 'COMMA')}"></span>円</td>
-            </tr>
-        </table>
+        <p class="confirmation-message">以下の内容で申し込みます。<br>
+            よろしければ「申し込み」を押してください。</p>
+
+        <div class="table-wrapper">
+            <table class="confirmation-table">
+                <tr>
+                    <th>金融機関名</th>
+                    <td th:text="*{bankName}"></td>
+                </tr>
+                <tr>
+                    <th>支店名</th>
+                    <td th:text="*{branchName}"></td>
+                </tr>
+                <tr>
+                    <th>科目名</th>
+                    <td th:text="*{bankAccountType}"></td>
+                </tr>
+                <tr>
+                    <th>口座番号</th>
+                    <td th:text="*{bankAccountNum}"></td>
+                </tr>
+                <tr>
+                    <th>購入者名</th>
+                    <td th:text="*{name}"></td>
+                </tr>
+                <tr>
+                    <th>銘柄選択</th>
+                    <td th:text="*{fundName}"></td>
+                </tr>
+                <tr>
+                    <th>購入金額</th>
+                    <td><span th:text="${#numbers.formatInteger(investmentTrustApplication.money, 1, 'COMMA')}"></span>円</td>
+                </tr>
+            </table>
+        </div>
 
         <input type="hidden" name="bankName" th:value="*{bankName}"/>
         <input type="hidden" name="branchName" th:value="*{branchName}"/>
@@ -49,9 +55,9 @@
         <input type="hidden" name="fundName" th:value="*{fundName}"/>
         <input type="hidden" name="money" th:value="*{money}"/>
 
-        <p style="text-align: center; display: flex; justify-content: center; gap: 50px;">
-            <input type="button" value="キャンセル" class="form-control-button form-clear-button" onclick="history.back()"/>
-            <input type="submit" id="submit" value="申し込み" class="form-control-button form-confirmation-button"/>
+        <p class="button-area">
+            <input type="submit" id="submit" value="申し込み" class="form-control-button form-confirmation-button button-wide"/>
+            <input type="button" value="キャンセル" class="form-control-button form-clear-button button-wide" onclick="history.back()"/>
         </p>
     </form>
 </div>

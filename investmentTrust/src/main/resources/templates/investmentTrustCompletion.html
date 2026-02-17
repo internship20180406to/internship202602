@@ -3,54 +3,57 @@
 <head>
     <meta charset="UTF-8"/>
     <title>投資信託注文完了画面</title>
-    <link rel="stylesheet" th:href="@{/css/investmentTrustMain.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/confirmation.css}">
 </head>
 <body>
 <div class="content">
     <h1>投資信託注文完了</h1>
 
-    <p style="text-align: center; color: green; font-weight: bold; font-size: 1.2em;">
+    <p class="completion-message">
         ご注文ありがとうございました。<br>
         以下の内容で注文が完了しました。
     </p>
 
-    <table class="confirmation-table">
-        <tr>
-            <th>金融機関名</th>
-            <td th:text="${investmentTrustApplication.bankName}"></td>
-        </tr>
-        <tr>
-            <th>支店名</th>
-            <td th:text="${investmentTrustApplication.branchName}"></td>
-        </tr>
-        <tr>
-            <th>科目名</th>
-            <td th:text="${investmentTrustApplication.bankAccountType}"></td>
-        </tr>
-        <tr>
-            <th>口座番号</th>
-            <td th:text="${investmentTrustApplication.bankAccountNum}"></td>
-        </tr>
-        <tr>
-            <th>購入者名</th>
-            <td th:text="${investmentTrustApplication.name}"></td>
-        </tr>
-        <tr>
-            <th>銘柄選択</th>
-            <td th:text="${investmentTrustApplication.fundName}"></td>
-        </tr>
-        <tr>
-            <th>購入金額</th>
-            <td><span th:text="${#numbers.formatInteger(investmentTrustApplication.money, 1, 'COMMA')}"></span>円</td>
-        </tr>
-        <tr>
-            <th>注文日時</th>
-            <td th:text="${#temporals.format(investmentTrustApplication.orderDateTime, 'yyyy年MM月dd日 HH:mm:ss')}"></td>
-        </tr>
-    </table>
+    <div class="table-wrapper">
+        <table class="confirmation-table">
+            <tr>
+                <th>金融機関名</th>
+                <td th:text="${investmentTrustApplication.bankName}"></td>
+            </tr>
+            <tr>
+                <th>支店名</th>
+                <td th:text="${investmentTrustApplication.branchName}"></td>
+            </tr>
+            <tr>
+                <th>科目名</th>
+                <td th:text="${investmentTrustApplication.bankAccountType}"></td>
+            </tr>
+            <tr>
+                <th>口座番号</th>
+                <td th:text="${investmentTrustApplication.bankAccountNum}"></td>
+            </tr>
+            <tr>
+                <th>購入者名</th>
+                <td th:text="${investmentTrustApplication.name}"></td>
+            </tr>
+            <tr>
+                <th>銘柄選択</th>
+                <td th:text="${investmentTrustApplication.fundName}"></td>
+            </tr>
+            <tr>
+                <th>購入金額</th>
+                <td><span th:text="${#numbers.formatInteger(investmentTrustApplication.money, 1, 'COMMA')}"></span>円</td>
+            </tr>
+            <tr>
+                <th>注文日時</th>
+                <td th:text="${#temporals.format(investmentTrustApplication.orderDateTime, 'yyyy年MM月dd日 HH:mm:ss')}"></td>
+            </tr>
+        </table>
+    </div>
 
-    <p style="text-align: center;">
-        <input type="button" value="新規注文" class="form-control-button form-confirmation-button" onclick="window.location='/investmentTrust';"/>
+    <p class="button-area">
+        <input type="button" value="続けて注文する" class="form-control-button form-confirmation-button button-wide" onclick="window.location='/investmentTrust';"/>
     </p>
 </div>
 </body>
