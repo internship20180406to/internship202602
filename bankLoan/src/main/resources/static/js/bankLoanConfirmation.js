@@ -13,6 +13,7 @@ function saveFormDataToSessionStorage() {
     const name = document.querySelector('[name="name"]');
     const loanAmountInput = document.getElementById('loanAmount');
     const annualIncomeInput = document.getElementById('annualIncome');
+    const loanPeriodInput = document.getElementById('loanPeriod');
 
     const formData = {
         bankName: bankName ? bankName.value : '',
@@ -21,7 +22,8 @@ function saveFormDataToSessionStorage() {
         bankAccountNum: bankAccountNum ? bankAccountNum.value : '',
         name: name ? name.value : '',
         loanAmount: loanAmountInput ? loanAmountInput.value.replace(/,/g, '') : '',
-        annualIncome: annualIncomeInput ? annualIncomeInput.value.replace(/,/g, '') : ''
+        annualIncome: annualIncomeInput ? annualIncomeInput.value.replace(/,/g, '') : '',
+        loanPeriod: loanPeriodInput ? loanPeriodInput.value : ''
     };
 
     sessionStorage.setItem('bankLoanFormData', JSON.stringify(formData));
@@ -42,6 +44,7 @@ function restoreFormDataFromSessionStorage() {
             const name = document.querySelector('[name="name"]');
             const loanAmountInput = document.getElementById('loanAmount');
             const annualIncomeInput = document.getElementById('annualIncome');
+            const loanPeriodInput = document.getElementById('loanPeriod');
 
             // 金融機関名を先に復元
             if (bankName && formData.bankName) bankName.value = formData.bankName;
@@ -63,6 +66,9 @@ function restoreFormDataFromSessionStorage() {
             }
             if (annualIncomeInput && formData.annualIncome) {
                 annualIncomeInput.value = formatNumberWithComma(formData.annualIncome);
+            }
+            if (loanPeriodInput && formData.loanPeriod) {
+                loanPeriodInput.value = formData.loanPeriod;
             }
         } catch (e) {
             console.error('フォームデータの復元に失敗しました:', e);
@@ -119,6 +125,12 @@ function setupNumberFormatting() {
     if (nameInput) {
         nameInput.addEventListener('input', saveFormDataToSessionStorage);
     }
+
+    // 借入期間の変更も検知
+    const loanPeriodInput = document.getElementById('loanPeriod');
+    if (loanPeriodInput) {
+        loanPeriodInput.addEventListener('input', saveFormDataToSessionStorage);
+    }
 }
 
 // フォーム送信時に入力値からカンマを削除
@@ -144,6 +156,7 @@ function validateFormBeforeSubmit(event) {
     const name = document.querySelector('[name="name"]');
     const loanAmountInput = document.getElementById('loanAmount');
     const annualIncomeInput = document.getElementById('annualIncome');
+    const loanPeriodInput = document.getElementById('loanPeriod');
 
     // バリデーション結果格納用
     let errorMessages = [];
@@ -186,6 +199,18 @@ function validateFormBeforeSubmit(event) {
         const annualIncomeValue = annualIncomeInput.value.replace(/,/g, '').trim();
         if (isNaN(annualIncomeValue) || annualIncomeValue === '') {
             errorMessages.push('借入年収は数値を入力してください');
+        }
+    }
+
+    if (!loanPeriodInput || !loanPeriodInput.value || loanPeriodInput.value.trim() === '') {
+        errorMessages.push('借入期間を入力してください');
+    } else {
+        // 借入期間が数値かチェック
+        const loanPeriodValue = loanPeriodInput.value.trim();
+        if (isNaN(loanPeriodValue) || loanPeriodValue === '') {
+            errorMessages.push('借入期間は数値を入力してください');
+        } else if (parseInt(loanPeriodValue) < 1 || parseInt(loanPeriodValue) > 50) {
+            errorMessages.push('借入期間は1年以上50年以下で入力してください');
         }
     }
 

@@ -25,6 +25,8 @@ public class BankLoanForm {
     private Integer loanAmount; //追加->借入金額
     @NonNull
     private Integer annualIncome; //追加->借入年収
+    @NonNull
+    private Integer loanPeriod; //追加->借入期間
     private BigDecimal interestRate; //追加->金利
 
     public String getBankName() {
@@ -81,6 +83,14 @@ public class BankLoanForm {
 
     public void setAnnualIncome(Integer annualIncome) {
         this.annualIncome = annualIncome;
+    }
+
+    public Integer getLoanPeriod() {
+        return loanPeriod;
+    }
+
+    public void setLoanPeriod(Integer loanPeriod) {
+        this.loanPeriod = loanPeriod;
     }
 
     public BigDecimal getInterestRate() {

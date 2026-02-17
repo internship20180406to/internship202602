@@ -14,6 +14,7 @@
     <p>申込者名: <span th:text="*{name}"></span></p>
     <p>借入金額(円): <span id="displayLoanAmount" th:text="*{loanAmount}"></span></p>
     <p>借入年収(円): <span id="displayAnnualIncome" th:text="*{annualIncome}"></span></p>
+    <p>借入期間(年): <span th:text="*{loanPeriod}"></span></p>
     <p>金利(%): <span th:text="*{interestRate}"></span></p>
     <input type="hidden" name="bankAccountNum" th:value="*{bankAccountNum}"/>
     <input type="hidden" name="bankName" th:value="*{bankName}"/>
@@ -22,6 +23,7 @@
     <input type="hidden" name="name" th:value="*{name}"/>
     <input type="hidden" name="loanAmount" th:value="*{loanAmount}"/>
     <input type="hidden" name="annualIncome" th:value="*{annualIncome}"/>
+    <input type="hidden" name="loanPeriod" th:value="*{loanPeriod}"/>
     <input type="hidden" name="interestRate" th:value="*{interestRate}"/>
     <p>
         <input type="submit" id="submit" value="申込"/>
