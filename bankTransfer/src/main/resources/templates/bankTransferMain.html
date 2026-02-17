@@ -42,6 +42,22 @@
         cursor: pointer;
         border-radius: 5px;
         }
+        .from-control-neo-button{
+        width: 100px;
+        padding: 10px 20px;
+        margin-top: 10px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        }
+
+        .from-control-neo-button:hover {
+            background-color: #45a049;
+        }
+
         .form-confirmation-button{
         color: white;
         background-color: #2185D0;
@@ -82,7 +98,7 @@
             <input type="text" th:field="*{bankAccountNum}" class="form-control" pattern="[0-9]{7}" title="7桁の数字を入力してください" required/></p>
         <p><label class="ml-1">口座名義: <small class="text-danger ml-1">※</small></label><br>
             <input type="text" th:field="*{name}" class="form-control" required/></p>
-        <p><label class="ml-1">金額: <small class="text-danger ml-1">※</small></label><br>
+        <p><label class="ml-1">金額（円）: <small class="text-danger ml-1">※</small></label><br>
             <input type="text" th:field="*{money}" class="form-control"  pattern = "^[0-9]+$" required/></p>
         <p><label class="ml-1">振込指定日: <small class="text-danger ml-1">※</small></label><br>
             <input type="datetime-local"
@@ -90,7 +106,11 @@
                    class="form-control" required/>
         <p style="text-align: center;"><input type="submit" value="確認"
                                               class="form-control-button form-confirmation-button"/>
-            <input type="reset" value="クリア" class="form-control-button form-clear-button" /></p>
+            <input type="reset" value="クリア" class="form-control-button form-clear-button" />
+        </p>
+    </form>
+    <form action="/transferList" method="get">
+        <button type="submit">振込履歴を見る</button>
     </form>
 </div>
 </body>

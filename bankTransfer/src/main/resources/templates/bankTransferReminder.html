@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>こども銀行振込履歴情報</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            padding-top: 40px;
+            padding-bottom: 40px;
+            justify-content: center;
+            align-items: center;
+            min-height: 85vh;
+            overflow: auto;
+        }
+        .content {
+            background-color: #ffffff;
+            width: 80%;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            min-height: 50vh;
+            overflow: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #2185D0;
+            color: white;
+        }
+        tr:nth-child(even) {background-color: #f9f9f9;}
+    </style>
+</head>
+<body>
+<div class="content">
+    <h1>こども銀行振込履歴情報</h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th>銀行名</th>
+            <th>支店名</th>
+            <th>振込先</th>
+            <th>金額(円)</th>
+            <th>手数料（円）</th>
+            <th>日時</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="transfer : ${transferList}">
+            <td th:text="${transfer.bankName}"></td>
+            <td th:text="${transfer.branchName}"></td>
+            <td th:text="${transfer.name}"></td>
+            <td th:text="${transfer.money}"></td>
+            <td th:text="${transfer.transFee}"></td>
+            <td th:text="${transfer.transferDateTime}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <p style="text-align: center;"><input type="button" value="振込に戻る" onclick="window.location='/bankTransfer';" class = "form-control-neo-button form-clear-button"/></p>
+</div>
+</body>
+</html>

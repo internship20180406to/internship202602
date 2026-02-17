@@ -1,7 +1,6 @@
 package com.example.internship.controller;
 
 import com.example.internship.entity.BankTransferForm;
-import com.example.internship.service.ApplyBankTransferService;
 import com.example.internship.repository.BankTransferRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,8 +8,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class BankTransferController {
@@ -46,4 +46,14 @@ public class BankTransferController {
         return "bankTransferCompletion";
     }
 
+    @GetMapping("/transferList")
+    public String showTransferList(Model model) {
+        List<BankTransferForm> list = repository.findAll();
+        if (list != null) {//空文字変換
+            model.addAttribute("transferList", list);
+        } else {
+            model.addAttribute("transferList", Collections.emptyList());
+        }
+        return "bankTransferReminder";
+    }
 }
