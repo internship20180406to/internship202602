@@ -95,6 +95,7 @@
         </div>
         <p><label class="ml-1">金融機関名: <small class="text-danger ml-1">※</small></label><br>
             <select th:field="*{bankName}" id="bankNameSelect" class="form-control" onchange="updateBranchOptions()">
+                <option value="">金融機関名を選択してください</option>
                 <option th:each="option : ${nameOptions}"
                         th:value="${option}"
                         th:text="${option}">選択肢
@@ -106,6 +107,7 @@
             </select></p>
         <p><label class="ml-1">口座種別: <small class="text-danger ml-1">※</small></label><br>
             <select th:field="*{bankAccountType}" class="form-control">
+                <option value="">口座種別を選択してください</option>
                 <option value="普通">普通</option>
                 <option value="当座">当座</option>
             </select></p>
