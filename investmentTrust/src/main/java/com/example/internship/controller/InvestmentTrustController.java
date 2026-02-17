@@ -45,6 +45,7 @@ public class InvestmentTrustController {
         model.addAttribute("fundNameOptions", jQuantsService.getFundNameOptions());
         model.addAttribute("fundInfoMap", jQuantsService.getFundInfoMap());
         model.addAttribute("fundChartDataMap", jQuantsService.getFundChartDataMap());
+        model.addAttribute("accountHistory", orderInvestmentTrustService.getAccountHistory());
     }
 
     @GetMapping("/investmentTrust")

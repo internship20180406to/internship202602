@@ -103,3 +103,14 @@
     align-items: center;
     gap: 8px;
 }
+
+/* === 口座履歴選択 === */
+
+.account-history-select {
+    text-align: center;
+    background-color: #E5E7EB;
+    margin-bottom: 12px;
+    border-radius: 5px;
+    border-color: #212121;
+    border-width: 1px;
+}

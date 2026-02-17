@@ -15,6 +15,17 @@
         <div class="form-section">
             <h2 class="form-section-title">口座情報</h2>
 
+            <div th:if="${!accountHistory.isEmpty()}">
+                <select id="accountHistorySelect" class="form-control account-history-select">
+                    <option value="">過去の履歴から選択</option>
+                    <option th:each="account, iter : ${accountHistory}"
+                            th:value="${iter.index}"
+                            th:text="${account.name + '｜' + account.bankName + '｜' + #temporals.format(account.orderDateTime, 'yyyy/MM/dd')}"
+                            th:attr="data-bank=${account.bankName},data-branch=${account.branchName},data-type=${account.bankAccountType},data-num=${account.bankAccountNum},data-name=${account.name}">
+                    </option>
+                </select>
+            </div>
+
             <p><label class="ml-1">金融機関名: <small class="text-danger ml-1">※</small></label><br>
                 <select th:field="*{bankName}" class="form-control" id="bankName">
                     <option value="">-- 選択してください --</option>
@@ -171,6 +182,35 @@
 
     updateBranches();
 
+    // 口座履歴選択
+    const accountHistorySelect = document.getElementById('accountHistorySelect');
+    const bankAccountTypeSelect = document.querySelector('select[name="bankAccountType"]');
+    const bankAccountNumInput = document.querySelector('input[name="bankAccountNum"]');
+    const nameInput = document.querySelector('input[name="name"]');
+
+    function applyAccountHistory(option) {
+        const bank = option.getAttribute('data-bank');
+        const branch = option.getAttribute('data-branch');
+        const type = option.getAttribute('data-type');
+        const num = option.getAttribute('data-num');
+        const name = option.getAttribute('data-name');
+
+        bankNameSelect.value = bank;
+        updateBranches();
+        branchNameSelect.value = branch;
+        bankAccountTypeSelect.value = type;
+        bankAccountNumInput.value = num;
+        nameInput.value = name;
+    }
+
+    if (accountHistorySelect) {
+        accountHistorySelect.addEventListener('change', function() {
+            if (this.value !== '') {
+                applyAccountHistory(this.options[this.selectedIndex]);
+            }
+        });
+    }
+
     const moneyDisplay = document.getElementById('moneyDisplay');
     const moneyHidden = document.getElementById('moneyHidden');
 
@@ -222,6 +262,7 @@
             fundInfoCard.style.display = 'none';
             feeCalcCard.style.display = 'none';
             updateChart('');
+            if (accountHistorySelect) accountHistorySelect.value = '';
         }, 0);
     });
 
