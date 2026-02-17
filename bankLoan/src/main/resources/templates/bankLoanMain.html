@@ -155,10 +155,21 @@
         }
     }
 
-    // ページ読み込み時に初期支店を設定
-    document.addEventListener('DOMContentLoaded', function() {
-        updateBranchOptions();
-    });
+    // ページ読み込み時に初期支店を設定（最初の読み込み時のみ）
+    // 外部スクリプト読み込み前に実行
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            // セッションストレージに保存されたデータがない場合のみ初期化
+            if (!sessionStorage.getItem('bankLoanFormData')) {
+                updateBranchOptions();
+            }
+        });
+    } else {
+        // スクリプトが遅延実行される場合
+        if (!sessionStorage.getItem('bankLoanFormData')) {
+            updateBranchOptions();
+        }
+    }
 </script>
 <script src="/js/bankLoanConfirmation.js"></script>
 </body>

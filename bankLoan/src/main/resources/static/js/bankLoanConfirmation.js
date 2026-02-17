@@ -43,8 +43,18 @@ function restoreFormDataFromSessionStorage() {
             const loanAmountInput = document.getElementById('loanAmount');
             const annualIncomeInput = document.getElementById('annualIncome');
 
+            // 金融機関名を先に復元
             if (bankName && formData.bankName) bankName.value = formData.bankName;
+
+            // 金融機関が復元されたら、支店オプションを生成
+            if (typeof updateBranchOptions === 'function') {
+                updateBranchOptions();
+            }
+
+            // その後で支店名を復元
             if (branchName && formData.branchName) branchName.value = formData.branchName;
+
+            // 他のフィールドを復元
             if (bankAccountType && formData.bankAccountType) bankAccountType.value = formData.bankAccountType;
             if (bankAccountNum && formData.bankAccountNum) bankAccountNum.value = formData.bankAccountNum;
             if (name && formData.name) name.value = formData.name;
