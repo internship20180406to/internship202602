@@ -44,7 +44,6 @@
         margin-top: 10px;
         border: none;
         cursor: pointer;
-        border-radius: 5px;
         border-radius: 9999px;
         display: flex;
         justify-content: center;
@@ -54,7 +53,7 @@
             background-color: #45a049;
         }
         .form-control-button {
-        width: 80px;
+        width: 100px;
         padding: 10px 20px;
         margin-top: 10px;
         border: none;
@@ -136,22 +135,22 @@
     <table class="confirm-table">
         <tr>
             <th>振込金額</th>
-            <td class="number" th:text="*{money}"></td>
+            <td class="number" th:text="*{money}+'円'"></td>
         </tr>
     </table>
     <table class="confirm-table">
         <tr>
             <th>振込手数料</th>
-            <td class="number" th:text="*{transFee}"></td>
+            <td class="number" th:text="*{transFee}+'円'"></td>
         </tr>
     </table>
     <table class="confirm-table">
         <tr>
             <th>お支払い総額</th>
-            <td class="number" th:text="*{transFee + money}"></td>
+            <td class="number" th:text="*{transFee + money}+'円'"></td>
         </tr>
     </table>
-    <input type="hidden" name="bankName" th:value="*{bankName}" class = ""/>
+    <input type="hidden" name="bankName" th:value="*{bankName}" />
     <input type="hidden" name="branchName" th:value="*{branchName}"/>
     <input type="hidden" name="bankAccountType" th:value="*{bankAccountType}"/>
     <input type="hidden" name="bankAccountNum" th:value="*{bankAccountNum}"/>
@@ -167,7 +166,7 @@
         <input type="button"
                value="キャンセル"
                onclick="window.location='/bankTransfer';"
-               class="form-control-neo-button form-clear-button" />
+               class="form-control-button form-clear-button" />
     </div>
 </form>
 </form>
