@@ -18,10 +18,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 @Controller
 public class InvestmentTrustController {
+
 
     @Autowired
     private OrderInvestmentTrustService orderInvestmentTrustService;
@@ -63,6 +65,8 @@ public class InvestmentTrustController {
 
     @PostMapping("/investmentTrustCompletion")
     public String completion(@ModelAttribute InvestmentTrustForm investmentTrustForm, Model model) {
+        String receiptNo = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+        model.addAttribute("receiptNo", receiptNo);
         orderInvestmentTrustService.orderInvestmentTrust(investmentTrustForm);
         return "investmentTrustCompletion";
     }
