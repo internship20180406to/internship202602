@@ -17,15 +17,15 @@ public class BankLoanForm {
     private String bankAccountType;
     @NonNull
     private Integer bankAccountNum;
+    @NonNull
+    private String name;
 
     public String getBankName() {
         return bankName;
     }
-
     public void setBankName(String bankName) {
         this.bankName = bankName;
     }
-
     public String getBranchName() {
         return branchName;
     }
@@ -35,8 +35,9 @@ public class BankLoanForm {
     public String getBankAccountType() {
         return bankAccountType;
     }
-    public Integer getBankAccountNum() {
-        return bankAccountNum;
+    public Integer getBankAccountNum() {return bankAccountNum;}
+    public String getName() {
+        return name;
     }
 
     public void setBankAccountNum(Integer bankAccountNum) {

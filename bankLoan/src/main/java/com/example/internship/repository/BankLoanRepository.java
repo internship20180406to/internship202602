@@ -11,9 +11,9 @@ public class BankLoanRepository {
     JdbcTemplate jdbcTemplate;
 
     public void create(BankLoanForm bankLoanForm) {
-        String sql = "INSERT INTO bankLoan_table(bankName,branchName, bankAccountNum,bankAccountType) VALUES(?,?, ?,?)";
+        String sql = "INSERT INTO bankLoan_table(bankName,branchName, bankAccountNum,bankAccountType,name) VALUES(?,?, ?,?,?)";
 
-        jdbcTemplate.update(sql, bankLoanForm.getBankName(),bankLoanForm.getBranchName(), bankLoanForm.getBankAccountNum(),bankLoanForm.getBankAccountType());
+        jdbcTemplate.update(sql, bankLoanForm.getBankName(),bankLoanForm.getBranchName(), bankLoanForm.getBankAccountNum(),bankLoanForm.getBankAccountType(), bankLoanForm.getName());
     }
     //public static void main(String[] args) {
         //String greeting = "こんにちは、Java!";

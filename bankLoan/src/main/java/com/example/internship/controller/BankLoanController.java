@@ -32,6 +32,9 @@ public class BankLoanController {
         model.addAttribute("bankName", bankLoanForm.getBankName());
         model.addAttribute("branchName", bankLoanForm.getBranchName());
         model.addAttribute("bankAccountNum", bankLoanForm.getBankAccountNum());
+        model.addAttribute("bankAccountType", bankLoanForm.getBankAccountType());
+        model.addAttribute("name", bankLoanForm.getName());
+
         model.addAttribute("bankLoanApplication", bankLoanForm);
         return "bankLoanConfirmation";
     }
