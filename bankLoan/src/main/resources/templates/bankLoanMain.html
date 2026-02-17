@@ -229,8 +229,20 @@
     // 外部スクリプト読み込み前に実行
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function() {
-            // セッションストレージに保存されたデータがない場合のみ初期化
+            // ページリロード後にselect要素が最初の選択肢を選んでいないか確認
+            const bankNameSelect = document.getElementById('bankNameSelect');
+            const bankAccountTypeSelect = document.querySelector('[name="bankAccountType"]');
+
+            // セッションストレージにデータがない場合、select要素を初期化
             if (!sessionStorage.getItem('bankLoanFormData')) {
+                // 金融機関名を空に設定
+                if (bankNameSelect && bankNameSelect.value !== '') {
+                    bankNameSelect.value = '';
+                }
+                // 口座種別を空に設定
+                if (bankAccountTypeSelect && bankAccountTypeSelect.value !== '') {
+                    bankAccountTypeSelect.value = '';
+                }
                 updateBranchOptions();
             }
 
@@ -261,7 +273,19 @@
         });
     } else {
         // スクリプトが遅延実行される場合
+        // ページリロード後にselect要素が最初の選択肢を選んでいないか確認
+        const bankNameSelect = document.getElementById('bankNameSelect');
+        const bankAccountTypeSelect = document.querySelector('[name="bankAccountType"]');
+
         if (!sessionStorage.getItem('bankLoanFormData')) {
+            // 金融機関名を空に設定
+            if (bankNameSelect && bankNameSelect.value !== '') {
+                bankNameSelect.value = '';
+            }
+            // 口座種別を空に設定
+            if (bankAccountTypeSelect && bankAccountTypeSelect.value !== '') {
+                bankAccountTypeSelect.value = '';
+            }
             updateBranchOptions();
         }
 
