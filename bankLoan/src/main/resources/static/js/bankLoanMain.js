@@ -8,6 +8,7 @@
     }
 // 口座番号
     function validBankAccountNum(i,where) {
+        i=changeNum(i)
         var input=i.value
         //console.log(`inputBankAccountNum=${input},input.length=${input.length}`)
 

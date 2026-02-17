@@ -21,6 +21,7 @@ public class BankLoanController {
         model.addAttribute("bankLoanApplication", new BankLoanForm());
         model.addAttribute("nameOptions", List.of("A銀行", "B銀行", "C銀行"));
         model.addAttribute("nameOptions1", List.of("a支店", "b支店", "c支店"));
+        model.addAttribute("nameOptions2", List.of("普通預金", "当座預金","定期預金","貯蓄預金","納税準備預金","積立定期預金","通知預金","財形預金", "別段預金"));
         return "bankLoanMain";
     }
 
