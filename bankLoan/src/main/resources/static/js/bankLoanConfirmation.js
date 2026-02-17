@@ -1,4 +1,7 @@
 const submitButton = document.getElementById("submit")
     submitButton.addEventListener('click', (e) => {
-      console.log(confirm("操作を実行します"))
+      if(confirm("操作を実行します")!==false){
+      //e.preventDefault;
+      window.location='/bankLoan';
+      }
     })
