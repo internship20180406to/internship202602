@@ -154,12 +154,35 @@ function validateFormBeforeSubmit(event) {
         errorMessages.push('借入年収を入力してください');
     }
 
-    // エラーがある場合は送信を中止してアラート表示
+    // エラーメッセージ表示用の要素を取得
+    const errorMessageContainer = document.getElementById('errorMessageContainer');
+    const errorList = document.getElementById('errorList');
+
+    // エラーがある場合は送信を中止して Web上に表示
     if (errorMessages.length > 0) {
         event.preventDefault();
-        alert('以下の項目を入力してください：\n\n' + errorMessages.join('\n'));
+
+        // エラーリストをクリア
+        errorList.innerHTML = '';
+
+        // エラーメッセージをリスト化して表示
+        errorMessages.forEach(function(message) {
+            const listItem = document.createElement('li');
+            listItem.textContent = message;
+            errorList.appendChild(listItem);
+        });
+
+        // エラーコンテナを表示
+        errorMessageContainer.classList.add('show');
+
+        // ページトップにスクロール
+        errorMessageContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
         return false;
     }
+
+    // バリデーション成功時はエラーコンテナを非表示
+    errorMessageContainer.classList.remove('show');
 
     // バリデーション成功時はカンマを削除
     removeCommasBeforeSubmit();

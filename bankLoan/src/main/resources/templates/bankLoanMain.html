@@ -56,6 +56,32 @@
         .form-clear-button:hover {
         background-color: #CCCCCC;
         }
+        .error-message-container {
+            background-color: #f8d7da;
+            border: 2px solid #f5c6cb;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .error-message-container.show {
+            display: block;
+        }
+        .error-message-container h3 {
+            color: #721c24;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .error-message-container ul {
+            list-style-position: inside;
+            margin: 0;
+            padding-left: 0;
+            color: #721c24;
+        }
+        .error-message-container li {
+            margin-bottom: 5px;
+        }
 
     </style>
 </head>
@@ -63,6 +89,10 @@
 <div class="content">
     <h1>ローン申込情報入力</h1>
     <form action="#" th:action="@{/bankLoanConfirmation}" th:object="${bankLoanApplication}" method="post" onsubmit="return validateFormBeforeSubmit(event)">
+        <div id="errorMessageContainer" class="error-message-container">
+            <h3>⚠️ 入力エラー</h3>
+            <ul id="errorList"></ul>
+        </div>
         <p><label class="ml-1">金融機関名: <small class="text-danger ml-1">※</small></label><br>
             <select th:field="*{bankName}" class="form-control">
                 <option th:each="option : ${nameOptions}"
