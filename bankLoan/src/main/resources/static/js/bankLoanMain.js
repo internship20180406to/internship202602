@@ -1,5 +1,6 @@
 document.getElementById("submitButton").addEventListener("mouseover",function(){
-    if (document.getElementById("inputBankAccountNum").classList.contains("backgroundRed")===false){
+    if (document.getElementById("inputBankAccountNum").classList.contains("backgroundRed")===false &&
+    document.getElementById("loanAmount").classList.contains("backgroundRed")===false){
         document.getElementById("submitButton").disabled = false;
         console.log("abled")
         console.log(document.getElementById("submitButton").classList)
@@ -19,6 +20,12 @@ document.getElementById("submitButton").addEventListener("mouseover",function(){
         }
     return a
     }
+
+    function changeNumNormal(a){
+    a.value=a.value.replace(/[^0-9０-９]/g,'').replace('０','0').replace('１','1').replace('２','2').replace('３','3').replace('４','4').replace('５','5').replace('６','6').replace('７','7').replace('８','8').replace('９','9')
+    return a
+    }
+
 // 口座番号
     function validBankAccountNum(i,where) {
         i=changeNum(i)
@@ -40,3 +47,15 @@ document.getElementById("submitButton").addEventListener("mouseover",function(){
         }
     }
 
+//借入金額
+    function validLoanAmount(i,where){
+        i=changeNumNormal(i)
+        var input=i.value
+        if (input) {
+            document.getElementById(where).classList.remove("backgroundRed")
+            //console.log("kariireok")
+        }else{
+            document.getElementById(where).classList.add("backgroundRed")
+            //console.log("kariireno")
+        }
+    }
