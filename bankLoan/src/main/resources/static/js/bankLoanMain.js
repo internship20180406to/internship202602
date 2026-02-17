@@ -6,33 +6,33 @@
         }
     }
 // セレクトボックスの値が変更されたときに呼ばれる関数
-    function bankAccountNumChange() {
-        // セレクトボックスの選択された値を取得
-        var input = document.getElementById("inputBankAccountNum").value;
-        console.log('inputBankAccountNum=${input}')
+    function validBankAccountNum(a) {
+        //var input =document.getElementById(inputBankAccountNum).value
+        var input=a.value
+        console.log(`inputBankAccountNum=${input},input.length=${input.length}`)
 
         // バリデーション処理
-        //if (selectedName !== "選択してください") {
-        　　　　　　　// 取得した値をコンソールに出力
-           //         console.log("選択された名前: " + selectedName);
-        　　　　　　　// 「選択してください」以外が選ばれた場合はボタンを有効化
-             //       document.getElementById("submitButton").disabled = false;
-               //     changeAction(selectedName);
-                //} else {
-                  //  // 「選択してください」が選ばれた場合はボタンを無効化
-                    //document.getElementById("submitButton").disabled = true;
-                //}
+        if (input.length === 7) {
+        　　//ボタンを有効化
+            document.getElementById("submitButton").disabled = false;
+            console.log("abled")
+            //changeAction(selectedName);
+        } else {
+            //「選択してください」が選ばれた場合はボタンを無効化
+            document.getElementById("submitButton").disabled = true;
+            console.log("disabled")
+        }
     }
 
 // セレクトボックスの変更後の値が「選択してください」以外だとhandlePlaceChange関数から呼ばれる
-        function changeAction(selectedName) {
-            const form = document.getElementById('tutorialForm');
-            form.addEventListener('submit', function(event) {
+       // function changeAction(selectedName) {
+       //     const form = document.getElementById('tutorialForm');
+       //     form.addEventListener('submit', function(event) {
                 // ここでURLパラメータを追加
-                const params = new URLSearchParams();
-                params.append('Name', selectedName);
+        //        const params = new URLSearchParams();
+        //        params.append('Name', selectedName);
 
                 // フォームのアクションにパラメータを付け加える
-                form.action = '/tutorial?' + params.toString();
-            });
-        };
+        //        form.action = '/tutorial?' + params.toString();
+       //     });
+      //  };
