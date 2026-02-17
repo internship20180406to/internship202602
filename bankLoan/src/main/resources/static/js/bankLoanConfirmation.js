@@ -171,10 +171,22 @@ function validateFormBeforeSubmit(event) {
 
     if (!loanAmountInput || !loanAmountInput.value || loanAmountInput.value.replace(/,/g, '').trim() === '') {
         errorMessages.push('借入金額を入力してください');
+    } else {
+        // カンマを除いた値が数値かチェック
+        const loanAmountValue = loanAmountInput.value.replace(/,/g, '').trim();
+        if (isNaN(loanAmountValue) || loanAmountValue === '') {
+            errorMessages.push('借入金額は数値を入力してください');
+        }
     }
 
     if (!annualIncomeInput || !annualIncomeInput.value || annualIncomeInput.value.replace(/,/g, '').trim() === '') {
         errorMessages.push('借入年収を入力してください');
+    } else {
+        // カンマを除いた値が数値かチェック
+        const annualIncomeValue = annualIncomeInput.value.replace(/,/g, '').trim();
+        if (isNaN(annualIncomeValue) || annualIncomeValue === '') {
+            errorMessages.push('借入年収は数値を入力してください');
+        }
     }
 
     // エラーメッセージ表示用の要素を取得

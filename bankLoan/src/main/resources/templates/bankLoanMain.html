@@ -247,6 +247,12 @@
 
                         // セッションストレージもクリア
                         sessionStorage.removeItem('bankLoanFormData');
+
+                        // エラーメッセージを消す
+                        const errorMessageContainer = document.getElementById('errorMessageContainer');
+                        if (errorMessageContainer) {
+                            errorMessageContainer.classList.remove('show');
+                        }
                     }, 0);
                 });
             }
@@ -272,6 +278,12 @@
 
                     // セッションストレージもクリア
                     sessionStorage.removeItem('bankLoanFormData');
+
+                    // エラーメッセージを消す
+                    const errorMessageContainer = document.getElementById('errorMessageContainer');
+                    if (errorMessageContainer) {
+                        errorMessageContainer.classList.remove('show');
+                    }
                 }, 0);
             });
         }
