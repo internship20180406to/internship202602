@@ -2,13 +2,24 @@ document.getElementById("submitButton").addEventListener("mouseover",function(){
     if (document.getElementById("inputBankAccountNum").classList.contains("backgroundRed")===false
     && document.getElementById("loanAmount").classList.contains("backgroundRed")===false
     && document.getElementById("annualIncome").classList.contains("backgroundRed")===false
-    && document.getElementById("interestRate").classList.contains("backgroundRed")===false){
+    && document.getElementById("interestRate").classList.contains("backgroundRed")===false
+    && document.getElementById("name").classList.contains("backgroundRed")===false){
         document.getElementById("submitButton").disabled = false;
         console.log("abled")
-        console.log(document.getElementById("submitButton").classList)
+        //console.log(document.getElementById("submitButton").classList)
+        console.log(document.getElementById("inputBankAccountNum").classList.contains("backgroundRed")
+        ,document.getElementById("loanAmount").classList.contains("backgroundRed")
+        ,document.getElementById("annualIncome").classList.contains("backgroundRed")
+        ,document.getElementById("interestRate").classList.contains("backgroundRed")
+        ,document.getElementById("name").classList.contains("backgroundRed"))
     }else{
         document.getElementById("submitButton").disabled = true;
         console.log("disabled")
+        console.log(document.getElementById("inputBankAccountNum").classList.contains("backgroundRed")
+        ,document.getElementById("loanAmount").classList.contains("backgroundRed")
+        ,document.getElementById("annualIncome").classList.contains("backgroundRed")
+        ,document.getElementById("interestRate").classList.contains("backgroundRed")
+        ,document.getElementById("name").classList.contains("backgroundRed"))
     }
 });
 
@@ -73,7 +84,20 @@ document.getElementById("submitButton").addEventListener("mouseover",function(){
         i=changeNumDecimal(i)
         var input=i.value
         //.console.log(typeof input);
-        if (input !=="" && 0<=input && input<=100 && input.search(/[^\.]+\.[0-9][0-9]$/)!==-1) {
+        if (input !=="" && 0<=input && input<=100 && input.search(/[^\.]+\.[0-9][0-9]$/)!==-1) {//0以上100以下かつ小数第二位まで入力されている
+            document.getElementById(where).classList.remove("backgroundRed")
+            //console.log("kariireok")
+        }else{
+            document.getElementById(where).classList.add("backgroundRed")
+            //console.log("kariireno")
+        }
+    }
+
+
+//債務者名
+    function validName(i,where){
+        var input=i.value
+        if (/^[ぁ-んァ-ヶ一-龠々ー]+$/.test(input)===true){//日本語だけで構成されている
             document.getElementById(where).classList.remove("backgroundRed")
             //console.log("kariireok")
         }else{
