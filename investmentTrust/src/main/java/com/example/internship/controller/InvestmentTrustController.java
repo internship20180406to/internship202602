@@ -21,35 +21,35 @@ public class InvestmentTrustController {
     @GetMapping("/investmentTrust")
     public String bankTransfer(Model model) {
         List<String> bankList = new ArrayList<>();
-        List<String> subjectNameList = new ArrayList<>();
-        List<String> brandNameList = new ArrayList<>();
+        List<String> bankAccountTypeList = new ArrayList<>();
+        List<String> fundNameList = new ArrayList<>();
         bankList.add("こめ銀行");
         bankList.add("ぱん銀行");
         bankList.add("麺銀行");
-        subjectNameList.add("普通預金");
-        subjectNameList.add("当座預金");
-        subjectNameList.add("貯蓄預金");
-        brandNameList.add("ツナマヨ");
-        brandNameList.add("梅干し");
-        brandNameList.add("鮭");
+        bankAccountTypeList.add("普通預金");
+        bankAccountTypeList.add("当座預金");
+        bankAccountTypeList.add("貯蓄預金");
+        fundNameList.add("ツナマヨ");
+        fundNameList.add("梅干し");
+        fundNameList.add("鮭");
         model.addAttribute("investmentTrustApplication", new InvestmentTrustForm());
         model.addAttribute("nameOptions", bankList);
-        model.addAttribute("brandNameOptions", brandNameList);
-        model.addAttribute("subjectNameOptions", subjectNameList);
+        model.addAttribute("fundNameOptions", fundNameList);
+        model.addAttribute("bankAccountTypeOptions", bankAccountTypeList);
         return "investmentTrustMain";
     }
 
     @PostMapping("/investmentTrustConfirmation")
     public String confirmation(@ModelAttribute InvestmentTrustForm investmentTrustForm, Model model) {
 
+        System.out.println(investmentTrustForm);
         model.addAttribute("bankName", investmentTrustForm.getBankName());
         model.addAttribute("branchName", investmentTrustForm.getBranchName());
-        model.addAttribute("subjectName", investmentTrustForm.getSubjectName());
+        model.addAttribute("bankAccountType", investmentTrustForm.getBankAccountType());
         model.addAttribute("bankAccountNum", investmentTrustForm.getBankAccountNum());
-        model.addAttribute("accountName", investmentTrustForm.getAccountName());
-        model.addAttribute("bankName", investmentTrustForm.getBankName());
-        model.addAttribute("amount", investmentTrustForm.getAmount());
-        model.addAttribute("brandName", investmentTrustForm.getBrandName());
+        model.addAttribute("name", investmentTrustForm.getName());
+        model.addAttribute("money", investmentTrustForm.getMoney());
+        model.addAttribute("fundName", investmentTrustForm.getFundName());
         model.addAttribute("investmentTrustApplication", investmentTrustForm);
         return "investmentTrustConfirmation";
     }

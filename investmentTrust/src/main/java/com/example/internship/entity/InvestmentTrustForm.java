@@ -12,17 +12,17 @@ public class InvestmentTrustForm {
     @NonNull
     private String bankName;
     @NonNull
-    private String subjectName;
+    private String bankAccountType;
     @NonNull
     private Integer bankAccountNum;
     @NonNull
-    private Integer accountName;
+    private String name;
     @NonNull
-    private String  brandName;
+    private String  fundName;
     @NonNull
-    private Integer amount;
+    private Integer money;
     @NonNull
-    private Integer branchName;
+    private String branchName;
 
     public String getBankName() {
         return bankName;
@@ -31,11 +31,11 @@ public class InvestmentTrustForm {
         this.bankName = bankName;
     }
 
-    public String getSubjectName() {
-        return subjectName;
+    public String getBankAccountType() {
+        return bankAccountType;
     }
-    public void setSubjectName(String subjectName) {
-        this.subjectName = subjectName;
+    public void setBankAccountType(String bankAccountType) {
+        this.bankAccountType = bankAccountType;
     }
 
     public Integer getBankAccountNum() {
@@ -43,31 +43,31 @@ public class InvestmentTrustForm {
     }
     public void setBankAccountNum(Integer bankAccountNum) {this.bankAccountNum = bankAccountNum;}
 
-    public Integer getAccountName() {
-        return accountName;
+    public String getName() {
+        return name;
     }
-    public void setAccountName(Integer accountName) {
-        this.accountName = accountName;
-    }
-
-    public String getBrandName() {
-        return brandName;
-    }
-    public void setBrandName(String brandName) {
-        this.brandName = brandName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Integer getAmount() {
-        return amount;
+    public String getFundName() {
+        return fundName;
     }
-    public void setAmount(Integer amount) {
-        this.amount = amount;
+    public void setFundName(String fundName) {
+        this.fundName = fundName;
     }
 
-    public Integer getBranchName() {
+    public Integer getMoney() {
+        return money;
+    }
+    public void setMoney(Integer money) {
+        this.money = money;
+    }
+
+    public String getBranchName() {
         return branchName;
     }
-    public void setBranchName(Integer branchName) {
+    public void setBranchName(String branchName) {
         this.branchName = branchName;
     }
 }
