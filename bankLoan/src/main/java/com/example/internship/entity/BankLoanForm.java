@@ -14,16 +14,18 @@ public class BankLoanForm {
     @NonNull
     private String bankName;
     @NonNull
-    private String bankAccountType;
+    private String branchName; //追加->支店名
+    @NonNull
+    private String bankAccountType; //追加->口座種別
     @NonNull
     private Integer bankAccountNum;
     @NonNull
-    private String name;
+    private String name; //追加->申請者名
     @NonNull
-    private Integer loanAmount;
+    private Integer loanAmount; //追加->借入金額
     @NonNull
-    private Integer annualIncome;
-    private BigDecimal interestRate;
+    private Integer annualIncome; //追加->借入年収
+    private BigDecimal interestRate; //追加->金利
 
     public String getBankName() {
         return bankName;
@@ -31,6 +33,14 @@ public class BankLoanForm {
 
     public void setBankName(String bankName) {
         this.bankName = bankName;
+    }
+
+    public String getBranchName() {
+        return branchName;
+    }
+
+    public void setBranchName(String branchName) {
+        this.branchName = branchName;
     }
 
     public Integer getBankAccountNum() {

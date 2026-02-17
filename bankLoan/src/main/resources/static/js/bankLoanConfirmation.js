@@ -7,6 +7,7 @@ function formatNumberWithComma(num) {
 // フォームデータをセッションストレージに保存
 function saveFormDataToSessionStorage() {
     const bankName = document.querySelector('[name="bankName"]');
+    const branchName = document.querySelector('[name="branchName"]');
     const bankAccountType = document.querySelector('[name="bankAccountType"]');
     const bankAccountNum = document.querySelector('[name="bankAccountNum"]');
     const name = document.querySelector('[name="name"]');
@@ -15,6 +16,7 @@ function saveFormDataToSessionStorage() {
 
     const formData = {
         bankName: bankName ? bankName.value : '',
+        branchName: branchName ? branchName.value : '',
         bankAccountType: bankAccountType ? bankAccountType.value : '',
         bankAccountNum: bankAccountNum ? bankAccountNum.value : '',
         name: name ? name.value : '',
@@ -34,6 +36,7 @@ function restoreFormDataFromSessionStorage() {
             const formData = JSON.parse(savedData);
 
             const bankName = document.querySelector('[name="bankName"]');
+            const branchName = document.querySelector('[name="branchName"]');
             const bankAccountType = document.querySelector('[name="bankAccountType"]');
             const bankAccountNum = document.querySelector('[name="bankAccountNum"]');
             const name = document.querySelector('[name="name"]');
@@ -41,6 +44,7 @@ function restoreFormDataFromSessionStorage() {
             const annualIncomeInput = document.getElementById('annualIncome');
 
             if (bankName && formData.bankName) bankName.value = formData.bankName;
+            if (branchName && formData.branchName) branchName.value = formData.branchName;
             if (bankAccountType && formData.bankAccountType) bankAccountType.value = formData.bankAccountType;
             if (bankAccountNum && formData.bankAccountNum) bankAccountNum.value = formData.bankAccountNum;
             if (name && formData.name) name.value = formData.name;
@@ -85,12 +89,16 @@ function setupNumberFormatting() {
 
     // その他のフィールドの変更も検知
     const bankName = document.querySelector('[name="bankName"]');
+    const branchName = document.querySelector('[name="branchName"]');
     const bankAccountType = document.querySelector('[name="bankAccountType"]');
     const bankAccountNum = document.querySelector('[name="bankAccountNum"]');
     const nameInput = document.querySelector('[name="name"]');
 
     if (bankName) {
         bankName.addEventListener('change', saveFormDataToSessionStorage);
+    }
+    if (branchName) {
+        branchName.addEventListener('change', saveFormDataToSessionStorage);
     }
     if (bankAccountType) {
         bankAccountType.addEventListener('change', saveFormDataToSessionStorage);
@@ -120,6 +128,7 @@ function removeCommasBeforeSubmit() {
 // フォーム送信時のバリデーション
 function validateFormBeforeSubmit(event) {
     const bankName = document.querySelector('[name="bankName"]');
+    const branchName = document.querySelector('[name="branchName"]');
     const bankAccountType = document.querySelector('[name="bankAccountType"]');
     const bankAccountNum = document.querySelector('[name="bankAccountNum"]');
     const name = document.querySelector('[name="name"]');
@@ -132,6 +141,10 @@ function validateFormBeforeSubmit(event) {
     // 各フィールドのバリデーション
     if (!bankName || !bankName.value || bankName.value.trim() === '') {
         errorMessages.push('金融機関名を選択してください');
+    }
+
+    if (!branchName || !branchName.value || branchName.value.trim() === '') {
+        errorMessages.push('支店名を選択してください');
     }
 
     if (!bankAccountType || !bankAccountType.value || bankAccountType.value.trim() === '') {

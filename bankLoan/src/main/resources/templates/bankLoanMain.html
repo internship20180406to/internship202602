@@ -94,11 +94,15 @@
             <ul id="errorList"></ul>
         </div>
         <p><label class="ml-1">金融機関名: <small class="text-danger ml-1">※</small></label><br>
-            <select th:field="*{bankName}" class="form-control">
+            <select th:field="*{bankName}" id="bankNameSelect" class="form-control" onchange="updateBranchOptions()">
                 <option th:each="option : ${nameOptions}"
                         th:value="${option}"
                         th:text="${option}">選択肢
                 </option>
+            </select></p>
+        <p><label class="ml-1">支店名: <small class="text-danger ml-1">※</small></label><br>
+            <select th:field="*{branchName}" id="branchNameSelect" class="form-control">
+                <option value="">支店を選択してください</option>
             </select></p>
         <p><label class="ml-1">口座種別: <small class="text-danger ml-1">※</small></label><br>
             <select th:field="*{bankAccountType}" class="form-control">
@@ -119,6 +123,41 @@
             <input type="reset" value="クリア" class="form-control-button form-clear-button"/></p>
     </form>
 </div>
+<script th:inline="javascript">
+    // Thymeleafから支店情報をJavaScriptオブジェクトに変換
+    const branchOptions = /*[[${branchOptions}]]*/;
+
+    // デバッグ用：ブラウザコンソールに出力
+    console.log('branchOptions:', branchOptions);
+
+    // 金融機関変更時に支店オプションを更新
+    function updateBranchOptions() {
+        const bankNameSelect = document.getElementById('bankNameSelect');
+        const branchNameSelect = document.getElementById('branchNameSelect');
+        const selectedBank = bankNameSelect.value;
+
+        // 支店選択肢をクリア
+        branchNameSelect.innerHTML = '<option value="">支店を選択してください</option>';
+
+        // 選択された金融機関の支店を追加
+        if (selectedBank && branchOptions && branchOptions[selectedBank]) {
+            const branches = branchOptions[selectedBank];
+            if (Array.isArray(branches)) {
+                branches.forEach(function(branch) {
+                    const option = document.createElement('option');
+                    option.value = branch;
+                    option.textContent = branch;
+                    branchNameSelect.appendChild(option);
+                });
+            }
+        }
+    }
+
+    // ページ読み込み時に初期支店を設定
+    document.addEventListener('DOMContentLoaded', function() {
+        updateBranchOptions();
+    });
+</script>
 <script src="/js/bankLoanConfirmation.js"></script>
 </body>
 

@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -26,10 +28,32 @@ public class BankLoanController {
             "はまなす銀行"
     );
 
+    private static final Map<String, List<String>> BRANCH_NAMES = new HashMap<String, List<String>>() {{
+        put("山陰共同銀行", Arrays.asList(
+                "松江支店",
+                "出雲支店",
+                "米子支店",
+                "益田支店"
+        ));
+        put("ながれぼし銀行", Arrays.asList(
+                "札幌支店",
+                "旭川支店",
+                "函館支店",
+                "帯広支店"
+        ));
+        put("はまなす銀行", Arrays.asList(
+                "青森支店",
+                "弘前支店",
+                "八戸支店",
+                "五所川原支店"
+        ));
+    }};
+
     @GetMapping("/bankLoan")
     public String bankTransfer(Model model) {
         model.addAttribute("bankLoanApplication", new BankLoanForm());
         model.addAttribute("nameOptions", BANK_NAME_OPTIONS);
+        model.addAttribute("branchOptions", BRANCH_NAMES);
         return "bankLoanMain";
     }
 
