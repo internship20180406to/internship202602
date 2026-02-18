@@ -20,5 +20,20 @@
         <div class="step-label">注文完了</div>
     </div>
 </div>
+<div th:fragment="chat">
+    <div id="chatFab" class="chat-fab">💬</div>
+    <div id="chatWindow" class="chat-window">
+        <div class="chat-header">
+            <span>投資信託アシスタント</span>
+            <button id="chatClose" class="chat-close">✕</button>
+        </div>
+        <div id="chatMessages" class="chat-messages"></div>
+        <div class="chat-input-area">
+            <input type="text" id="chatInput" class="chat-input" placeholder="質問を入力してください…"/>
+            <button id="chatSend" class="chat-send-btn">送信</button>
+        </div>
+    </div>
+    <script th:src="@{/js/chat.js}"></script>
+</div>
 </body>
 </html>
