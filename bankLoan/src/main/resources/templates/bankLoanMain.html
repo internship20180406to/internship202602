@@ -160,7 +160,7 @@
             </div>
         </div>
         <p><label class="ml-1">口座種別:<small class="text-danger ml-1 required-mark" data-required-for="bankAccountTypeSelect">※</small></label><br>
-            <select th:field="*{bankAccountType}" id="bankAccountTypeSelect" class="form-control">
+            <select th:field="*{bankAccountType}" id="bankAccountTypeSelect" class="form-control" required>
                 <option value="" disabled hidden>口座種別を選択してください</option>
                 <option value="普通">普通</option>
                 <option value="当座">当座</option>
