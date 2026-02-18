@@ -146,6 +146,7 @@
     <input type="hidden" name="transferDateTime" th:field="*{transferDateTime}"/>
     <div class="button-area">
         <input type="submit"
+               id = "submit"
                value="振込"
                class="form-control-button form-confirmation-button" />
 
@@ -155,8 +156,7 @@
                class="form-control-button form-clear-button" />
     </div>
 </form>
-</form>
-<script th:inline="javascript" src="/js/bankTransferConfirmation.js"></script>
+    <script th:inline="javascript" src="/js/bankTransferConfirmation.js"></script>
 </div>
 </body>
 </html>
