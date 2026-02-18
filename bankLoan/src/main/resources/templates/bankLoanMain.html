@@ -8,8 +8,6 @@
         background-color: #f0f0f0;
         margin: 0;
         padding: 0;
-        display: flex;
-        padding-top: 40px;
         padding-bottom: 40px;
         justify-content: center;
         align-items: center;
@@ -24,6 +22,7 @@
          box-shadow: 0 4px 8px rgba(0,0,0,0.1);
          min-height: 50vh;
          overflow: auto;
+         margin: auto;
         }
         .form-control {
             width: 100%;
@@ -39,6 +38,13 @@
         width: 80px;
         padding: 10px 20px;
         margin-top: 10px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        }
+        .form-control-buttonVer2 {
+        padding: 10px ;
+        margin-top: 10px 20px;
         border: none;
         cursor: pointer;
         border-radius: 5px;
@@ -64,9 +70,34 @@
         background-color:#FADBDA;
         }
 
+        .backgroundPaleBlue{
+        padding:15px;
+        color:grey;
+        background-color:#DDEEFF;
+        }
+        .backgroundBlue{
+        padding:15px;
+        background-color:#66B3FF;
+        }
+        .header{
+        width:100%;
+        margin: auto;
+        text-align: center;
+        }
+
     </style>
 </head>
 <body>
+<div   class="header">
+    <table style="border-spacing:0px" class="header">
+        <tr>
+            <td class="backgroundBlue">情報入力</td>
+            <td class="backgroundPaleBlue">申込確認</td>
+            <td class="backgroundPaleBlue">申込完了</td>
+        </tr>
+    </table>
+</div>
+<br style="clear: both;">
 <div class="content">
     <h1>ローン申込情報入力</h1>
     <form action="#" th:action="@{/bankLoanConfirmation}" th:object="${bankLoanApplication}" method="post">
