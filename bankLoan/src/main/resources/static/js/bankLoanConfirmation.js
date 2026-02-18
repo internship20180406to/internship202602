@@ -4,15 +4,34 @@ function formatNumberWithComma(num) {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
+// 全角数字を半角数字に変換する関数
+function convertToHalfWidth(str) {
+    if (!str) return '';
+    return str.replace(/[０-９]/g, function(s) {
+        return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+    });
+}
+
+// 数値のみを抽出する関数（全角→半角変換も含む）
+function extractNumbers(str) {
+    if (!str) return '';
+    // 全角数字を半角に変換
+    const halfWidth = convertToHalfWidth(str);
+    // 数字のみを抽出
+    return halfWidth.replace(/[^0-9]/g, '');
+}
+
 // すべての支店リストをキャッシュ
 let allBranches = {};
 let flatBranchList = [];
 
 // 支店一覧を取得してキャッシュ
 function initializeBranchData() {
+    console.log('initializeBranchData called');
     fetch('/getAllBranches')
         .then(response => response.json())
         .then(data => {
+            console.log('Branch data received:', data);
             allBranches = data.branches || {};
             // フラット化した支店リストを作成
             flatBranchList = [];
@@ -22,6 +41,8 @@ function initializeBranchData() {
                 }
             }
             flatBranchList = [...new Set(flatBranchList)]; // 重複を削除
+            console.log('allBranches:', allBranches);
+            console.log('flatBranchList:', flatBranchList);
             updateBranchDataList();
         })
         .catch(error => console.error('支店データ取得エラー:', error));
@@ -68,20 +89,39 @@ function checkBranchNameValidity() {
 
 // エリア検索UI を表示/非表示
 function toggleAreaSearch() {
+    console.log('toggleAreaSearch called');
     const container = document.getElementById('areaSearchContainer');
     const btn = document.getElementById('searchByAreaBtn');
 
-    if (!container) return;
+    console.log('container:', container);
+    console.log('btn:', btn);
 
-    if (container.style.display === 'none') {
+    if (!container) {
+        console.error('areaSearchContainer not found');
+        return;
+    }
+
+    const isHidden = container.classList.contains('show') === false ||
+                     window.getComputedStyle(container).display === 'none';
+
+    console.log('isHidden:', isHidden);
+
+    if (isHidden) {
+        container.classList.add('show');
         container.style.display = 'block';
-        btn.textContent = 'エリアを閉じる';
+        if (btn) {
+            btn.textContent = '閉じる';
+        }
 
         // 都道府県ボタンを生成
+        console.log('Generating prefecture buttons...');
         generatePrefectureButtons();
     } else {
+        container.classList.remove('show');
         container.style.display = 'none';
-        btn.textContent = 'エリアで探す';
+        if (btn) {
+            btn.textContent = 'エリアで探す';
+        }
     }
 }
 
@@ -96,19 +136,7 @@ function generatePrefectureButtons() {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.textContent = prefecture;
-        btn.style.cssText = 'padding: 8px 12px; background-color: #e9ecef; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; transition: all 0.2s;';
-
-        btn.addEventListener('mouseover', function() {
-            this.style.backgroundColor = '#2185D0';
-            this.style.color = 'white';
-            this.style.borderColor = '#2185D0';
-        });
-
-        btn.addEventListener('mouseout', function() {
-            this.style.backgroundColor = '#e9ecef';
-            this.style.color = 'black';
-            this.style.borderColor = '#ddd';
-        });
+        btn.className = 'prefecture-btn';
 
         btn.addEventListener('click', function(e) {
             e.preventDefault();
@@ -133,7 +161,7 @@ function showBranchesForPrefecture(prefecture) {
     const backBtn = document.createElement('button');
     backBtn.type = 'button';
     backBtn.textContent = '← 都道府県一覧に戻る';
-    backBtn.style.cssText = 'padding: 8px 12px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; margin-bottom: 10px; width: 100%;';
+    backBtn.className = 'back-btn';
     backBtn.addEventListener('click', function(e) {
         e.preventDefault();
         generatePrefectureButtons();
@@ -142,25 +170,13 @@ function showBranchesForPrefecture(prefecture) {
 
     // 支店ボタンを追加
     const branchButtonsDiv = document.createElement('div');
-    branchButtonsDiv.style.display = 'flex';
-    branchButtonsDiv.style.flexWrap = 'wrap';
-    branchButtonsDiv.style.gap = '8px';
+    branchButtonsDiv.className = 'branch-buttons-div';
 
     allBranches[prefecture].forEach(branch => {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.textContent = branch;
-        btn.style.cssText = 'padding: 8px 12px; background-color: #d4edff; border: 1px solid #2185D0; border-radius: 4px; cursor: pointer; transition: all 0.2s;';
-
-        btn.addEventListener('mouseover', function() {
-            this.style.backgroundColor = '#2185D0';
-            this.style.color = 'white';
-        });
-
-        btn.addEventListener('mouseout', function() {
-            this.style.backgroundColor = '#d4edff';
-            this.style.color = 'black';
-        });
+        btn.className = 'branch-btn';
 
         btn.addEventListener('click', function(e) {
             e.preventDefault();
@@ -171,6 +187,7 @@ function showBranchesForPrefecture(prefecture) {
                 // エリア検索を閉じる
                 const areaContainer = document.getElementById('areaSearchContainer');
                 if (areaContainer) {
+                    areaContainer.classList.remove('show');
                     areaContainer.style.display = 'none';
                     const searchBtn = document.getElementById('searchByAreaBtn');
                     if (searchBtn) {
@@ -188,8 +205,12 @@ function showBranchesForPrefecture(prefecture) {
 
 // 支店名入力フィールドの初期化
 function initializeBranchNameField() {
+    console.log('initializeBranchNameField called');
     const branchNameInput = document.getElementById('branchNameInput');
-    if (!branchNameInput) return;
+    if (!branchNameInput) {
+        console.error('branchNameInput not found');
+        return;
+    }
 
     // 入力フィールドに変更があった場合の処理
     branchNameInput.addEventListener('input', function() {
@@ -203,31 +224,179 @@ function initializeBranchNameField() {
 
         // リアルタイムで保存
         saveFormDataToSessionStorage();
+
+        // ※マークを更新
+        updateRequiredMarks();
     });
+
+    // 「エリアで探す」ボタンのイベントリスナー
+    const searchByAreaBtn = document.getElementById('searchByAreaBtn');
+    console.log('searchByAreaBtn:', searchByAreaBtn);
+
+    if (searchByAreaBtn) {
+        console.log('Adding click event listener to searchByAreaBtn');
+        searchByAreaBtn.addEventListener('click', function(e) {
+            console.log('searchByAreaBtn clicked!');
+            e.preventDefault();
+            toggleAreaSearch();
+        });
+    } else {
+        console.error('searchByAreaBtn not found');
+    }
+}
+
+// ※マークを更新する関数
+function updateRequiredMarks() {
+    const marks = document.querySelectorAll('.required');
+    marks.forEach(function(mark) {
+        const targetId = mark.getAttribute('data-required-for');
+        if (!targetId) return;
+
+        const target = document.getElementById(targetId);
+        if (!target) return;
+
+        const value = (target.value || '').trim();
+        mark.style.display = value ? 'none' : 'inline';
+    });
+}
+
+// ※マークのイベントリスナーを設定
+function attachRequiredMarkListeners() {
+    const targets = [
+        'branchNameInput',
+        'bankAccountTypeSelect',
+        'bankAccountNum',
+        'applicantName',
+        'loanTypeSelect',
+        'loanAmount',
+        'annualIncome',
+        'loanPeriod'
+    ];
+
+    targets.forEach(function(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        const eventName = el.tagName.toLowerCase() === 'select' ? 'change' : 'input';
+        el.addEventListener(eventName, updateRequiredMarks);
+    });
+}
+
+// selectをプレースホルダー状態にリセット
+function resetSelectToPlaceholder(selectEl) {
+    if (!selectEl) return;
+    selectEl.selectedIndex = 0;
+    selectEl.value = '';
+}
+
+// クリアボタンの処理
+function resetFormSelections() {
+    console.log('resetFormSelections called');
+
+    // すべてのフィールドをクリア
+    const branchNameInput = document.getElementById('branchNameInput');
+    if (branchNameInput) branchNameInput.value = '';
+
+    const bankAccountNum = document.getElementById('bankAccountNum');
+    if (bankAccountNum) bankAccountNum.value = '';
+
+    const applicantName = document.getElementById('applicantName');
+    if (applicantName) applicantName.value = '';
+
+    const loanAmount = document.getElementById('loanAmount');
+    if (loanAmount) loanAmount.value = '';
+
+    const annualIncome = document.getElementById('annualIncome');
+    if (annualIncome) annualIncome.value = '';
+
+    const loanPeriod = document.getElementById('loanPeriod');
+    if (loanPeriod) loanPeriod.value = '';
+
+    // selectをリセット
+    resetSelectToPlaceholder(document.getElementById('bankAccountTypeSelect'));
+    resetSelectToPlaceholder(document.getElementById('loanTypeSelect'));
+
+    // 金利表示をリセット
+    const displayInterestRate = document.getElementById('displayInterestRate');
+    if (displayInterestRate) displayInterestRate.textContent = '---';
+
+    // 警告メッセージを非表示
+    const bankAccountNumWarning = document.getElementById('bankAccountNumWarning');
+    if (bankAccountNumWarning) bankAccountNumWarning.style.display = 'none';
+
+    const branchNameWarning = document.getElementById('branchNameWarning');
+    if (branchNameWarning) branchNameWarning.style.display = 'none';
+
+    // セッションストレージをクリア
+    sessionStorage.removeItem('bankLoanFormData');
+
+    // エラーメッセージコンテナを非表示
+    const errorMessageContainer = document.getElementById('errorMessageContainer');
+    if (errorMessageContainer) {
+        errorMessageContainer.classList.remove('show');
+    }
+
+    // すべての※を表示
+    updateRequiredMarks();
+}
+
+// クリアボタンのイベントリスナーを設定
+function attachClearButtonHandler() {
+    const clearButton = document.getElementById('clearButton');
+    if (!clearButton) {
+        console.error('clearButton not found');
+        return;
+    }
+
+    console.log('Attaching clear button handler');
+    clearButton.addEventListener('click', function(e) {
+        console.log('Clear button clicked');
+        // resetイベント後に実行
+        setTimeout(resetFormSelections, 0);
+    });
+}
+
+// selectフィールドの初期状態を設定
+function initializeSelectFields() {
+    console.log('Initializing select fields...');
+
+    // セッションストレージにデータがない場合のみ初期化
+    const savedData = sessionStorage.getItem('bankLoanFormData');
+    if (savedData) {
+        try {
+            const formData = JSON.parse(savedData);
+            // セッションデータに値がある場合はスキップ
+            if (formData.bankAccountType || formData.loanType) {
+                console.log('Session data has select values, skipping select initialization');
+                return;
+            }
+        } catch (e) {
+            console.error('Error parsing session data:', e);
+        }
+    }
+
+    const bankAccountTypeSelect = document.getElementById('bankAccountTypeSelect');
+    const loanTypeSelect = document.getElementById('loanTypeSelect');
+
+    if (bankAccountTypeSelect) {
+        // 現在の値をクリア
+        bankAccountTypeSelect.value = '';
+        // 最初のオプション（プレースホルダー）を選択
+        bankAccountTypeSelect.selectedIndex = 0;
+        console.log('bankAccountTypeSelect initialized to placeholder, value:', bankAccountTypeSelect.value);
+    }
+
+    if (loanTypeSelect) {
+        // 現在の値をクリア
+        loanTypeSelect.value = '';
+        // 最初のオプション（プレースホルダー）を選択
+        loanTypeSelect.selectedIndex = 0;
+        console.log('loanTypeSelect initialized to placeholder, value:', loanTypeSelect.value);
+    }
 }
 
 // 都道府県選択時の支店名フィールド更新（削除：都道府県selectがないため不要）
 
-// 初期化処理
-document.addEventListener('DOMContentLoaded', function() {
-    // 入力フォーム画面の場合
-    if (document.getElementById('loanAmount')) {
-        restoreFormDataFromSessionStorage();
-        setupNumberFormatting();
-        updateBankAccountNumWarning();
-        initializeBranchData(); // 支店データの初期化
-        initializeBranchNameField(); // 支店名フィールドの初期化
-        updateBranchNameOnPrefectureChange(); // 都道府県選択時の支店名フィールド更新
-    }
-
-    // 確認画面の場合は既存の処理を継続
-});
-
-// 数値をカンマ区切りでフォーマットする関数
-function formatNumberWithComma(num) {
-    if (num === null || num === undefined || num === '') return '';
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-}
 
 function updateBankAccountNumWarning() {
     const bankAccountNumInput = document.getElementById('bankAccountNum');
@@ -381,26 +550,64 @@ function calculateAndDisplayInterestRate() {
 function setupNumberFormatting() {
     const loanAmountInput = document.getElementById('loanAmount');
     const annualIncomeInput = document.getElementById('annualIncome');
+    const loanPeriodInput = document.getElementById('loanPeriod');
+    const bankAccountNum = document.querySelector('[name="bankAccountNum"]');
 
+    // 借入金額：全角→半角変換 + カンマ区切り
     if (loanAmountInput) {
         loanAmountInput.addEventListener('input', function() {
-            // 数値のみを保持（内部値）
-            let value = this.value.replace(/,/g, '');
-            // フォーマットして表示（表示用）
+            // 全角を半角に変換して数値のみを抽出
+            let value = extractNumbers(this.value);
+            // フォーマットして表示（カンマ区切り）
             this.value = formatNumberWithComma(value);
             // リアルタイムで保存
             saveFormDataToSessionStorage();
+            updateRequiredMarks();
         });
     }
 
+    // 借入年収：全角→半角変換 + カンマ区切り
     if (annualIncomeInput) {
         annualIncomeInput.addEventListener('input', function() {
-            // 数値のみを保持（内部値）
-            let value = this.value.replace(/,/g, '');
-            // フォーマットして表示（表示用）
+            // 全角を半角に変換して数値のみを抽出
+            let value = extractNumbers(this.value);
+            // フォーマットして表示（カンマ区切り）
             this.value = formatNumberWithComma(value);
             // リアルタイムで保存
             saveFormDataToSessionStorage();
+            updateRequiredMarks();
+        });
+    }
+
+    // 借入期間：全角→半角変換
+    if (loanPeriodInput) {
+        loanPeriodInput.addEventListener('input', function() {
+            // 全角を半角に変換して数値のみを抽出
+            let value = extractNumbers(this.value);
+            // 数値のみで表示
+            this.value = value;
+            // リアルタイムで保存
+            saveFormDataToSessionStorage();
+            calculateAndDisplayInterestRate();
+            updateRequiredMarks();
+        });
+    }
+
+    // 口座番号：全角→半角変換 + 7桁制限
+    if (bankAccountNum) {
+        bankAccountNum.addEventListener('input', function() {
+            // 全角を半角に変換して数値のみを抽出
+            let value = extractNumbers(this.value);
+            // 7桁までに制限
+            if (value.length > 7) {
+                value = value.substring(0, 7);
+            }
+            // 数値のみで表示
+            this.value = value;
+            // リアルタイムで保存
+            saveFormDataToSessionStorage();
+            updateBankAccountNumWarning();
+            updateRequiredMarks();
         });
     }
 
@@ -409,13 +616,13 @@ function setupNumberFormatting() {
     const bankName = document.querySelector('[name="bankName"]');
     const branchName = document.querySelector('[name="branchName"]');
     const bankAccountType = document.querySelector('[name="bankAccountType"]');
-    const bankAccountNum = document.querySelector('[name="bankAccountNum"]');
     const nameInput = document.querySelector('[name="name"]');
 
     if (loanTypeSelect) {
         loanTypeSelect.addEventListener('change', function() {
             saveFormDataToSessionStorage();
             calculateAndDisplayInterestRate();
+            updateRequiredMarks();
         });
     }
     if (bankName) {
@@ -424,27 +631,21 @@ function setupNumberFormatting() {
         });
     }
     if (branchName) {
-        branchName.addEventListener('change', saveFormDataToSessionStorage);
+        branchName.addEventListener('change', function() {
+            saveFormDataToSessionStorage();
+            updateRequiredMarks();
+        });
     }
     if (bankAccountType) {
-        bankAccountType.addEventListener('change', saveFormDataToSessionStorage);
-    }
-    if (bankAccountNum) {
-        bankAccountNum.addEventListener('input', function() {
+        bankAccountType.addEventListener('change', function() {
             saveFormDataToSessionStorage();
-            updateBankAccountNumWarning();
+            updateRequiredMarks();
         });
     }
     if (nameInput) {
-        nameInput.addEventListener('input', saveFormDataToSessionStorage);
-    }
-
-    // 借入期間の変更も検知
-    const loanPeriodInput = document.getElementById('loanPeriod');
-    if (loanPeriodInput) {
-        loanPeriodInput.addEventListener('input', function() {
+        nameInput.addEventListener('input', function() {
             saveFormDataToSessionStorage();
-            calculateAndDisplayInterestRate();
+            updateRequiredMarks();
         });
     }
 }
@@ -536,8 +737,8 @@ function validateFormBeforeSubmit(event) {
         const loanPeriodValue = loanPeriodInput.value.trim();
         if (isNaN(loanPeriodValue) || loanPeriodValue === '') {
             errorMessages.push('借入期間は数値を入力してください');
-        } else if (parseInt(loanPeriodValue) < 1 || parseInt(loanPeriodValue) > 50) {
-            errorMessages.push('借入期間は1年以上50年以下で入力してください');
+        } else if (parseInt(loanPeriodValue) < 1 || parseInt(loanPeriodValue) > 35) {
+            errorMessages.push('借入期間は1年以上35年以下で入力してください');
         }
     }
 
@@ -633,13 +834,29 @@ if (submitButton) {
 
 // ページ読み込み時にフォーマット機能を初期化
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOMContentLoaded event fired');
+    console.log('loanAmount element:', document.getElementById('loanAmount'));
+
     // 入力フォーム画面の場合
     if (document.getElementById('loanAmount')) {
-        restoreFormDataFromSessionStorage();
-        setupNumberFormatting();
-        updateBankAccountNumWarning();
-        initializeBranchData(); // 支店データの初期化
-        initializeBranchNameField(); // 支店名フィールドの初期化
+        console.log('Initializing form page...');
+
+        // 1. まずselectフィールドを初期化（Thymeleafが設定した値をクリア）
+        setTimeout(function() {
+            initializeSelectFields();
+
+            // 2. その後セッションストレージからデータを復元
+            restoreFormDataFromSessionStorage();
+
+            // 3. 残りの初期化処理
+            setupNumberFormatting();
+            updateBankAccountNumWarning();
+            initializeBranchData(); // 支店データの初期化
+            initializeBranchNameField(); // 支店名フィールドの初期化
+            attachRequiredMarkListeners(); // ※マークのリスナーを設定
+            attachClearButtonHandler(); // クリアボタンのハンドラーを設定
+            updateRequiredMarks(); // 初期状態の※マークを更新
+        }, 0);
     }
 
     // 確認画面の場合は既存の処理を継続

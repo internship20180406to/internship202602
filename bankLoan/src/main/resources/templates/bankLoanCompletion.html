@@ -35,6 +35,35 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 60px 40px;
+            position: relative;
+        }
+
+        .header-logo {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-logo-icon {
+            font-size: 32px;
+            background: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .header-logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .header-icon {
@@ -66,16 +95,77 @@
             line-height: 1.6;
         }
 
-        .progress-bar {
-            height: 4px;
-            background-color: rgba(255, 255, 255, 0.3);
+        .progress-container {
             margin-top: 20px;
+            position: relative;
+            padding: 0 50px;
         }
 
-        .progress-fill {
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .progress-step-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.3);
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            position: relative;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+
+        .progress-step.completed .progress-step-circle {
+            background-color: #4caf50;
+            color: white;
+            border-color: #4caf50;
+        }
+
+        .progress-step-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: 500;
+            margin-top: 5px;
+        }
+
+        .progress-step.completed .progress-step-label {
+            color: white;
+            font-weight: 600;
+        }
+
+        .progress-bar-line {
+            position: absolute;
+            top: 18px;
+            left: 50px;
+            right: 50px;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.3);
+            z-index: 1;
+        }
+
+        .progress-bar-fill {
             height: 100%;
             background-color: #4caf50;
             width: 100%;
+            transition: width 0.6s ease;
+            position: relative;
         }
 
         .content {
@@ -187,6 +277,22 @@
                 padding: 40px 25px;
             }
 
+            .header-logo {
+                position: static;
+                justify-content: center;
+                margin-bottom: 15px;
+            }
+
+            .header-logo-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 28px;
+            }
+
+            .header-logo-text {
+                font-size: 16px;
+            }
+
             .header-icon {
                 font-size: 60px;
                 margin-bottom: 15px;
@@ -198,6 +304,26 @@
 
             .header p {
                 font-size: 14px;
+            }
+
+            .progress-container {
+                padding: 0 30px;
+            }
+
+            .progress-step-circle {
+                width: 30px;
+                height: 30px;
+                font-size: 12px;
+            }
+
+            .progress-step-label {
+                font-size: 11px;
+            }
+
+            .progress-bar-line {
+                left: 30px;
+                right: 30px;
+                top: 15px;
             }
 
             .content {
@@ -226,11 +352,31 @@
 <body>
 <div class="container">
     <div class="header">
+        <div class="header-logo">
+            <div class="header-logo-icon">🏦</div>
+            <div class="header-logo-text">かわらそば銀行</div>
+        </div>
         <div class="header-icon">🎉</div>
         <h1>申込が完了しました</h1>
         <p>ご利用いただきありがとうございました</p>
-        <div class="progress-bar">
-            <div class="progress-fill"></div>
+        <div class="progress-container">
+            <div class="progress-bar-line">
+                <div class="progress-bar-fill"></div>
+            </div>
+            <div class="progress-steps">
+                <div class="progress-step completed">
+                    <div class="progress-step-circle">✓</div>
+                    <div class="progress-step-label">入力</div>
+                </div>
+                <div class="progress-step completed">
+                    <div class="progress-step-circle">✓</div>
+                    <div class="progress-step-label">確認</div>
+                </div>
+                <div class="progress-step completed">
+                    <div class="progress-step-circle">✓</div>
+                    <div class="progress-step-label">完了</div>
+                </div>
+            </div>
         </div>
     </div>
 
