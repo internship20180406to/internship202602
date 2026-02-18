@@ -16,7 +16,7 @@ body {
 
 .content {
     background-color: #ffffff;
-    width: 430px;
+    width: 860px;
     max-width: 95%;
     padding: 0 0 20px 0;
     border-radius: 10px;
@@ -33,6 +33,40 @@ h1 {
     margin: 0;
     padding: 20px 0;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+/* === ナビバー === */
+
+.nav-bar {
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    height: 56px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    background: #ffffff;
+}
+
+.nav-back {
+    background: none;
+    border: none;
+    font-size: 32px;
+    cursor: pointer;
+    color: #000000;
+    line-height: 1;
+    padding: 0;
+    width: 32px;
+}
+
+.nav-title {
+    flex: 1;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+    color: #4579FF;
+}
+
+.nav-spacer {
+    width: 32px;
 }
 
 /* === ラベル・テキスト === */

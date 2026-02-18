@@ -104,6 +104,145 @@
     gap: 8px;
 }
 
+/* === 2カラムフォームグリッド === */
+
+.form-grid-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 16px;
+}
+
+/* === 投資先情報レイアウト === */
+
+.fund-top-layout {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+
+.fund-selector-col {
+    flex: 0 0 240px;
+}
+
+/* === ファンド詳細カード === */
+
+.fund-detail-card {
+    flex: 1;
+    background-color: #FBFBFB;
+    border: 1px solid #E5E5E5;
+    border-radius: 10px;
+    padding: 16px;
+}
+
+.fund-price-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #E8E8E8;
+}
+
+.fund-price-label {
+    font-size: 12px;
+    color: #888888;
+    margin-bottom: 4px;
+}
+
+.fund-price-main {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.fund-price-value {
+    font-size: 26px;
+    font-weight: 700;
+    color: #000000;
+}
+
+.fund-price-unit {
+    font-size: 14px;
+    color: #888888;
+}
+
+.fund-change-badge {
+    font-size: 14px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+}
+
+.fund-change-badge.positive {
+    color: #00B53C;
+    background-color: rgba(0, 181, 60, 0.08);
+}
+
+.fund-change-badge.negative {
+    color: #dc2626;
+    background-color: rgba(220, 38, 38, 0.08);
+}
+
+.fund-detail-rows {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.fund-detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 7px 8px;
+    border-bottom: 1px solid #E8E8E8;
+}
+
+.fund-detail-row:nth-last-child(-n+2) {
+    border-bottom: none;
+}
+
+.fund-detail-label {
+    font-size: 12px;
+    color: #888888;
+}
+
+.fund-detail-value {
+    font-size: 12px;
+    font-weight: 600;
+    color: #000000;
+}
+
+/* === チャートコントロール === */
+
+.chart-controls {
+    display: flex;
+    gap: 8px;
+    padding: 8px 0;
+    align-items: center;
+}
+
+.chart-period-btn {
+    padding: 4px 14px;
+    border: 1px solid #E5E7EB;
+    border-radius: 4px;
+    background: #ffffff;
+    font-size: 13px;
+    cursor: pointer;
+    color: #666666;
+    font-family: 'Noto Sans JP', 'Noto Sans', sans-serif;
+}
+
+.chart-period-btn.active {
+    background: #4579FF;
+    border-color: #4579FF;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.chart-period-btn:hover:not(.active) {
+    background: #f0f4ff;
+    border-color: #4579FF;
+}
+
 /* === 口座履歴選択 === */
 
 .account-history-panel {

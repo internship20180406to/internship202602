@@ -5,11 +5,17 @@
     <title>投資信託注文情報入力画面</title>
     <link rel="stylesheet" th:href="@{/css/common.css}">
     <link rel="stylesheet" th:href="@{/css/form.css}">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3/build/global/luxon.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.3.1/dist/chartjs-adapter-luxon.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.2.1/dist/chartjs-chart-financial.min.js"></script>
 </head>
 <body>
 <div class="content">
-    <h1>投資信託注文情報</h1>
+    <nav class="nav-bar">
+        <span class="nav-title">投資信託注文情報</span>
+        <div class="nav-spacer"></div>
+    </nav>
     <div th:replace="~{fragments :: stepBar(1)}"></div>
     <form action="#" th:action="@{/investmentTrustConfirmation}" th:object="${investmentTrustApplication}" method="post">
 
@@ -33,27 +39,43 @@
                 </div>
             </div>
 
-            <p><label class="ml-1">金融機関名: <small class="text-danger ml-1">※</small></label><br>
-                <select th:field="*{bankName}" class="form-control" id="bankName">
-                    <option value="">-- 選択してください --</option>
-                    <option th:each="option : ${bankNameOptions}"
-                            th:value="${option}"
-                            th:text="${option}">選択肢
-                    </option>
-                </select>
-                <span th:if="${#fields.hasErrors('bankName')}"
-                      th:errors="*{bankName}"
-                      class="error-message"></span>
-            </p>
+            <div class="form-grid-2col">
+                <p><label class="ml-1">金融機関名: <small class="text-danger ml-1">※</small></label><br>
+                    <select th:field="*{bankName}" class="form-control" id="bankName">
+                        <option value="">-- 選択してください --</option>
+                        <option th:each="option : ${bankNameOptions}"
+                                th:value="${option}"
+                                th:text="${option}">選択肢
+                        </option>
+                    </select>
+                    <span th:if="${#fields.hasErrors('bankName')}"
+                          th:errors="*{bankName}"
+                          class="error-message"></span>
+                </p>
 
-            <p><label class="ml-1">支店名: <small class="text-danger ml-1">※</small></label><br>
-                <select th:field="*{branchName}" class="form-control" id="branchName">
-                    <option value="">-- 金融機関を先に選択してください --</option>
-                </select>
-                <span th:if="${#fields.hasErrors('branchName')}"
-                      th:errors="*{branchName}"
-                      class="error-message"></span>
-            </p>
+                <p><label class="ml-1">口座番号: <small class="text-danger ml-1">※</small></label><br>
+                    <input type="text" th:field="*{bankAccountNum}" class="form-control" placeholder="1234567" pattern="[0-9]{7}" maxlength="7" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'')"/>
+                    <span th:if="${#fields.hasErrors('bankAccountNum')}"
+                          th:errors="*{bankAccountNum}"
+                          class="error-message"></span>
+                </p>
+
+                <p><label class="ml-1">支店名: <small class="text-danger ml-1">※</small></label><br>
+                    <select th:field="*{branchName}" class="form-control" id="branchName">
+                        <option value="">-- 金融機関を先に選択してください --</option>
+                    </select>
+                    <span th:if="${#fields.hasErrors('branchName')}"
+                          th:errors="*{branchName}"
+                          class="error-message"></span>
+                </p>
+
+                <p><label class="ml-1">購入者名: <small class="text-danger ml-1">※</small></label><br>
+                    <input type="text" th:field="*{name}" class="form-control" placeholder="山田太郎"/>
+                    <span th:if="${#fields.hasErrors('name')}"
+                          th:errors="*{name}"
+                          class="error-message"></span>
+                </p>
+            </div>
 
             <p><label class="ml-1">科目名: <small class="text-danger ml-1">※</small></label><br>
                 <select th:field="*{bankAccountType}" class="form-control">
@@ -67,55 +89,63 @@
                       th:errors="*{bankAccountType}"
                       class="error-message"></span>
             </p>
-
-            <p><label class="ml-1">口座番号: <small class="text-danger ml-1">※</small></label><br>
-                <input type="text" th:field="*{bankAccountNum}" class="form-control" placeholder="1234567" pattern="[0-9]{7}" maxlength="7" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'')"/>
-                <span th:if="${#fields.hasErrors('bankAccountNum')}"
-                      th:errors="*{bankAccountNum}"
-                      class="error-message"></span>
-            </p>
-
-            <p><label class="ml-1">購入者名: <small class="text-danger ml-1">※</small></label><br>
-                <input type="text" th:field="*{name}" class="form-control" placeholder="山田太郎"/>
-                <span th:if="${#fields.hasErrors('name')}"
-                      th:errors="*{name}"
-                      class="error-message"></span>
-            </p>
         </div>
 
         <div class="form-section">
             <h2 class="form-section-title">投資先情報</h2>
 
-            <p><label class="ml-1">銘柄選択: <small class="text-danger ml-1">※</small></label><br>
-                <select th:field="*{fundName}" class="form-control" id="fundName">
-                    <option value="">-- 選択してください --</option>
-                    <option th:each="option : ${fundNameOptions}"
-                            th:value="${option}"
-                            th:text="${option}">選択肢
-                    </option>
-                </select>
-                <span th:if="${#fields.hasErrors('fundName')}"
-                      th:errors="*{fundName}"
-                      class="error-message"></span>
-            </p>
+            <div class="fund-top-layout">
+                <div class="fund-selector-col">
+                    <p><label class="ml-1">銘柄選択: <small class="text-danger ml-1">※</small></label><br>
+                        <select th:field="*{fundName}" class="form-control" id="fundName">
+                            <option value="">-- 選択してください --</option>
+                            <option th:each="option : ${fundNameOptions}"
+                                    th:value="${option}"
+                                    th:text="${option}">選択肢
+                            </option>
+                        </select>
+                        <span th:if="${#fields.hasErrors('fundName')}"
+                              th:errors="*{fundName}"
+                              class="error-message"></span>
+                    </p>
+                </div>
 
-            <div id="fundInfoCard" class="fund-info-card" style="display: none;">
-                <div class="fund-info-row">
-                    <span class="fund-info-label">株価（終値）</span>
-                    <span id="fundBasePrice" class="fund-info-value"></span>
+                <div id="fundInfoCard" class="fund-detail-card" style="display: none;">
+                    <div class="fund-price-header">
+                        <div>
+                            <div class="fund-price-label">基準価額</div>
+                            <div class="fund-price-main">
+                                <span id="fundBasePrice" class="fund-price-value"></span>
+                                <span class="fund-price-unit">円</span>
+                            </div>
+                        </div>
+                        <span id="fundChangeRate" class="fund-change-badge"></span>
+                    </div>
+                    <div class="fund-detail-rows">
+                        <div class="fund-detail-row">
+                            <span class="fund-detail-label">前日終値</span>
+                            <span id="fundPrevClose" class="fund-detail-value"></span>
+                        </div>
+                        <div class="fund-detail-row">
+                            <span class="fund-detail-label">純資産総額</span>
+                            <span id="fundNetAssets" class="fund-detail-value"></span>
+                        </div>
+                        <div class="fund-detail-row">
+                            <span class="fund-detail-label">騰落率(1ヶ月)</span>
+                            <span id="fundChangeRateMonth" class="fund-detail-value"></span>
+                        </div>
+                        <div class="fund-detail-row">
+                            <span class="fund-detail-label">手数料</span>
+                            <span id="fundFee" class="fund-detail-value"></span>
+                        </div>
+                    </div>
                 </div>
-                <div class="fund-info-row">
-                    <span class="fund-info-label">前日比</span>
-                    <span id="fundChangeRate" class="fund-info-value"></span>
-                </div>
-                <div class="fund-info-row">
-                    <span class="fund-info-label">売買代金</span>
-                    <span id="fundNetAssets" class="fund-info-value"></span>
-                </div>
-                <div class="fund-info-row">
-                    <span class="fund-info-label">手数料</span>
-                    <span id="fundFee" class="fund-info-value"></span>
-                </div>
+            </div>
+
+            <div id="chartControls" class="chart-controls" style="display: none;">
+                <button type="button" class="chart-period-btn active" data-period="6">6ヶ月</button>
+                <button type="button" class="chart-period-btn" data-period="3">3ヶ月</button>
+                <button type="button" class="chart-period-btn" data-period="1">1ヶ月</button>
             </div>
 
             <div id="stockChartContainer" class="chart-container" style="display: none;">

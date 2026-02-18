@@ -68,7 +68,6 @@ accountHistoryRows.forEach(function(row) {
         this.classList.add('selected');
         applyAccountHistory(this);
 
-        // リストを閉じてヘッダーに選択内容を表示
         accountHistoryToggle.classList.remove('open');
         accountHistoryToggle.classList.add('has-selection');
         accountHistoryList.style.display = 'none';
@@ -131,6 +130,7 @@ document.querySelector('input[type="reset"]').addEventListener('click', function
         fundNameSelect.value = '';
         fundInfoCard.style.display = 'none';
         feeCalcCard.style.display = 'none';
+        chartControls.style.display = 'none';
         updateChart('');
         accountHistoryRows.forEach(r => r.classList.remove('selected'));
         if (accountHistoryToggle) {
@@ -138,29 +138,49 @@ document.querySelector('input[type="reset"]').addEventListener('click', function
             accountHistoryList.style.display = 'none';
             accountHistorySelectedInfo.innerHTML = '';
         }
+        chartPeriodBtns.forEach(b => b.classList.remove('active'));
+        chartPeriodBtns[0].classList.add('active');
+        currentPeriod = 6;
     }, 0);
 });
 
 // ファンド情報の動的表示
 const fundNameSelect = document.getElementById('fundName');
 const fundInfoCard = document.getElementById('fundInfoCard');
-const fundBasePrice = document.getElementById('fundBasePrice');
-const fundChangeRate = document.getElementById('fundChangeRate');
-const fundNetAssets = document.getElementById('fundNetAssets');
-const fundFee = document.getElementById('fundFee');
 const stockChartContainer = document.getElementById('stockChartContainer');
 const stockChartCanvas = document.getElementById('stockChart');
+const chartControls = document.getElementById('chartControls');
+const chartPeriodBtns = document.querySelectorAll('.chart-period-btn');
 let stockChart = null;
+let currentPeriod = 6;
+
+chartPeriodBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        chartPeriodBtns.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        currentPeriod = parseInt(this.getAttribute('data-period'));
+        updateChart(fundNameSelect.value);
+    });
+});
 
 function showFundInfo(fund) {
     const info = fundInfoMap[fund];
     if (info) {
-        fundBasePrice.textContent = info.basePrice + '円';
-        fundChangeRate.textContent = info.changeRate + '%';
-        const rate = parseFloat(info.changeRate);
-        fundChangeRate.style.color = rate >= 0 ? '#00B53C' : '#dc2626';
-        fundNetAssets.textContent = info.netAssets + '億円';
-        fundFee.textContent = info.fee + '%';
+        const basePrice = Number(String(info.basePrice).replace(/,/g, ''));
+        const changeRate = parseFloat(info.changeRate);
+        const prevClose = Math.round(basePrice / (1 + changeRate / 100));
+
+        document.getElementById('fundBasePrice').textContent = basePrice.toLocaleString();
+
+        const changeRateEl = document.getElementById('fundChangeRate');
+        changeRateEl.textContent = (changeRate >= 0 ? '+' : '') + changeRate + '%';
+        changeRateEl.className = 'fund-change-badge ' + (changeRate >= 0 ? 'positive' : 'negative');
+
+        document.getElementById('fundPrevClose').textContent = prevClose.toLocaleString() + '円';
+        document.getElementById('fundNetAssets').textContent = Number(String(info.netAssets).replace(/,/g, '')).toLocaleString() + '億円';
+        document.getElementById('fundChangeRateMonth').textContent = (changeRate >= 0 ? '+' : '') + changeRate + '%';
+        document.getElementById('fundFee').textContent = info.fee + '%';
+
         fundInfoCard.style.display = 'block';
     } else {
         fundInfoCard.style.display = 'none';
@@ -172,29 +192,54 @@ function updateChart(fund) {
     const chartData = fundChartDataMap[fund];
     if (!chartData) {
         stockChartContainer.style.display = 'none';
+        chartControls.style.display = 'none';
         if (stockChart) {
             stockChart.destroy();
             stockChart = null;
         }
         return;
     }
+
+    const tradingDaysPerMonth = 21;
+    const pointCount = currentPeriod * tradingDaysPerMonth;
+    const dates = chartData.dates.slice(-pointCount);
+    const prices = chartData.prices.slice(-pointCount).map(Number);
+
+    chartControls.style.display = 'flex';
     stockChartContainer.style.display = 'block';
     if (stockChart) {
         stockChart.destroy();
     }
+
+    // 終値からOHLCを擬似生成（"MM/dd" → "YYYY-MM-dd" に年を補完）
+    const currentYear = new Date().getFullYear();
+    const ohlcData = dates.map(function(date, i) {
+        const c = prices[i];
+        const prev = i > 0 ? prices[i - 1] : c;
+        const o = prev + (Math.random() - 0.5) * prev * 0.004;
+        const range = Math.abs(c - o) + c * 0.002;
+        const h = Math.max(o, c) + Math.random() * range * 0.8;
+        const l = Math.min(o, c) - Math.random() * range * 0.8;
+        return {
+            x: new Date(currentYear + '-' + date.replace('/', '-')).getTime(),
+            o: Math.round(o * 10) / 10,
+            h: Math.round(h * 10) / 10,
+            l: Math.round(l * 10) / 10,
+            c: c
+        };
+    });
+
     stockChart = new Chart(stockChartCanvas, {
-        type: 'line',
+        type: 'candlestick',
         data: {
-            labels: chartData.dates,
             datasets: [{
-                label: fund + ' 株価推移',
-                data: chartData.prices.map(Number),
-                borderColor: '#4579FF',
-                backgroundColor: 'rgba(69, 121, 255, 0.1)',
-                fill: true,
-                tension: 0.3,
-                pointRadius: 2,
-                pointHoverRadius: 5
+                label: fund,
+                data: ohlcData,
+                color: {
+                    up: '#00B53C',
+                    down: '#dc2626',
+                    unchanged: '#888888'
+                }
             }]
         },
         options: {
@@ -202,23 +247,38 @@ function updateChart(fund) {
             plugins: {
                 legend: { display: false },
                 tooltip: {
+                    backgroundColor: 'rgba(0,0,0,0.75)',
+                    padding: 10,
                     callbacks: {
                         label: function(context) {
-                            return Number(context.raw).toLocaleString() + '円';
+                            const d = context.raw;
+                            return [
+                                '始値: ' + d.o.toLocaleString() + '円',
+                                '高値: ' + d.h.toLocaleString() + '円',
+                                '安値: ' + d.l.toLocaleString() + '円',
+                                '終値: ' + d.c.toLocaleString() + '円'
+                            ];
                         }
                     }
                 }
             },
             scales: {
                 x: {
-                    ticks: { maxTicksLimit: 10 }
+                    type: 'timeseries',
+                    time: { unit: 'month' },
+                    ticks: { maxTicksLimit: 8, font: { size: 11 }, color: '#888' },
+                    grid: { display: false, drawBorder: false }
                 },
                 y: {
+                    position: 'right',
                     ticks: {
                         callback: function(value) {
                             return value.toLocaleString();
-                        }
-                    }
+                        },
+                        font: { size: 11 },
+                        color: '#888'
+                    },
+                    grid: { color: 'rgba(0,0,0,0.05)', drawBorder: false }
                 }
             }
         }
@@ -231,11 +291,12 @@ fundNameSelect.addEventListener('change', function () {
     updateChart(fund);
 });
 
-// 値の復元と再計算（初期表示・history.back()両対応）まだ修正できていない
+// 値の復元と再計算（初期表示・history.back()両対応）
 function restoreState() {
     const fund = fundNameSelect.value;
     showFundInfo(fund);
     updateChart(fund);
+
     const rawMoney = moneyDisplay.value.replace(/[^0-9]/g, '');
     if (rawMoney) {
         moneyHidden.value = rawMoney;
