@@ -9,6 +9,7 @@
 <body>
 <div class="content">
     <h1>投資信託注文確認</h1>
+    <div th:replace="~{fragments :: stepBar(2)}"></div>
     <form action="#" th:action="@{/investmentTrustCompletion}" th:object="${investmentTrustApplication}" method="post">
 
         <p class="confirmation-message">以下の内容で申し込みます。<br>
