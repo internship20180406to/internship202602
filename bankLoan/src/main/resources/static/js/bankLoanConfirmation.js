@@ -258,6 +258,7 @@ function updateRequiredMarks() {
         const value = (target.value || '').trim();
         mark.style.display = value ? 'none' : 'inline';
     });
+    updateInputErrorStates();
 }
 
 // ※マークのイベントリスナーを設定
@@ -338,6 +339,8 @@ function resetFormSelections() {
 
     // すべての※を表示
     updateRequiredMarks();
+    hasValidationAttempt = false;
+    clearInputErrorStates();
 }
 
 // クリアボタンのイベントリスナーを設定
@@ -678,6 +681,8 @@ function validateFormBeforeSubmit(event) {
 
     // バリデーション結果格納用
     let errorMessages = [];
+    hasValidationAttempt = true;
+    updateInputErrorStates();
 
     // 各フィールドのバリデーション
     if (!bankName || !bankName.value || bankName.value.trim() === '') {
@@ -771,10 +776,68 @@ function validateFormBeforeSubmit(event) {
 
     // バリデーション成功時はエラーコンテナを非表示
     errorMessageContainer.classList.remove('show');
-
+    updateInputErrorStates();
     // バリデーション成功時はカンマを削除
     removeCommasBeforeSubmit();
     return true;
+}
+
+// バリデーション実行済みかどうか
+let hasValidationAttempt = false;
+
+function setInputErrorState(element, hasError) {
+    if (!element) return;
+    if (hasError) {
+        element.classList.add('input-error');
+    } else {
+        element.classList.remove('input-error');
+    }
+}
+
+function clearInputErrorStates() {
+    document.querySelectorAll('.input-error').forEach(function(element) {
+        element.classList.remove('input-error');
+    });
+}
+
+function updateInputErrorStates() {
+    if (!hasValidationAttempt) return;
+
+    const branchName = document.querySelector('[name="branchName"]');
+    const bankAccountType = document.querySelector('[name="bankAccountType"]');
+    const bankAccountNum = document.querySelector('[name="bankAccountNum"]');
+    const name = document.querySelector('[name="name"]');
+    const loanTypeSelect = document.getElementById('loanTypeSelect');
+    const loanAmountInput = document.getElementById('loanAmount');
+    const annualIncomeInput = document.getElementById('annualIncome');
+    const loanPeriodInput = document.getElementById('loanPeriod');
+
+    const branchNameValue = branchName ? branchName.value.trim() : '';
+    const branchNameInvalid = !branchNameValue || !flatBranchList.includes(branchNameValue);
+
+    const bankAccountTypeInvalid = !bankAccountType || !bankAccountType.value || bankAccountType.value.trim() === '';
+    const bankAccountNumInvalid = !bankAccountNum || !bankAccountNum.value || bankAccountNum.value.trim() === '';
+    const nameInvalid = !name || !name.value || name.value.trim() === '';
+    const loanTypeInvalid = !loanTypeSelect || !loanTypeSelect.value || loanTypeSelect.value.trim() === '';
+
+    const loanAmountValue = loanAmountInput ? loanAmountInput.value.replace(/,/g, '').trim() : '';
+    const loanAmountInvalid = !loanAmountInput || !loanAmountValue || isNaN(loanAmountValue);
+
+    const annualIncomeValue = annualIncomeInput ? annualIncomeInput.value.replace(/,/g, '').trim() : '';
+    const annualIncomeInvalid = !annualIncomeInput || !annualIncomeValue || isNaN(annualIncomeValue);
+
+    const loanPeriodValue = loanPeriodInput ? loanPeriodInput.value.trim() : '';
+    const loanPeriodInvalid = !loanPeriodInput || !loanPeriodValue || isNaN(loanPeriodValue) ||
+        parseInt(loanPeriodValue) < 1 || parseInt(loanPeriodValue) > 35;
+
+    setInputErrorState(branchName, branchNameInvalid);
+    setInputErrorState(bankAccountType, bankAccountTypeInvalid);
+    setInputErrorState(bankAccountNum, bankAccountNumInvalid);
+    setInputErrorState(name, nameInvalid);
+    setInputErrorState(loanTypeSelect, loanTypeInvalid);
+    setInputErrorState(loanAmountInput, loanAmountInvalid);
+    setInputErrorState(annualIncomeInput, annualIncomeInvalid);
+    setInputErrorState(loanPeriodInput, loanPeriodInvalid);
 }
 
 // 確認画面の申込ボタンの処理
