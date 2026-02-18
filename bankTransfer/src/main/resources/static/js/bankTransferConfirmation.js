@@ -4,5 +4,4 @@ submitButton.addEventListener('click', (e) => {
   if (!ok) {
     e.preventDefault();
   }
-
 });

@@ -12,9 +12,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 @NoArgsConstructor
 public class BankTransferForm{
     @NonNull
+    private Long id;
+    @NonNull
     private String bankName;
     @NonNull
-    private Integer bankAccountNum;
+    private String bankAccountNum;
     @NonNull
     private String branchName;//支店名
     @NonNull
@@ -29,6 +31,13 @@ public class BankTransferForm{
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime transferDateTime;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getBankName() {
         return bankName;
@@ -38,11 +47,11 @@ public class BankTransferForm{
         this.bankName = bankName;
     }
 
-    public Integer getBankAccountNum() {
+    public String getBankAccountNum() {
         return bankAccountNum;
     }
 
-    public void setBankAccountNum(Integer bankAccountNum) {
+    public void setBankAccountNum(String bankAccountNum) {
         this.bankAccountNum = bankAccountNum;
     }
 

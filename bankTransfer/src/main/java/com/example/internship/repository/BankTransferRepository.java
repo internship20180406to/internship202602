@@ -6,6 +6,8 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -33,6 +35,23 @@ public class BankTransferRepository {
                 bankTransferForm.getTransFee(),
                 bankTransferForm.getTransferDateTime()
         );
+
     }
+
+    public List<BankTransferForm> findPendingTransfers(){
+        String sql ="SELECT * FROM bankTransfer_table " +
+                "WHERE transferDateTime <= ?" +
+                " AND executed = false";
+
+        return jdbcTemplate.query(sql,
+                new Object[]{LocalDateTime.now()},
+                new BeanPropertyRowMapper<>((BankTransferForm.class)));
+    }
+
+    public void markAsExecuted(Long id){
+        String sql = "UPDATE bankTransfer_table SET executed = TRUE WHERE id = ?";
+        jdbcTemplate.update(sql,id);
+    }
+
 
 }
