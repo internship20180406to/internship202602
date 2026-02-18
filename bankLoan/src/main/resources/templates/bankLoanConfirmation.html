@@ -3,33 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <title>ローン申込確認画面</title>
+    <style>
+        body {
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+        padding-bottom: 40px;
+        justify-content: center;
+        align-items: center;
+        min-height: 85vh;
+        overflow: auto;
+        }
+        .content {
+         background-color: #ffffff;
+         width: 80%;
+         padding: 20px;
+         border-radius: 10px;
+         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+         min-height: 50vh;
+         overflow: auto;
+         margin: auto;
+        }
+        .form-control {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            box-sizing: border-box;
+        }
+
+        .text-danger {
+        color: red;
+        }
+        .form-control-button {
+        width: 80px;
+        padding: 10px 20px;
+        margin-top: 10px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        }
+        .form-control-buttonVer2 {
+        padding: 10px ;
+        margin-top: 10px 20px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        }
+        .form-confirmation-button{
+        color: white;
+        background-color: #2185D0;
+        }
+        .form-control-button:disabled {
+        cursor: not-allowed;
+        }
+        .form-confirmation-button:hover {
+        background-color: #1678c2;
+        }
+        .form-clear-button{
+        color: black;
+        background-color: #E0E1E2;
+        }
+        .form-clear-button:hover {
+        background-color: #CCCCCC;
+        }
+        .backgroundRed{
+        background-color:#FADBDA;
+        }
+
+        .backgroundPaleBlue{
+        padding:15px;
+        color:grey;
+        background-color:#DDEEFF;
+        }
+        .backgroundBlue{
+        padding:15px;
+        color:white;
+        background-color:#66B3FF;
+        }
+        .header{
+        width:100%;
+        margin: auto;
+        text-align: center;
+        }
+
+    </style>
 </head>
 <body>
-<h1>ローン申込確認画面</h1>
-<form action="#" th:action="@{/bankLoanCompletion}" th:object="${bankLoanApplication}" method="post">
-    <p>金融機関名: <span th:text="*{bankName}"></span></p>
-    <p>支店名: <span th:text="*{branchName}"></span></p>
-    <p>科目名: <span th:text="*{bankAccountType}"></span></p>
-    <p>口座番号: <span th:text="*{bankAccountNum}"></span></p>
-    <p>債務者名: <span th:text="*{name}"></span></p>
+<div   class="header">
+    <table style="border-spacing:0px" class="header">
+        <tr>
+            <td class="backgroundPaleBlue">情報入力</td>
+            <td class="backgroundBlue">申込確認</td>
+            <td class="backgroundPaleBlue">申込完了</td>
+        </tr>
+    </table>
+</div>
+<br style="clear: both;">
+<div class="content" style="text-align: center; ">
+    <h1>ローン申込確認</h1>
+    <form action="#" th:action="@{/bankLoanCompletion}" th:object="${bankLoanApplication}" method="post">
 
-    <p>借入金額: <span th:text="*{loanAmount}"></span></p>
-    <p>借入年収: <span th:text="*{annualIncome}"></span></p>
-    <p>金利: <span th:text="*{interestRate}"></span></p>
+        <table style="margin: auto; text-align: left;">
+            <tr>
+                <td><label class="ml-1">金融機関名</label></td>
+                <td style="width: 50px;"></td>
+                <td><span th:text="*{bankName}"></span></td>
+            </tr>
+            <tr>
+                <td>支店名</td>
+                <td></td>
+                <td><span th:text="*{branchName}"></span></td>
+            </tr>
+            <tr>
+                <td>科目名</td>
+                <td></td>
+                <td> <span th:text="*{bankAccountType}"></span>     </td>
+            </tr>
+            <tr>
+                <td> 口座番号    </td>
+                <td></td>
+                <td> <span th:text="*{bankAccountNum}"> </span>    </td>
+            </tr>
+            <tr>
+                <td>  債務者名</td>
+                <td></td>
+                <td>   <span th:text="*{name}"></span>  </td>
+            </tr>
+            <tr>
+                <td>  借入金額  </td>
+                <td></td>
+                <td>   <span th:text="*{loanAmount}"></span>   </td>
+            </tr>
+            <tr>
+                <td>  金利   </td>
+                <td></td>
+                <td>   <span th:text="*{interestRate}"></span>   </td>
+            </tr>
+        </table>
 
-    <input type="hidden" name="bankAccountNum" th:value="*{bankAccountNum}"/>
-    <input type="hidden" name="branchName" th:value="*{branchName}"/>
-    <input type="hidden" name="bankAccountType" th:value="*{bankAccountType}"/>
-    <input type="hidden" name="bankName" th:value="*{bankName}"/>
-    <input type="hidden" name="name" th:value="*{name}"/>
-    <input type="hidden" name="loanAmount" th:value="*{loanAmount}"/>
-    <input type="hidden" name="annualIncome" th:value="*{annualIncome}"/>
-    <input type="hidden" name="interestRate" th:value="*{interestRate}"/>
-    <p>
-        <input type="submit" id="submit" value="申込"/>
-        <input type="button" value="キャンセル" onclick="window.location='/bankLoan';"/>
-    </p>
-</form>
+
+        <p style="text-align: center;">    <input type="submit" id="submit" value="申込" class="form-control-button form-confirmation-button"/>
+            <input type="button" value="キャンセル" onclick="window.location='/bankLoan';" class="form-control-buttonVer2 form-clear-button"/></p>
+
+    </form>
+</div>
 <script th:inline="javascript" src="/js/bankLoanConfirmation.js"></script>
 </body>
 </html>
