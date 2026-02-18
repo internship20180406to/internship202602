@@ -74,17 +74,4 @@ public class BankTransferService {
         String sql = "UPDATE bankTransfer_table SET executed = TRUE WHERE id = ?";
         repository.markAsExecuted(id);
     }
-
-    private BankTransferForm mapRowToForm(ResultSet rs) throws SQLException {
-        BankTransferForm form = new BankTransferForm();
-        form.setBankName(rs.getString("bankName"));
-        form.setBranchName(rs.getString("branchName"));
-        form.setBankAccountType(rs.getString("bankAccountType"));
-        form.setBankAccountNum(rs.getString("bankAccountNum"));
-        form.setName(rs.getString("name"));
-        form.setMoney(rs.getInt("money"));
-        form.setTransFee(rs.getInt("transFee"));
-        form.setTransferDateTime(rs.getTimestamp("transferDateTime").toLocalDateTime());
-        return form;
-    }
 }
