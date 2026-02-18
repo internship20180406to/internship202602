@@ -1,33 +1,127 @@
 <!doctype html>
-<html lang="ja">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8"/>
-  <title>銀行アプリのご案内</title>
+  <title>銀行アプリのご案内 | CFG</title>
   <style>
-    .content { background-color: #ffffff; width: 80%; padding: 30px; margin: 40px auto; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); text-align: center; }
-    .btn { background-color: #2185D0; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; }
+    /* 背景を高級感のあるグラデーションに */
+    body {
+        background: linear-gradient(135deg, #1a4a73 0%, #2185D0 100%);
+        margin: 0;
+        padding: 0;
+        font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .content {
+        background-color: rgba(255, 255, 255, 0.95);
+        width: 90%;
+        max-width: 500px;
+        padding: 50px 30px;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* 巨大なキャッチコピー */
+    h1 {
+        color: #1a4a73;
+        font-size: 2.2em;
+        margin-bottom: 10px;
+        font-weight: 900;
+        letter-spacing: -1px;
+    }
+
+    .sub-title {
+        color: #2185D0;
+        font-weight: bold;
+        font-size: 1.1em;
+        margin-bottom: 30px;
+    }
+
+    /* スマホ画像の演出 */
+    .app-img {
+        width: 100%;
+        max-width: 280px;
+        filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15));
+        transition: transform 0.3s ease;
+        margin: 20px 0;
+    }
+    .app-img:hover {
+        transform: scale(1.05) rotate(-2deg);
+    }
+
+    /* 特徴リスト */
+    .features {
+        text-align: left;
+        display: inline-block;
+        margin: 20px 0;
+        color: #555;
+    }
+    .feature-item {
+        margin: 10px 0;
+        display: flex;
+        align-items: center;
+    }
+    .feature-item::before {
+        content: '✓';
+        color: #2185D0;
+        font-weight: bold;
+        margin-right: 10px;
+    }
+
+    /* 派手なボタン */
+    .btn-container {
+        margin-top: 40px;
+    }
+    .btn {
+        background: linear-gradient(to right, #2185D0, #1a4a73);
+        color: white;
+        padding: 18px 40px;
+        text-decoration: none;
+        border-radius: 50px;
+        font-weight: bold;
+        font-size: 1.1em;
+        box-shadow: 0 4px 15px rgba(33, 133, 208, 0.4);
+        display: inline-block;
+        transition: all 0.3s;
+    }
+    .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(33, 133, 208, 0.6);
+        color: #fff;
+    }
   </style>
 </head>
 <body>
 <div class="content">
-  <div style="display: flex; align-items: center; margin-bottom: 30px;">
-    <!-- ロゴ本体 -->
-    <span style="
-        font-family: 'Arial Black', 'Gadget', sans-serif;
-        font-size: 1.8em;
-        letter-spacing: 2px;
-        color: #1a4a73;
-        border-bottom: 3px solid #2185D0;
-        line-height: 1;
-        padding-bottom: 2px;">
-        CFG
-    </span>
+  <!-- ロゴ -->
+  <div style="margin-bottom: 20px;">
+    <span style="font-family: 'Arial Black', sans-serif; font-size: 1.5em; color: #1a4a73; border-bottom: 3px solid #2185D0;">CFG</span>
   </div>
-  <h1>公式アプリのご案内</h1>
-  <p>いつでもどこでも残高照会や振込が可能です。</p>
-  <img th:src="@{/images/app_sample.png}" width="200" alt="アプリ画面イメージ" />
-  <br><br>
-  <p><a th:href="@{/investmentTrust}" class="btn">注文画面に戻る</a></p>
+
+  <h1>手のひらに、<br>自由な銀行を。</h1>
+  <p class="sub-title">CFG公式アプリ、ついに誕生。</p>
+
+  <!-- スマホ画像 -->
+  <img th:src="@{/images/app.png}" class="app-img" alt="アプリ画面" />
+
+  <div class="features">
+    <div class="feature-item">最短10秒で残高チェック</div>
+    <div class="feature-item">投資信託の運用状況も一目で</div>
+    <div class="feature-item">指紋・顔認証でログインも一瞬</div>
+  </div>
+
+  <div class="btn-container">
+    <a th:href="@{/investmentTrust}" class="btn">今すぐ体験する</a>
+  </div>
+
+  <p style="margin-top: 20px;"><a th:href="@{/investmentTrust}" style="color: #999; font-size: 0.8em; text-decoration: none;">Web版に戻る</a></p>
 </div>
 </body>
 </html>

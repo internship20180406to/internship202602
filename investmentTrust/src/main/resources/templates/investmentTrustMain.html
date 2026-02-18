@@ -79,6 +79,9 @@
 
 
     <h1>投資信託注文情報入力</h1>
+    <div th:if="${errorMessage}" class="alert alert-danger" style="color: red; background-color: #fff2f2; padding: 10px; border: 1px solid red; border-radius: 5px; margin-bottom: 20px;">
+        <span th:text="${errorMessage}">エラー内容</span>
+    </div>
     <form action="#" th:action="@{/investmentTrustConfirmation}" th:object="${investmentTrustApplication}" method="post">
         <p><label class="ml-1">金融機関名: <small class="text-danger ml-1">※</small></label><br>
             <select th:field="*{bankName}" class="form-control" required>

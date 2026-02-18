@@ -16,20 +16,23 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedPanels = []; // リセット
         for (let i = 1; i <= 9; i++) {
             const div = document.createElement("div");
-            div.style.width = "100px";
-            div.style.height = "100px";
+            div.style.width = "120px";
+            div.style.height = "120px";
+            div.style.boxSizing = "border-box"; // 枠線を含めて105pxにする設定
             div.style.background = `url('/images/ninsyou(${i}).jpg')`;
             div.style.backgroundSize = "cover"; // 画像を枠に合わせる
             div.style.backgroundPosition = "center"; // 中央に寄せる
-            div.style.border = "3px solid transparent";
+            div.style.border = "4px solid transparent";
             div.style.cursor = "pointer";
+            div.style.borderRadius = "4px";
+
             div.onclick = () => {
                 if (selectedPanels.includes(i)) {
                     selectedPanels = selectedPanels.filter(p => p !== i);
-                    div.style.border = "3px solid transparent";
+                    div.style.border = "4px solid transparent";
                 } else {
                     selectedPanels.push(i);
-                    div.style.border = "3px solid #007bff";
+                    div.style.border = "4px solid #007bff";
                 }
             };
             imageGrid.appendChild(div);

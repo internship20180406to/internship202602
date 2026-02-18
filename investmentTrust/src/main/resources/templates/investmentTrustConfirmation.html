@@ -3,80 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <title>投資信託注文確認画面</title>
+    <style>
+        /* 画面中央に配置するためのベース */
+        body {
+            background-color: #f4f7f8;
+            margin: 0;
+            padding: 40px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+        }
+        .content {
+            background-color: #ffffff;
+            width: 90%;
+            max-width: 550px;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        h1 {
+            color: #1a4a73;
+            font-size: 1.5em;
+            margin-bottom: 30px;
+        }
+        /* 明細リストのデザイン */
+        .confirm-box {
+            text-align: left;
+            margin-bottom: 30px;
+            border-top: 1px solid #eee;
+        }
+        .confirm-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 5px;
+            border-bottom: 1px solid #eee;
+        }
+        .label {
+            color: #666;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        .value {
+            color: #333;
+            font-weight: 500;
+        }
+        /* 金額と口数の強調エリア */
+        .highlight-box {
+            background-color: #f8fbff;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        .highlight-text {
+            color: #2185D0;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        /* ボタンのデザイン */
+        .btn-area {
+            margin-top: 30px;
+        }
+        #btn-submit {
+            width: 100%;
+            padding: 15px;
+            background-color: #2185D0;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        #btn-submit:hover { background-color: #1678c2; }
+        .btn-cancel {
+            display: inline-block;
+            margin-top: 15px;
+            color: #888;
+            text-decoration: none;
+            font-size: 0.9em;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-<div style="display: flex; align-items: center; margin-bottom: 30px;">
-    <!-- ロゴ本体 -->
-    <span style="
-        font-family: 'Arial Black', 'Gadget', sans-serif;
-        font-size: 1.8em;
-        letter-spacing: 2px;
-        color: #1a4a73;
-        border-bottom: 3px solid #2185D0;
-        line-height: 1;
-        padding-bottom: 2px;">
-        CFG
-    </span>
-</div>
-<h1>投資信託注文確認画面</h1>
-<form action="#" th:action="@{/investmentTrustCompletion}" th:object="${investmentTrustApplication}" method="post">
-    <p>金融機関名: <span th:text="*{bankName}"></span></p>
-    <p>支店名: <span th:text="*{branchName}"></span></p>
-    <p>科目名: <span th:text="*{bankAccountType}"></span></p>
-    <p>口座番号: <span th:text="*{bankAccountNum}"></span></p>
-    <p>購入者名: <span th:text="*{name}"></span></p>
-    <p>購入銘柄: <span th:text="*{fundName}"></span></p>
-    <p>購入金額: <span th:text="*{money}"></span><span>円</span></p>
-    <p>銘柄単価：<span th:text="${unitPrice}"></span> 円/口</p>
-    <p>購入予定口数：<span th:text="${computedQuantity}"></span> 口</p>
 
-
-    <input type="hidden" name="bankAccountNum" th:value="*{bankAccountNum}"/>
-    <input type="hidden" name="bankName" th:value="*{bankName}"/>
-    <input type="hidden" name="branchName" th:value="*{branchName}"/>
-    <input type="hidden" name="bankAccountType" th:value="*{bankAccountType}"/>
-    <input type="hidden" name="name" th:value="*{name}"/>
-    <input type="hidden" name="fundName" th:value="*{fundName}"/>
-    <input type="hidden" name="money" th:value="*{money}"/>
-    <p>
-        <input type="submit" id="btn-submit" value="申込"/>
-        <input type="button" value="キャンセル" onclick="window.location='/investmentTrust';"/>
-    </p>
-
-    <!-- 最初は隠れているロボットチェックのエリア -->
-    <div id="robot-overlay" style="
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    background: rgba(0,0,0,0.6);
-    z-index: 10000;
-    justify-content: center;
-    align-items: center;
-">
-        <div style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); text-align: center; min-width: 350px;">
-            <h5 id="auth-title" class="mb-4">セキュリティ認証</h5>
-
-            <!-- 【重要】IDを追加しました -->
-            <div id="step-checkbox" style="border: 1px solid #ccc; padding: 15px; background: #f9f9f9; display: inline-block;">
-                <input type="checkbox" id="not-robot" style="width: 20px; height: 20px; cursor: pointer;">
-                <label for="not-robot" style="font-size: 18px; margin-left: 10px; cursor: pointer;">私はロボットではありません</label>
-            </div>
-
-            <div id="step-images" style="display: none;">
-                <p>信号機の画像をすべて選択してください</p>
-                <div id="image-grid" style="display: grid; grid-template-columns: repeat(3, 100px); gap: 5px; justify-content: center;">
-                    <!-- JSで9枚生成されます -->
-                </div>
-            </div>
-
-            <br>
-            <button type="button" id="btn-next-step" class="btn btn-primary mt-4 w-100">認証して次へ</button>
-        </div>
+<div class="content">
+    <!-- ロゴエリア -->
+    <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+        <span style="font-family: 'Arial Black', sans-serif; font-size: 1.8em; letter-spacing: 2px; color: #1a4a73; border-bottom: 3px solid #2185D0; line-height: 1;">
+            CFG
+        </span>
     </div>
 
+    <h1>注文内容の確認</h1>
+    <p style="color: #666; font-size: 0.9em; margin-bottom: 30px;">以下の内容で注文を確定します。よろしいですか？</p>
 
-    <!--</form>-->
+    <form th:action="@{/investmentTrustCompletion}" th:object="${investmentTrustApplication}" method="post">
+
+        <div class="confirm-box">
+            <div class="confirm-row">
+                <span class="label">金融機関名</span>
+                <span class="value" th:text="*{bankName}"></span>
+            </div>
+            <div class="confirm-row">
+                <span class="label">支店名 / 科目</span>
+                <span class="value"><span th:text="*{branchName}"></span> / <span th:text="*{bankAccountType}"></span></span>
+            </div>
+            <div class="confirm-row">
+                <span class="label">口座番号</span>
+                <span class="value" th:text="*{bankAccountNum}"></span>
+            </div>
+            <div class="confirm-row">
+                <span class="label">購入者名</span>
+                <span class="value" th:text="*{name}"></span>
+            </div>
+            <div class="confirm-row">
+                <span class="label">購入銘柄</span>
+                <span class="value" th:text="*{fundName}"></span>
+            </div>
+            <div class="confirm-row">
+                <span class="label">銘柄単価</span>
+                <span class="value" th:text="${unitPrice} + ' 円/口'"></span>
+            </div>
+            <!-- 強調エリア -->
+            <div class="highlight-box">
+                <div class="confirm-row" style="border-bottom: none;">
+                    <span class="label">購入金額</span>
+                    <span class="value highlight-text" th:text="*{money} + ' 円'"></span>
+                </div>
+                <div class="confirm-row" style="border-top: 1px dashed #d0e4ff; border-bottom: none;">
+                    <span class="label">概算購入口数</span>
+                    <span class="value highlight-text" th:text="${computedQuantity} + ' 口'"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 隠しフィールド -->
+        <input type="hidden" th:field="*{bankName}"/>
+        <input type="hidden" th:field="*{branchName}"/>
+        <input type="hidden" th:field="*{bankAccountType}"/>
+        <input type="hidden" th:field="*{bankAccountNum}"/>
+        <input type="hidden" th:field="*{name}"/>
+        <input type="hidden" th:field="*{fundName}"/>
+        <input type="hidden" th:field="*{money}"/>
+
+        <div class="btn-area">
+            <!-- 多段階認証用ボタン -->
+            <button type="button" id="btn-submit">注文を確定する</button>
+            <br>
+            <button type="button" class="btn-cancel" onclick="window.location='/investmentTrust';">キャンセルして戻る</button>
+        </div>
+
+        <!-- セキュリティ認証オーバーレイ -->
+        <div id="robot-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 10000; justify-content: center; align-items: center;">
+            <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); text-align: center; min-width: 450px; max-width: 90%;">
+                <h5 id="auth-title" style="margin-bottom: 20px;">セキュリティ認証</h5>
+                <div id="step-checkbox" style="border: 1px solid #ccc; padding: 15px; background: #f9f9f9; display: inline-block;">
+                    <input type="checkbox" id="not-robot" style="width: 20px; height: 20px; cursor: pointer;">
+                    <label for="not-robot" style="font-size: 18px; margin-left: 10px; cursor: pointer;">私はロボットではありません</label>
+                </div>
+                <div id="step-images" style="display: none; margin: 0 auto;">
+                    <p style="font-size: 0.9em; margin-bottom: 10px;">信号機の画像をすべて選択してください</p>
+                    <div id="image-grid" style="display: grid; grid-template-columns: repeat(3, 120px); gap: 8px; justify-content: center;">
+                    </div>
+                </div>
+
+                <br>
+                <button type="button" id="btn-next-step" class="btn btn-primary mt-4 w-100" style="padding: 10px;">認証して次へ</button>
+            </div>
+        </div>
+    </form>
+</div>
+
 <script th:inline="javascript" src="/js/investmentTrustConfirmation.js"></script>
 </body>
 </html>

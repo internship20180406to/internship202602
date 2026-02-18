@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,12 +85,39 @@ public class InvestmentTrustController {
     }
 
     @PostMapping("/investmentTrustCompletion")
-    public String completion(@ModelAttribute InvestmentTrustForm investmentTrustForm, Model model) {
+    public String completion(@ModelAttribute InvestmentTrustForm investmentTrustForm, Model model,  RedirectAttributes redirectAttributes) {
+
+
+        // 1. 金額のチェック（例：100円未満や、ありえない高額を弾く）
+        if (investmentTrustForm.getMoney() == null || investmentTrustForm.getMoney() < 100) {
+            redirectAttributes.addFlashAttribute("errorMessage", "購入金額は100円以上の数値を入力してください。");
+            return "redirect:/investmentTrust?error=invalid_amount"; // 入力画面へ戻す
+        }
+
+        // 2. 銘柄名のチェック（改ざんされて存在しない銘柄になっていないか）
+        List<String> validFunds = List.of("ツナマヨ", "梅干し", "鮭");
+        if (!validFunds.contains(investmentTrustForm.getFundName())) {
+            redirectAttributes.addFlashAttribute("errorMessage", "無効な銘柄が選択されました。");
+            // 想定外の銘柄名ならエラー（検証からの書き換え対策）
+            return "redirect:/investmentTrust?error=invalid_fund";
+        }
+
+        // 3. 口座番号の桁数チェック（7桁以外を弾く）
+        if (investmentTrustForm.getBankAccountNum() == null ||
+                String.valueOf(investmentTrustForm.getBankAccountNum()).length() != 7) {
+            redirectAttributes.addFlashAttribute("errorMessage", "口座番号は正確に7桁で入力してください。");
+            return "redirect:/investmentTrust?error=invalid_account";
+        }
+
+        // --- チェックを突破したら保存処理へ ---
         String receiptNo = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
         model.addAttribute("receiptNo", receiptNo);
+
         orderInvestmentTrustService.orderInvestmentTrust(investmentTrustForm);
+
         return "investmentTrustCompletion";
     }
+
     // アプリ紹介ページを表示する
     @GetMapping("/bankAppIntro")
     public String showAppIntro() {
