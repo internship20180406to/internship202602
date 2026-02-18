@@ -60,7 +60,7 @@ public class JQuantsService {
 
     private void generateChartData() {
         fundChartDataMap.clear();
-        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MM/dd");
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         Random rand = new Random(42);
 
         for (Map.Entry<String, Map<String, String>> entry : fundInfoMap.entrySet()) {
@@ -73,7 +73,7 @@ public class JQuantsService {
             LocalDate today = LocalDate.now();
 
             double price = basePrice * 0.95;
-            for (int i = 29; i >= 0; i--) {
+            for (int i = 364; i >= 0; i--) {
                 LocalDate date = today.minusDays(i);
                 dates.add(date.format(fmt));
                 price = price * (1 + (rand.nextDouble() * 0.04 - 0.02));

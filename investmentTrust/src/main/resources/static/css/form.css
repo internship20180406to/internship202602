@@ -45,6 +45,12 @@
     margin: 8px 0 16px 0;
 }
 
+.fund-info-card.fee-calc-center {
+    width: 600px;
+    margin: 16px auto;
+    display: block;
+}
+
 .fund-info-row {
     display: flex;
     justify-content: space-between;
@@ -117,7 +123,7 @@
 .fund-top-layout {
     display: flex;
     gap: 16px;
-    align-items: flex-start;
+    align-items: flex-end;
     margin-bottom: 8px;
 }
 

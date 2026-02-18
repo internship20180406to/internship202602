@@ -36,5 +36,9 @@ public class InvestmentTrustForm {
     @Max(value = 100000000, message = "購入金額は1億円以下で入力してください")
     private Long money;
 
+    private Long totalMoney;
+
+    private Long units;
+
     private LocalDateTime orderDateTime;
 }

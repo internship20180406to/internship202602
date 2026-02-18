@@ -22,4 +22,12 @@ public class OrderInvestmentTrustService {
     public List<Map<String, Object>> getAccountHistory() {
         return investmentTrustRepository.findDistinctAccounts();
     }
+
+    public List<Map<String, Object>> getOrderHistory() {
+        return investmentTrustRepository.findAllOrders();
+    }
+
+    public Map<Integer, Long> getAccountBalanceMap() {
+        return investmentTrustRepository.findAllBalances();
+    }
 }

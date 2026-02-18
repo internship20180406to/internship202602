@@ -46,6 +46,8 @@ public class InvestmentTrustController {
         model.addAttribute("fundInfoMap", jQuantsService.getFundInfoMap());
         model.addAttribute("fundChartDataMap", jQuantsService.getFundChartDataMap());
         model.addAttribute("accountHistory", orderInvestmentTrustService.getAccountHistory());
+        model.addAttribute("balanceMap", orderInvestmentTrustService.getAccountBalanceMap());
+        model.addAttribute("orderHistory", orderInvestmentTrustService.getOrderHistory());
     }
 
     @GetMapping("/investmentTrust")
@@ -64,6 +66,18 @@ public class InvestmentTrustController {
             return "investmentTrustMain";
         }
 
+        Map<String, String> fundInfo = jQuantsService.getFundInfoMap().get(investmentTrustForm.getFundName());
+        if (fundInfo != null) {
+            double feeRate = Double.parseDouble(fundInfo.get("fee"));
+            long basePrice = Long.parseLong(fundInfo.get("basePrice").replace(",", ""));
+            long feeAmount = (long) Math.floor(investmentTrustForm.getMoney() * feeRate / 100);
+            investmentTrustForm.setTotalMoney(investmentTrustForm.getMoney() + feeAmount);
+            investmentTrustForm.setUnits((long) Math.floor((double) investmentTrustForm.getMoney() / basePrice * 10000));
+        } else {
+            investmentTrustForm.setTotalMoney(investmentTrustForm.getMoney());
+            investmentTrustForm.setUnits(0L);
+        }
+
         model.addAttribute("investmentTrustApplication", investmentTrustForm);
         return "investmentTrustConfirmation";
     }
@@ -71,6 +85,7 @@ public class InvestmentTrustController {
     @PostMapping("/investmentTrustCompletion")
     public String completion(@ModelAttribute InvestmentTrustForm investmentTrustForm,
                              RedirectAttributes redirectAttributes) {
+        investmentTrustForm.setMoney(investmentTrustForm.getTotalMoney());
         investmentTrustForm.setOrderDateTime(LocalDateTime.now());
         orderInvestmentTrustService.orderInvestmentTrust(investmentTrustForm);
         redirectAttributes.addFlashAttribute("investmentTrustApplication", investmentTrustForm);
@@ -83,6 +98,12 @@ public class InvestmentTrustController {
             return "redirect:/investmentTrust";
         }
         return "investmentTrustCompletion";
+    }
+
+    @GetMapping("/investmentTrustHistory")
+    public String historyView(Model model) {
+        model.addAttribute("orderHistory", orderInvestmentTrustService.getOrderHistory());
+        return "investmentTrustHistory";
     }
 
 }

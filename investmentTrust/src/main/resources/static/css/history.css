@@ -1,0 +1,39 @@
+/* === 履歴テーブル === */
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 14px;
+}
+
+.history-table th,
+.history-table td {
+    border: 1px solid #ddd;
+    padding: 10px 12px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.history-table thead th {
+    background-color: #4579FF;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.history-table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.history-table tbody tr:hover {
+    background-color: #e8f0ff;
+}
+
+/* === 履歴なし === */
+
+.history-empty {
+    text-align: center;
+    color: #888;
+    padding: 40px 0;
+    font-size: 1.0em;
+}

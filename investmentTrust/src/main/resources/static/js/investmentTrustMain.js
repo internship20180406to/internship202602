@@ -49,6 +49,8 @@ function applyAccountHistory(row) {
     bankAccountTypeSelect.value = type;
     bankAccountNumInput.value = num;
     nameInput.value = name;
+    updateSidebarAccount();
+    updateSidebarHistory();
 }
 
 const accountHistoryToggle = document.getElementById('accountHistoryToggle');
@@ -86,6 +88,7 @@ const moneyHidden = document.getElementById('moneyHidden');
 // 計算ロジック
 const feeCalcCard = document.getElementById('feeCalcCard');
 const calcMoney = document.getElementById('calcMoney');
+const calcUnits = document.getElementById('calcUnits');
 const calcFeeRate = document.getElementById('calcFeeRate');
 const calcFeeAmount = document.getElementById('calcFeeAmount');
 const calcActual = document.getElementById('calcActual');
@@ -99,16 +102,218 @@ function updateFeeCalc() {
         return;
     }
     const money = Number(raw);
+    const basePrice = Number(String(info.basePrice).replace(/,/g, ''));
     const feeRate = parseFloat(info.fee);
+    const units = Math.floor(money / basePrice * 10000);
     const feeAmount = Math.floor(money * feeRate / 100);
-    const actual = money - feeAmount;
+    const actual = money + feeAmount;
 
     calcMoney.textContent = money.toLocaleString() + '円';
+    calcUnits.textContent = units.toLocaleString() + '口';
     calcFeeRate.textContent = feeRate + '%';
-    calcFeeAmount.textContent = '-' + feeAmount.toLocaleString() + '円';
+    calcFeeAmount.textContent = '+' + feeAmount.toLocaleString() + '円';
     calcActual.textContent = actual.toLocaleString() + '円';
     feeCalcCard.style.display = 'block';
+    updateSidebarSim(actual);
 }
+
+// サイドバー
+const sidebarBank = document.getElementById('sidebarBank');
+const sidebarName = document.getElementById('sidebarName');
+const sidebarBalance = document.getElementById('sidebarBalance');
+const sidebarSimCard = document.getElementById('sidebarSimCard');
+const sidebarTotal = document.getElementById('sidebarTotal');
+const sidebarAfterBalance = document.getElementById('sidebarAfterBalance');
+const sidebarChartCard = document.getElementById('sidebarChartCard');
+let assetPieChart = null;
+
+function updateSidebarAccount() {
+    const bank = bankNameSelect.value;
+    const name = nameInput.value;
+    const num = parseInt(bankAccountNumInput.value);
+
+    sidebarBank.textContent = bank || '-';
+    sidebarName.textContent = name || '購入者名';
+
+    if (bankAccountNumInput.value.length === 7 && !isNaN(num)) {
+        const balance = balanceMap[num];
+        if (balance !== undefined) {
+            sidebarBalance.textContent = Number(balance).toLocaleString() + '円';
+            sidebarBalance.style.color = '';
+        } else {
+            sidebarBalance.textContent = '口座が見つかりません';
+            sidebarBalance.style.color = '#dc2626';
+        }
+    } else {
+        sidebarBalance.textContent = '-';
+        sidebarBalance.style.color = '';
+    }
+}
+
+function updateSidebarSim(total) {
+    const num = parseInt(bankAccountNumInput.value);
+    const balance = balanceMap[num];
+    if (balance === undefined) {
+        sidebarSimCard.style.display = 'none';
+        return;
+    }
+    const after = balance - total;
+    sidebarTotal.textContent = total.toLocaleString() + '円';
+    sidebarAfterBalance.textContent = after.toLocaleString() + '円';
+    sidebarAfterBalance.style.color = after < 0 ? '#dc2626' : '#16a34a';
+    sidebarSimCard.style.display = 'block';
+    updateAssetChart(total, after);
+}
+
+const FUND_COLORS = ['#4579FF', '#F59E0B', '#10B981', '#EF4444', '#8B5CF6', '#F97316'];
+const CASH_COLOR = '#CBD5E1';
+
+function updateAssetChart(currentTotal, remainingCash) {
+    if (remainingCash < 0) {
+        sidebarChartCard.style.display = 'none';
+        return;
+    }
+    sidebarChartCard.style.display = 'block';
+
+    const num = parseInt(bankAccountNumInput.value);
+    const currentFund = fundNameSelect.value;
+
+    // 過去の投資を銘柄別に集計
+    const fundTotals = {};
+    if (!isNaN(num)) {
+        orderHistory
+            .filter(o => Number(o.bankAccountNum) === num)
+            .forEach(o => {
+                fundTotals[o.fundName] = (fundTotals[o.fundName] || 0) + Number(o.money);
+            });
+    }
+    // 今回の投資を加算
+    if (currentFund && currentTotal > 0) {
+        fundTotals[currentFund] = (fundTotals[currentFund] || 0) + currentTotal;
+    }
+
+    const fundNames = Object.keys(fundTotals);
+    const fundAmounts = Object.values(fundTotals);
+    const totalInvested = fundAmounts.reduce((a, b) => a + b, 0);
+    const grandTotal = totalInvested + remainingCash;
+
+    const labels = [...fundNames, '現金残高'];
+    const data = [...fundAmounts, remainingCash];
+    const bgColors = [...fundNames.map((_, i) => FUND_COLORS[i % FUND_COLORS.length]), CASH_COLOR];
+
+    // 比率バー更新
+    const investPct = ((totalInvested / grandTotal) * 100).toFixed(1);
+    const cashPct = ((remainingCash / grandTotal) * 100).toFixed(1);
+    document.getElementById('assetInvestPct').textContent = '投資 ' + investPct + '%';
+    document.getElementById('assetCashPct').textContent = '現金 ' + cashPct + '%';
+    const bar = document.getElementById('assetRatioBar');
+    bar.innerHTML = fundNames.map((name, i) => {
+        const pct = ((fundTotals[name] / grandTotal) * 100).toFixed(1);
+        return `<div style="width:${pct}%;background:${FUND_COLORS[i % FUND_COLORS.length]};height:100%"></div>`;
+    }).join('') + `<div style="width:${cashPct}%;background:${CASH_COLOR};height:100%"></div>`;
+
+    // 内訳リスト更新
+    const breakdown = document.getElementById('assetBreakdown');
+    breakdown.innerHTML = [...fundNames.map((name, i) => {
+        const pct = ((fundTotals[name] / grandTotal) * 100).toFixed(1);
+        return `<div class="asset-breakdown-row">
+            <span class="asset-dot" style="background:${FUND_COLORS[i % FUND_COLORS.length]}"></span>
+            <span class="asset-breakdown-name">${name}</span>
+            <span class="asset-breakdown-right">
+                <span class="asset-breakdown-pct">${pct}%</span>
+                <span class="asset-breakdown-amt">${fundTotals[name].toLocaleString()}円</span>
+            </span>
+        </div>`;
+    }), `<div class="asset-breakdown-row">
+        <span class="asset-dot" style="background:${CASH_COLOR}"></span>
+        <span class="asset-breakdown-name">現金残高</span>
+        <span class="asset-breakdown-right">
+            <span class="asset-breakdown-pct">${cashPct}%</span>
+            <span class="asset-breakdown-amt">${remainingCash.toLocaleString()}円</span>
+        </span>
+    </div>`].join('');
+
+    // グラフ更新
+    if (assetPieChart) {
+        assetPieChart.data.labels = labels;
+        assetPieChart.data.datasets[0].data = data;
+        assetPieChart.data.datasets[0].backgroundColor = bgColors;
+        assetPieChart.update();
+        return;
+    }
+
+    const ctx = document.getElementById('assetPieChart').getContext('2d');
+    assetPieChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels,
+            datasets: [{
+                data,
+                backgroundColor: bgColors,
+                borderWidth: 2,
+                borderColor: '#ffffff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '60%',
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const pct = ((context.raw / total) * 100).toFixed(1);
+                            return context.label + ': ' + Number(context.raw).toLocaleString() + '円 (' + pct + '%)';
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+function updateSidebarHistory() {
+    const num = parseInt(bankAccountNumInput.value);
+    const historyCard = document.getElementById('sidebarHistoryCard');
+    const historyList = document.getElementById('sidebarHistoryList');
+
+    if (isNaN(num) || bankAccountNumInput.value.length !== 7) {
+        historyCard.style.display = 'none';
+        return;
+    }
+
+    const filtered = orderHistory
+        .filter(o => Number(o.bankAccountNum) === num)
+        .slice(0, 5);
+
+    if (filtered.length === 0) {
+        historyCard.style.display = 'none';
+        return;
+    }
+
+    historyList.innerHTML = filtered.map(o => {
+        const date = new Date(o.orderDateTime).toLocaleDateString('ja-JP', { month: '2-digit', day: '2-digit' });
+        return `<div class="sidebar-history-row">
+            <span class="sidebar-history-fund">${o.fundName}</span>
+            <span class="sidebar-history-meta">
+                <span class="sidebar-history-amount">${Number(o.money).toLocaleString()}円</span>
+                <span class="sidebar-history-date">${date}</span>
+            </span>
+        </div>`;
+    }).join('');
+
+    historyCard.style.display = 'block';
+}
+
+bankNameSelect.addEventListener('change', updateSidebarAccount);
+bankAccountNumInput.addEventListener('input', function() {
+    updateSidebarAccount();
+    updateSidebarHistory();
+    updateFeeCalc();
+});
+nameInput.addEventListener('input', updateSidebarAccount);
 
 moneyDisplay.addEventListener('input', function () {
     const raw = this.value.replace(/[^0-9]/g, '');
@@ -200,8 +405,8 @@ function updateChart(fund) {
         return;
     }
 
-    const tradingDaysPerMonth = 21;
-    const pointCount = currentPeriod * tradingDaysPerMonth;
+    const calendarDaysPerMonth = 30;
+    const pointCount = currentPeriod * calendarDaysPerMonth;
     const dates = chartData.dates.slice(-pointCount);
     const prices = chartData.prices.slice(-pointCount).map(Number);
 
@@ -211,8 +416,7 @@ function updateChart(fund) {
         stockChart.destroy();
     }
 
-    // 終値からOHLCを擬似生成（"MM/dd" → "YYYY-MM-dd" に年を補完）
-    const currentYear = new Date().getFullYear();
+    // 終値からOHLCを擬似生成（日付は "yyyy-MM-dd" 形式）
     const ohlcData = dates.map(function(date, i) {
         const c = prices[i];
         const prev = i > 0 ? prices[i - 1] : c;
@@ -221,7 +425,7 @@ function updateChart(fund) {
         const h = Math.max(o, c) + Math.random() * range * 0.8;
         const l = Math.min(o, c) - Math.random() * range * 0.8;
         return {
-            x: new Date(currentYear + '-' + date.replace('/', '-')).getTime(),
+            x: new Date(date).getTime(),
             o: Math.round(o * 10) / 10,
             h: Math.round(h * 10) / 10,
             l: Math.round(l * 10) / 10,
@@ -270,7 +474,7 @@ function updateChart(fund) {
                     grid: { display: false, drawBorder: false }
                 },
                 y: {
-                    position: 'right',
+                    position: 'left',
                     ticks: {
                         callback: function(value) {
                             return value.toLocaleString();

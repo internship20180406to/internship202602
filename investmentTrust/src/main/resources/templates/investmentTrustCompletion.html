@@ -8,7 +8,10 @@
 </head>
 <body>
 <div class="content">
-    <h1>投資信託注文完了</h1>
+    <nav class="nav-bar">
+        <div th:replace="~{fragments :: logo}"></div>
+        <span class="nav-title">投資信託注文完了</span>
+    </nav>
     <div th:replace="~{fragments :: stepBar(3)}"></div>
 
     <p class="completion-message">
@@ -55,6 +58,7 @@
 
     <p class="button-area">
         <input type="button" value="続けて注文する" class="form-control-button form-confirmation-button button-wide" onclick="window.location='/investmentTrust';"/>
+        <input type="button" value="注文履歴を見る" class="form-control-button form-clear-button button-wide" onclick="window.location='/investmentTrustHistory';"/>
     </p>
 </div>
 </body>

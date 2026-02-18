@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
+<div th:fragment="logo" class="logo-header">
+    <img th:src="@{/images/rogo.png}" alt="OSFG" class="logo-img"/>
+</div>
 <div th:fragment="stepBar(currentStep)" class="step-bar">
     <div class="step-item" th:classappend="${currentStep == 1} ? ' active' : ' completed'">
         <div class="step-circle">1</div>

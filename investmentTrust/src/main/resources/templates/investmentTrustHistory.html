@@ -1,0 +1,55 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>投資信託注文履歴</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/history.css}">
+</head>
+<body>
+<div class="content">
+    <nav class="nav-bar">
+        <div th:replace="~{fragments :: logo}"></div>
+        <span class="nav-title">注文履歴</span>
+    </nav>
+
+    <div class="table-wrapper">
+        <div th:if="${#lists.isEmpty(orderHistory)}" class="history-empty">
+            注文履歴がありません。
+        </div>
+
+        <table th:unless="${#lists.isEmpty(orderHistory)}" class="history-table">
+            <thead>
+                <tr>
+                    <th>注文日時</th>
+                    <th>銘柄</th>
+                    <th>合計支払額</th>
+                    <th>金融機関</th>
+                    <th>支店</th>
+                    <th>科目</th>
+                    <th>口座番号</th>
+                    <th>購入者名</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="order : ${orderHistory}">
+                    <td th:text="${#temporals.format(order.orderDateTime, 'yyyy/MM/dd HH:mm')}"></td>
+                    <td th:text="${order.fundName}"></td>
+                    <td><span th:text="${#numbers.formatInteger(order.money, 1, 'COMMA')}"></span>円</td>
+                    <td th:text="${order.bankName}"></td>
+                    <td th:text="${order.branchName}"></td>
+                    <td th:text="${order.bankAccountType}"></td>
+                    <td th:text="${order.bankAccountNum}"></td>
+                    <td th:text="${order.name}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p class="button-area">
+        <input type="button" value="注文画面へ戻る" class="form-control-button form-confirmation-button button-wide"
+               onclick="window.location='/investmentTrust';"/>
+    </p>
+</div>
+</body>
+</html>

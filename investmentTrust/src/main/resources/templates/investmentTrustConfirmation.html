@@ -8,7 +8,10 @@
 </head>
 <body>
 <div class="content">
-    <h1>投資信託注文確認</h1>
+    <nav class="nav-bar">
+        <div th:replace="~{fragments :: logo}"></div>
+        <span class="nav-title">投資信託注文確認</span>
+    </nav>
     <div th:replace="~{fragments :: stepBar(2)}"></div>
     <form action="#" th:action="@{/investmentTrustCompletion}" th:object="${investmentTrustApplication}" method="post">
 
@@ -45,6 +48,14 @@
                     <th>購入金額</th>
                     <td><span th:text="${#numbers.formatInteger(investmentTrustApplication.money, 1, 'COMMA')}"></span>円</td>
                 </tr>
+                <tr>
+                    <th>購入口数</th>
+                    <td><span th:text="${#numbers.formatInteger(investmentTrustApplication.units, 1, 'COMMA')}"></span>口</td>
+                </tr>
+                <tr>
+                    <th>合計支払額（手数料込）</th>
+                    <td><span th:text="${#numbers.formatInteger(investmentTrustApplication.totalMoney, 1, 'COMMA')}"></span>円</td>
+                </tr>
             </table>
         </div>
 
@@ -55,6 +66,8 @@
         <input type="hidden" name="name" th:value="*{name}"/>
         <input type="hidden" name="fundName" th:value="*{fundName}"/>
         <input type="hidden" name="money" th:value="*{money}"/>
+        <input type="hidden" name="totalMoney" th:value="*{totalMoney}"/>
+        <input type="hidden" name="units" th:value="*{units}"/>
 
         <p class="button-area">
             <input type="submit" id="submit" value="申し込み" class="form-control-button form-confirmation-button button-wide"/>

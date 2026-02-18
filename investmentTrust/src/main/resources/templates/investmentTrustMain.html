@@ -13,13 +13,14 @@
 <body>
 <div class="content">
     <nav class="nav-bar">
+        <div th:replace="~{fragments :: logo}"></div>
         <span class="nav-title">投資信託注文情報</span>
-        <div class="nav-spacer"></div>
     </nav>
     <div th:replace="~{fragments :: stepBar(1)}"></div>
     <form action="#" th:action="@{/investmentTrustConfirmation}" th:object="${investmentTrustApplication}" method="post">
 
-        <div class="form-section">
+        <div class="account-with-sidebar">
+        <div class="form-section account-section">
             <h2 class="form-section-title">口座情報</h2>
 
             <div th:if="${!accountHistory.isEmpty()}" class="account-history-panel">
@@ -89,9 +90,30 @@
                       th:errors="*{bankAccountType}"
                       class="error-message"></span>
             </p>
-        </div>
+        </div><!-- /.account-section -->
 
-        <div class="form-section">
+        <aside class="sidebar">
+            <div class="sidebar-card">
+                <div class="sidebar-section-title" id="sidebarName">-</div>
+                <div class="sidebar-row">
+                    <span class="sidebar-label">金融機関</span>
+                    <span class="sidebar-value" id="sidebarBank">-</span>
+                </div>
+                <div class="sidebar-row">
+                    <span class="sidebar-label">口座残高</span>
+                    <span class="sidebar-value" id="sidebarBalance">-</span>
+                </div>
+            </div>
+            <div class="sidebar-card" id="sidebarHistoryCard" style="display: none;">
+                <div class="sidebar-section-title">直近の取引</div>
+                <div id="sidebarHistoryList"></div>
+            </div>
+        </aside>
+
+        </div><!-- /.account-with-sidebar -->
+
+        <div class="fund-with-sidebar">
+        <div class="form-section fund-section">
             <h2 class="form-section-title">投資先情報</h2>
 
             <div class="fund-top-layout">
@@ -106,6 +128,17 @@
                         </select>
                         <span th:if="${#fields.hasErrors('fundName')}"
                               th:errors="*{fundName}"
+                              class="error-message"></span>
+                    </p>
+                    <p><label class="ml-1">購入金額: <small class="text-danger ml-1">※</small></label><br>
+                        <span class="money-input-wrapper">
+                            <input type="text" id="moneyDisplay" class="form-control" placeholder="10,000" inputmode="numeric"
+                                   th:value="${investmentTrustApplication.money != null ? #numbers.formatInteger(investmentTrustApplication.money, 1, 'COMMA') : ''}"/>
+                            <input type="hidden" th:field="*{money}" id="moneyHidden"/>
+                            <span>円</span>
+                        </span>
+                        <span th:if="${#fields.hasErrors('money')}"
+                              th:errors="*{money}"
                               class="error-message"></span>
                     </p>
                 </div>
@@ -152,31 +185,54 @@
                 <canvas id="stockChart"></canvas>
             </div>
 
-            <p><label class="ml-1">購入金額: <small class="text-danger ml-1">※</small></label><br>
-                <span class="money-input-wrapper">
-                    <input type="text" id="moneyDisplay" class="form-control" placeholder="10,000" inputmode="numeric"
-                           th:value="${investmentTrustApplication.money != null ? #numbers.formatInteger(investmentTrustApplication.money, 1, 'COMMA') : ''}"/>
-                    <input type="hidden" th:field="*{money}" id="moneyHidden"/>
-                    <span>円</span>
-                </span>
-                <span th:if="${#fields.hasErrors('money')}"
-                      th:errors="*{money}"
-                      class="error-message"></span>
-            </p>
+        </div><!-- /.fund-section -->
 
-            <div id="feeCalcCard" class="fund-info-card" style="display: none;">
-                <div class="fund-info-row">
-                    <span class="fund-info-label">購入金額</span>
-                    <span id="calcMoney" class="fund-info-value"></span>
+        <aside class="sidebar">
+            <div class="sidebar-card" id="sidebarSimCard" style="display: none;">
+                <div class="sidebar-section-title">購入シミュレーション</div>
+                <div class="sidebar-row">
+                    <span class="sidebar-label">合計支払額</span>
+                    <span class="sidebar-value" id="sidebarTotal">-</span>
                 </div>
-                <div class="fund-info-row">
-                    <span class="fund-info-label">手数料（<span id="calcFeeRate"></span>）</span>
-                    <span id="calcFeeAmount" class="fund-info-value fee-negative"></span>
+                <div class="sidebar-row">
+                    <span class="sidebar-label">購入後残高</span>
+                    <span class="sidebar-value sidebar-after-balance" id="sidebarAfterBalance">-</span>
                 </div>
-                <div class="fund-info-row fee-result-row">
-                    <span class="fund-info-label">実質投資額</span>
-                    <span id="calcActual" class="fund-info-value fee-result"></span>
+            </div>
+            <div class="sidebar-card" id="sidebarChartCard" style="display: none;">
+                <div class="sidebar-section-title">資産配分</div>
+                <div class="asset-ratio-bar-wrap">
+                    <div class="asset-ratio-label">
+                        <span id="assetInvestPct"></span>
+                        <span id="assetCashPct"></span>
+                    </div>
+                    <div class="asset-ratio-bar" id="assetRatioBar"></div>
                 </div>
+                <div class="sidebar-chart-container">
+                    <canvas id="assetPieChart"></canvas>
+                </div>
+                <div class="asset-breakdown" id="assetBreakdown"></div>
+            </div>
+        </aside>
+
+        </div><!-- /.fund-with-sidebar -->
+
+        <div id="feeCalcCard" class="fund-info-card fee-calc-center" style="display: none;">
+            <div class="fund-info-row">
+                <span class="fund-info-label">購入金額</span>
+                <span id="calcMoney" class="fund-info-value"></span>
+            </div>
+            <div class="fund-info-row">
+                <span class="fund-info-label">購入口数</span>
+                <span id="calcUnits" class="fund-info-value"></span>
+            </div>
+            <div class="fund-info-row">
+                <span class="fund-info-label">手数料（<span id="calcFeeRate"></span>）</span>
+                <span id="calcFeeAmount" class="fund-info-value"></span>
+            </div>
+            <div class="fund-info-row fee-result-row">
+                <span class="fund-info-label">合計支払額</span>
+                <span id="calcActual" class="fund-info-value fee-result"></span>
             </div>
         </div>
 
@@ -191,6 +247,8 @@
     const selectedBranch = /*[[${investmentTrustApplication.branchName}]]*/ '';
     const fundInfoMap = /*[[${fundInfoMap}]]*/ {};
     const fundChartDataMap = /*[[${fundChartDataMap}]]*/ {};
+    const balanceMap = /*[[${balanceMap}]]*/ {};
+    const orderHistory = /*[[${orderHistory}]]*/ [];
 </script>
 <script th:src="@{/js/investmentTrustMain.js}"></script>
 </body>

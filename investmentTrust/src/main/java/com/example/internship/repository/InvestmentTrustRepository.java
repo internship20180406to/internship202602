@@ -28,6 +28,23 @@ public class InvestmentTrustRepository {
         return jdbcTemplate.queryForList(sql);
     }
 
+    public Map<Integer, Long> findAllBalances() {
+        String sql = "SELECT bankAccountNum, balance FROM account_balance_table";
+        Map<Integer, Long> result = new java.util.LinkedHashMap<>();
+        jdbcTemplate.queryForList(sql).forEach(row ->
+            result.put((Integer) row.get("bankAccountNum"), (Long) row.get("balance"))
+        );
+        return result;
+    }
+
+    public List<Map<String, Object>> findAllOrders() {
+        String sql = "SELECT bankName, branchName, bankAccountType, bankAccountNum, " +
+                "name, fundName, money, orderDateTime " +
+                "FROM investmentTrust_table " +
+                "ORDER BY orderDateTime DESC";
+        return jdbcTemplate.queryForList(sql);
+    }
+
     public void create(InvestmentTrustForm investmentTrustForm) {
         String sql = "INSERT INTO investmentTrust_table(" +
                 "bankName, branchName, bankAccountType, bankAccountNum, " +
