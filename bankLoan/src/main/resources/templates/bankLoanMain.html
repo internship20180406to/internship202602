@@ -92,7 +92,7 @@
                         th:text="${option}">選択肢
                 </option>
             </select></p>
-        <p><label class="ml-1">口座番号(半角数字): <small class="text-danger ml-1">※</small></label><br>
+        <p><label class="ml-1">口座番号(ハイフンなし): <small class="text-danger ml-1">※</small></label><br>
             <input  id="inputBankAccountNum" type="text" oninput="validBankAccountNum(this,'inputBankAccountNum')"
                 th:field="*{bankAccountNum}" class="form-control backgroundRed" placeholder="1234567"/></p>
 
@@ -100,15 +100,15 @@
             <input  id="name" type="text" oninput="validName(this,'name')"
                     th:field="*{name}" class="form-control backgroundRed" placeholder="山田太郎"/></p>
 
-        <p><label class="ml-1">借入金額(半角数字): <small class="text-danger ml-1">※</small></label><br>
+        <p><label class="ml-1">借入金額（円）(数字のみ): <small class="text-danger ml-1">※</small></label><br>
             <input  id="loanAmount" type="text" oninput="validLoanAmount(this,'loanAmount')"
                     th:field="*{loanAmount}" class="form-control backgroundRed" placeholder="100000"/></p>
 
-        <p><label class="ml-1">借入年収(半角数字): <small class="text-danger ml-1">※</small></label><br>
+        <p><label class="ml-1">借入年収（円）(数字のみ): <small class="text-danger ml-1">※</small></label><br>
             <input  id="annualIncome" type="text" oninput="validLoanAmount(this,'annualIncome')"
                     th:field="*{annualIncome}" class="form-control backgroundRed" placeholder="5000000"/></p>
 
-        <p><label class="ml-1">金利（%）（半角数字、小数第二位まで入力）: <small class="text-danger ml-1">※</small></label><br>
+        <p><label class="ml-1">金利（%）（数字のみ、小数第二位まで入力）: <small class="text-danger ml-1">※</small></label><br>
             <input  id="interestRate" type="text" oninput="validInterestRate(this,'interestRate')"
                     th:field="*{interestRate}" class="form-control backgroundRed" placeholder="5.0"/></p>
 

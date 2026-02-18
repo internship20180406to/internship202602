@@ -1,3 +1,4 @@
+
 document.getElementById("submitButton").addEventListener("mouseover",function(){
     if (document.getElementById("inputBankAccountNum").classList.contains("backgroundRed")===false
     && document.getElementById("loanAmount").classList.contains("backgroundRed")===false
