@@ -6,8 +6,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.internship.entity.BankTransferForm;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 @Service
@@ -74,4 +72,8 @@ public class BankTransferService {
         String sql = "UPDATE bankTransfer_table SET executed = TRUE WHERE id = ?";
         repository.markAsExecuted(id);
     }
+    public int getBalance(String bankAccountNum) {
+        return repository.findBalanceByAccountNum(bankAccountNum);
+    }
+
 }

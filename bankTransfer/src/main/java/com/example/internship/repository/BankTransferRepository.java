@@ -14,7 +14,7 @@ import java.util.List;
 public class BankTransferRepository {
     @Autowired
     JdbcTemplate jdbcTemplate;
-
+    //履歴
     public List<BankTransferForm> findAll() {
         String sql = "SELECT * FROM bankTransfer_table ORDER BY transferDateTime DESC";
         return jdbcTemplate.query(
@@ -22,7 +22,7 @@ public class BankTransferRepository {
                 new BeanPropertyRowMapper<>(BankTransferForm.class)
         );
     }
-
+    //履歴保存
     public void create(BankTransferForm bankTransferForm) {
         String sql = "INSERT INTO bankTransfer_table(bankName, branchName ,bankAccountType,bankAccountNum, name, money, transFee,transferDateTime) VALUES(?, ?, ? ,? ,?, ?, ?, ?)";
         jdbcTemplate.update(sql,
@@ -51,6 +51,11 @@ public class BankTransferRepository {
     public void markAsExecuted(Long id){
         String sql = "UPDATE bankTransfer_table SET executed = TRUE WHERE id = ?";
         jdbcTemplate.update(sql,id);
+    }
+
+    public int findBalanceByAccountNum(String bankAccountNum) {
+        String sql = "SELECT money FROM bank_table WHERE bankAccountNum = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, bankAccountNum);
     }
 
 
