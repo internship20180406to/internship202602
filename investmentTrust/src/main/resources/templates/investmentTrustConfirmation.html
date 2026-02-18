@@ -37,10 +37,44 @@
     <input type="hidden" name="fundName" th:value="*{fundName}"/>
     <input type="hidden" name="money" th:value="*{money}"/>
     <p>
-        <input type="submit" id="submit" value="申込"/>
+        <input type="submit" id="btn-submit" value="申込"/>
         <input type="button" value="キャンセル" onclick="window.location='/investmentTrust';"/>
     </p>
-<!--</form>-->
+
+    <!-- 最初は隠れているロボットチェックのエリア -->
+    <div id="robot-overlay" style="
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.6);
+    z-index: 10000;
+    justify-content: center;
+    align-items: center;
+">
+        <div style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); text-align: center; min-width: 350px;">
+            <h5 id="auth-title" class="mb-4">セキュリティ認証</h5>
+
+            <!-- 【重要】IDを追加しました -->
+            <div id="step-checkbox" style="border: 1px solid #ccc; padding: 15px; background: #f9f9f9; display: inline-block;">
+                <input type="checkbox" id="not-robot" style="width: 20px; height: 20px; cursor: pointer;">
+                <label for="not-robot" style="font-size: 18px; margin-left: 10px; cursor: pointer;">私はロボットではありません</label>
+            </div>
+
+            <div id="step-images" style="display: none;">
+                <p>信号機の画像をすべて選択してください</p>
+                <div id="image-grid" style="display: grid; grid-template-columns: repeat(3, 100px); gap: 5px; justify-content: center;">
+                    <!-- JSで9枚生成されます -->
+                </div>
+            </div>
+
+            <br>
+            <button type="button" id="btn-next-step" class="btn btn-primary mt-4 w-100">認証して次へ</button>
+        </div>
+    </div>
+
+
+    <!--</form>-->
 <script th:inline="javascript" src="/js/investmentTrustConfirmation.js"></script>
 </body>
 </html>

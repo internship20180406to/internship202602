@@ -19,4 +19,6 @@ public class OrderInvestmentTrustService {
     public void orderInvestmentTrust(InvestmentTrustForm investmentTrustForm) {
         investmentTrustRepository.create(investmentTrustForm);
     }
+
+
 }
