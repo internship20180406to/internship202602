@@ -22,6 +22,8 @@ public class BankLoanForm {
     @NonNull
     private String name; //追加->申請者名
     @NonNull
+    private String loanType; //追加->ローンの種類
+    @NonNull
     private Integer loanAmount; //追加->借入金額
     @NonNull
     private Integer annualIncome; //追加->借入年収
@@ -67,6 +69,14 @@ public class BankLoanForm {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getLoanType() {
+        return loanType;
+    }
+
+    public void setLoanType(String loanType) {
+        this.loanType = loanType;
     }
 
     public Integer getLoanAmount() {

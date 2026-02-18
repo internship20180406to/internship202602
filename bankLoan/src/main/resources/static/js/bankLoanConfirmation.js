@@ -250,6 +250,7 @@ function saveFormDataToSessionStorage() {
     const bankAccountType = document.querySelector('[name="bankAccountType"]');
     const bankAccountNum = document.querySelector('[name="bankAccountNum"]');
     const name = document.querySelector('[name="name"]');
+    const loanTypeSelect = document.getElementById('loanTypeSelect');
     const loanAmountInput = document.getElementById('loanAmount');
     const annualIncomeInput = document.getElementById('annualIncome');
     const loanPeriodInput = document.getElementById('loanPeriod');
@@ -260,6 +261,7 @@ function saveFormDataToSessionStorage() {
         bankAccountType: bankAccountType ? bankAccountType.value : '',
         bankAccountNum: bankAccountNum ? bankAccountNum.value : '',
         name: name ? name.value : '',
+        loanType: loanTypeSelect ? loanTypeSelect.value : '',
         loanAmount: loanAmountInput ? loanAmountInput.value.replace(/,/g, '') : '',
         annualIncome: annualIncomeInput ? annualIncomeInput.value.replace(/,/g, '') : '',
         loanPeriod: loanPeriodInput ? loanPeriodInput.value : ''
@@ -281,6 +283,7 @@ function restoreFormDataFromSessionStorage() {
             const bankAccountType = document.querySelector('[name="bankAccountType"]');
             const bankAccountNum = document.querySelector('[name="bankAccountNum"]');
             const name = document.querySelector('[name="name"]');
+            const loanTypeSelect = document.getElementById('loanTypeSelect');
             const loanAmountInput = document.getElementById('loanAmount');
             const annualIncomeInput = document.getElementById('annualIncome');
             const loanPeriodInput = document.getElementById('loanPeriod');
@@ -304,6 +307,18 @@ function restoreFormDataFromSessionStorage() {
 
             if (bankAccountNum && formData.bankAccountNum) bankAccountNum.value = formData.bankAccountNum;
             if (name && formData.name) name.value = formData.name;
+
+            // ローンの種類を復元
+            if (loanTypeSelect) {
+                if (formData.loanType) {
+                    loanTypeSelect.value = formData.loanType;
+                } else {
+                    // 保存されたデータがない場合はリセット
+                    loanTypeSelect.selectedIndex = 0;
+                    loanTypeSelect.value = '';
+                }
+            }
+
             if (loanAmountInput && formData.loanAmount) {
                 loanAmountInput.value = formatNumberWithComma(formData.loanAmount);
             }
@@ -322,16 +337,12 @@ function restoreFormDataFromSessionStorage() {
 
 // リアルタイム金利計算関数
 function calculateAndDisplayInterestRate() {
-    const bankName = document.querySelector('[name="bankName"]');
-    const loanAmount = document.getElementById('loanAmount');
-    const annualIncome = document.getElementById('annualIncome');
+    const loanTypeSelect = document.getElementById('loanTypeSelect');
     const loanPeriod = document.getElementById('loanPeriod');
     const displayInterestRate = document.getElementById('displayInterestRate');
 
     // 必須項目が入力されているか確認
-    if (!bankName || !bankName.value ||
-        !loanAmount || !loanAmount.value ||
-        !annualIncome || !annualIncome.value ||
+    if (!loanTypeSelect || !loanTypeSelect.value ||
         !loanPeriod || !loanPeriod.value) {
         // 未入力の場合は---を表示
         if (displayInterestRate) {
@@ -340,13 +351,10 @@ function calculateAndDisplayInterestRate() {
         return;
     }
 
-    // カンマを除いて数値に変換
-    const loanAmountValue = parseInt(loanAmount.value.replace(/,/g, ''));
-    const annualIncomeValue = parseInt(annualIncome.value.replace(/,/g, ''));
     const loanPeriodValue = parseInt(loanPeriod.value);
 
     // 数値チェック
-    if (isNaN(loanAmountValue) || isNaN(annualIncomeValue) || isNaN(loanPeriodValue)) {
+    if (isNaN(loanPeriodValue)) {
         if (displayInterestRate) {
             displayInterestRate.textContent = '---';
         }
@@ -354,7 +362,7 @@ function calculateAndDisplayInterestRate() {
     }
 
     // API呼び出し
-    fetch(`/calculateInterestRate?bankName=${encodeURIComponent(bankName.value)}&loanAmount=${loanAmountValue}&annualIncome=${annualIncomeValue}&loanPeriod=${loanPeriodValue}`)
+    fetch(`/calculateInterestRate?loanType=${encodeURIComponent(loanTypeSelect.value)}&loanPeriod=${loanPeriodValue}`)
         .then(response => response.json())
         .then(data => {
             if (displayInterestRate && data.interestRate) {
@@ -382,8 +390,6 @@ function setupNumberFormatting() {
             this.value = formatNumberWithComma(value);
             // リアルタイムで保存
             saveFormDataToSessionStorage();
-            // リアルタイムで金利計算
-            calculateAndDisplayInterestRate();
         });
     }
 
@@ -395,22 +401,26 @@ function setupNumberFormatting() {
             this.value = formatNumberWithComma(value);
             // リアルタイムで保存
             saveFormDataToSessionStorage();
-            // リアルタイムで金利計算
-            calculateAndDisplayInterestRate();
         });
     }
 
     // その他のフィールドの変更も検知
+    const loanTypeSelect = document.getElementById('loanTypeSelect');
     const bankName = document.querySelector('[name="bankName"]');
     const branchName = document.querySelector('[name="branchName"]');
     const bankAccountType = document.querySelector('[name="bankAccountType"]');
     const bankAccountNum = document.querySelector('[name="bankAccountNum"]');
     const nameInput = document.querySelector('[name="name"]');
 
+    if (loanTypeSelect) {
+        loanTypeSelect.addEventListener('change', function() {
+            saveFormDataToSessionStorage();
+            calculateAndDisplayInterestRate();
+        });
+    }
     if (bankName) {
         bankName.addEventListener('change', function() {
             saveFormDataToSessionStorage();
-            calculateAndDisplayInterestRate();
         });
     }
     if (branchName) {
@@ -460,6 +470,7 @@ function validateFormBeforeSubmit(event) {
     const bankAccountType = document.querySelector('[name="bankAccountType"]');
     const bankAccountNum = document.querySelector('[name="bankAccountNum"]');
     const name = document.querySelector('[name="name"]');
+    const loanTypeSelect = document.getElementById('loanTypeSelect');
     const loanAmountInput = document.getElementById('loanAmount');
     const annualIncomeInput = document.getElementById('annualIncome');
     const loanPeriodInput = document.getElementById('loanPeriod');
@@ -492,6 +503,10 @@ function validateFormBeforeSubmit(event) {
 
     if (!name || !name.value || name.value.trim() === '') {
         errorMessages.push('申込者名を入力してください');
+    }
+
+    if (!loanTypeSelect || !loanTypeSelect.value || loanTypeSelect.value.trim() === '') {
+        errorMessages.push('ローンの種類を選択してください');
     }
 
     if (!loanAmountInput || !loanAmountInput.value || loanAmountInput.value.replace(/,/g, '').trim() === '') {
@@ -578,6 +593,7 @@ if (submitButton) {
             params.append('bankAccountType', document.getElementById('bankAccountType').value);
             params.append('bankAccountNum', document.getElementById('bankAccountNum').value);
             params.append('name', document.getElementById('applicantName').value);
+            params.append('loanType', document.getElementById('loanType').value);
             // カンマを除去して数値のみを送信
             params.append('loanAmount', document.getElementById('loanAmount').value.replace(/,/g, ''));
             params.append('annualIncome', document.getElementById('annualIncome').value.replace(/,/g, ''));

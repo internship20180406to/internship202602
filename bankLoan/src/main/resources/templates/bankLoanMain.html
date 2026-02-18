@@ -171,6 +171,14 @@
         </p>
         <p><label class="ml-1">申込者名:<small class="text-danger ml-1 required-mark" data-required-for="applicantName">※</small></label><br>
             <input type="text" id="applicantName" th:field="*{name}" class="form-control" placeholder="山田 太郎"/></p>
+        <p><label class="ml-1">ローンの種類:<small class="text-danger ml-1 required-mark" data-required-for="loanTypeSelect">※</small></label><br>
+            <select th:field="*{loanType}" id="loanTypeSelect" class="form-control" required>
+                <option value="" disabled hidden>ローンの種類を選択してください</option>
+                <option value="住宅ローン">住宅ローン</option>
+                <option value="マイカーローン">マイカーローン</option>
+                <option value="教育ローン">教育ローン</option>
+                <option value="フリーローン">フリーローン</option>
+            </select></p>
         <p><label class="ml-1">借入金額(円):<small class="text-danger ml-1 required-mark" data-required-for="loanAmount">※</small></label><br>
             <input type="text" id="loanAmount" th:field="*{loanAmount}" class="form-control" placeholder="3000000"/></p>
         <p><label class="ml-1">借入年収(円):<small class="text-danger ml-1 required-mark" data-required-for="annualIncome">※</small></label><br>
@@ -188,6 +196,7 @@
     // ページ初期化時に口座種別を確実にリセット（DOMContentLoaded前に実行）
     document.addEventListener('DOMContentLoaded', function() {
         const bankAccountTypeSelect = document.getElementById('bankAccountTypeSelect');
+        const loanTypeSelect = document.getElementById('loanTypeSelect');
 
         // セッションストレージにデータがない場合のみリセット
         if (!sessionStorage.getItem('bankLoanFormData')) {
@@ -195,6 +204,10 @@
                 // 確実に最初のoption（disabled hidden）に設定
                 bankAccountTypeSelect.selectedIndex = 0;
                 bankAccountTypeSelect.value = '';
+            }
+            if (loanTypeSelect) {
+                loanTypeSelect.selectedIndex = 0;
+                loanTypeSelect.value = '';
             }
         }
     }, true); // キャプチャフェーズで実行（バブリング前に実行）
@@ -237,6 +250,7 @@
             'bankAccountTypeSelect',
             'bankAccountNum',
             'applicantName',
+            'loanTypeSelect',
             'loanAmount',
             'annualIncome',
             'loanPeriod'
@@ -254,10 +268,14 @@
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function() {
             const bankAccountTypeSelect = document.querySelector('[name="bankAccountType"]');
+            const loanTypeSelect = document.querySelector('[name="loanType"]');
 
             if (!sessionStorage.getItem('bankLoanFormData')) {
                 if (bankAccountTypeSelect && bankAccountTypeSelect.value !== '') {
                     bankAccountTypeSelect.value = '';
+                }
+                if (loanTypeSelect && loanTypeSelect.value !== '') {
+                    loanTypeSelect.value = '';
                 }
                 updateBranchOptions();
             }
@@ -273,6 +291,13 @@
                         if (bankAccountTypeSelect) {
                             bankAccountTypeSelect.value = '';
                             bankAccountTypeSelect.selectedIndex = 0;
+                        }
+
+                        // ローンの種類selectをリセット
+                        const loanTypeSelect = document.getElementById('loanTypeSelect');
+                        if (loanTypeSelect) {
+                            loanTypeSelect.value = '';
+                            loanTypeSelect.selectedIndex = 0;
                         }
 
                         if (typeof updateBankAccountNumWarning === 'function') {
@@ -305,10 +330,14 @@
         });
     } else {
         const bankAccountTypeSelect = document.querySelector('[name="bankAccountType"]');
+        const loanTypeSelect = document.querySelector('[name="loanType"]');
 
         if (!sessionStorage.getItem('bankLoanFormData')) {
             if (bankAccountTypeSelect && bankAccountTypeSelect.value !== '') {
                 bankAccountTypeSelect.value = '';
+            }
+            if (loanTypeSelect && loanTypeSelect.value !== '') {
+                loanTypeSelect.value = '';
             }
             updateBranchOptions();
         }
@@ -324,6 +353,13 @@
                     if (bankAccountTypeSelect) {
                         bankAccountTypeSelect.value = '';
                         bankAccountTypeSelect.selectedIndex = 0;
+                    }
+
+                    // ローンの種類selectをリセット
+                    const loanTypeSelect = document.getElementById('loanTypeSelect');
+                    if (loanTypeSelect) {
+                        loanTypeSelect.value = '';
+                        loanTypeSelect.selectedIndex = 0;
                     }
 
                     if (typeof updateBankAccountNumWarning === 'function') {
