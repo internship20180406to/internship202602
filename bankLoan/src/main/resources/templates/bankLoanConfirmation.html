@@ -134,6 +134,11 @@
                 <td>   <span th:text="*{loanAmount}"></span>   </td>
             </tr>
             <tr>
+                <td>  借入年収  </td>
+                <td></td>
+                <td>   <span th:text="*{annualIncome}"></span>   </td>
+            </tr>
+            <tr>
                 <td>  金利   </td>
                 <td></td>
                 <td>   <span th:text="*{interestRate}"></span>   </td>
@@ -149,8 +154,10 @@
         <input type="hidden" name="annualIncome" th:value="*{annualIncome}"/>
         <input type="hidden" name="interestRate" th:value="*{interestRate}"/>
 
-        <p style="text-align: center;">    <input type="submit" id="submit" value="申込" class="form-control-button form-confirmation-button"/>
-            <input type="button" value="キャンセル" onclick="window.location='/bankLoan';" class="form-control-buttonVer2 form-clear-button"/></p>
+        <p style="text-align: center;">
+            <input type="submit" id="submit" value="申込" class="form-control-button form-confirmation-button"/>
+            <input type="button" value="キャンセル" onclick="window.location='/bankLoan';" class="form-control-buttonVer2 form-clear-button"/>
+        </p>
 
     </form>
 </div>

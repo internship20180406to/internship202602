@@ -36,13 +36,23 @@ public class BankLoanController {
         model.addAttribute("loanAmount", bankLoanForm.getLoanAmount());
         model.addAttribute("annualIncome", bankLoanForm.getAnnualIncome());
         model.addAttribute("interestRate", bankLoanForm.getInterestRate());
+        model.addAttribute("years", bankLoanForm.getyears());
         model.addAttribute("bankLoanApplication", bankLoanForm);
         return "bankLoanConfirmation";
     }
-
     @PostMapping("/bankLoanCompletion")
     public String completion(@ModelAttribute BankLoanForm bankLoanForm, Model model) {
-        applyBankLoanService.applyBankLoan(bankLoanForm);
+        model.addAttribute("bankName", bankLoanForm.getBankName());
+        model.addAttribute("branchName", bankLoanForm.getBranchName());
+        model.addAttribute("bankAccountNum", bankLoanForm.getBankAccountNum());
+        model.addAttribute("bankAccountType", bankLoanForm.getBankAccountType());
+        model.addAttribute("name", bankLoanForm.getName());
+        model.addAttribute("loanAmount", bankLoanForm.getLoanAmount());
+        model.addAttribute("annualIncome", bankLoanForm.getAnnualIncome());
+        model.addAttribute("years", bankLoanForm.getyears());
+        model.addAttribute("interestRate", bankLoanForm.getInterestRate());
+        model.addAttribute("bankLoanApplication", bankLoanForm);
+        applyBankLoanService.applyBankLoan(bankLoanForm);//
         return "bankLoanCompletion";
     }
 

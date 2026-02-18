@@ -1,3 +1,36 @@
+const rates =[[2,4.60],[3,4.90],[5,5.20],[10,5.55],[15,5.85],[20,6.05],[35,6.30]]
+
+//全角数字を半角にする
+function toHalfWidth(str) {
+    str=str.replace(/[^0-9０-９。]/g,'').replace(/。/g,".")
+    return str.replace(/[０-９]/g, function(s) {
+        return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+    });
+}
+
+//金利計算
+function calculateRate(a){
+a=Number.parseInt(a)//intにする
+for (let n = 0; n < rates.length; n++){
+if (a<=rates[n][0]){
+return rates[n][1]
+}
+}
+if (a>=35){
+return 6.50}
+return null
+}
+
+document.getElementById("years").addEventListener("input",function(){
+console.log (this.value)
+const yearsInputted = this.value;
+rate=calculateRate(yearsInputted)
+console.log(`rate=${rate}`)
+document.getElementById("interestRate").value=rate
+if (rate===null){document.getElementById("DisplayedInterestRate").textContent=""}
+else{document.getElementById("DisplayedInterestRate").textContent=rate+"%"}
+
+});
 
 document.getElementById("submitButton").addEventListener("mouseover",function(){
     if (document.getElementById("inputBankAccountNum").classList.contains("backgroundRed")===false
@@ -24,15 +57,18 @@ document.getElementById("submitButton").addEventListener("mouseover",function(){
     }
 });
 
-//
+
 
 //口座番号入力修正
     function changeNum(a){
-    a.value=a.value.replace(/[^0-9０-９]/g,'').replace('０','0').replace('１','1').replace('２','2').replace('３','3').replace('４','4').replace('５','5').replace('６','6').replace('７','7').replace('８','8').replace('９','9')
+    console.log(a.value)
+    a.value=toHalfWidth(a.value)
+    //a.value=a.value.replace(/[^0-9０-９]/g,'').replace('０','0').replace('１','1').replace('２','2').replace('３','3').replace('４','4').replace('５','5').replace('６','6').replace('７','7').replace('８','8').replace('９','9')
     if (a.value.length >=7){
         a.value=a.value.slice(0,7)
         }
     return a
+    console.log(a.value)
     }
 //数字入力修正
     function changeNumNormal(a){
@@ -87,10 +123,8 @@ document.getElementById("submitButton").addEventListener("mouseover",function(){
         //.console.log(typeof input);
         if (input !=="" && 0<=input && input<=100 && input.search(/[^\.]+\.[0-9][0-9]$/)!==-1) {//0以上100以下かつ小数第二位まで入力されている
             document.getElementById(where).classList.remove("backgroundRed")
-            //console.log("kariireok")
         }else{
             document.getElementById(where).classList.add("backgroundRed")
-            //console.log("kariireno")
         }
     }
 
@@ -100,9 +134,7 @@ document.getElementById("submitButton").addEventListener("mouseover",function(){
         var input=i.value
         if (/^[ぁ-んァ-ヶ一-龠々ー]+$/.test(input)===true){//日本語だけで構成されている
             document.getElementById(where).classList.remove("backgroundRed")
-            //console.log("kariireok")
         }else{
             document.getElementById(where).classList.add("backgroundRed")
-            //console.log("kariireno")
         }
     }
