@@ -2,86 +2,450 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>ローン申込情報入力画面</title>
     <style>
-        body {
-        background-color: #f0f0f0;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        padding-top: 40px;
-        padding-bottom: 40px;
-        justify-content: center;
-        align-items: center;
-        min-height: 85vh;
-        overflow: auto;
-        }
-        .content {
-         background-color: #ffffff;
-         width: 80%;
-         padding: 20px;
-         border-radius: 10px;
-         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-         min-height: 50vh;
-         overflow: auto;
-        }
-        .form-control {
-            width: 100%;
-            padding: 8px;
-            margin: 5px 0;
+        * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
-        .text-danger {
-        color: red;
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
         }
-        .form-control-button {
-        width: 80px;
-        padding: 10px 20px;
-        margin-top: 10px;
-        border: none;
-        cursor: pointer;
-        border-radius: 5px;
+
+        .container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 700px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
         }
-        .form-confirmation-button{
-        color: white;
-        background-color: #2185D0;
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
         }
-        .form-confirmation-button:hover {
-        background-color: #1678c2;
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 600;
         }
-        .form-clear-button{
-        color: black;
-        background-color: #E0E1E2;
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
         }
-        .form-clear-button:hover {
-        background-color: #CCCCCC;
+
+        .progress-bar {
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.3);
         }
+
+        .progress-fill {
+            height: 100%;
+            background-color: #4caf50;
+            width: 33%;
+            transition: width 0.3s ease;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group label .required {
+            color: #e74c3c;
+            margin-left: 4px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-control:disabled,
+        .form-control[readonly] {
+            background-color: #f5f5f5;
+            cursor: not-allowed;
+        }
+
+        .form-control[readonly] {
+            border-color: #ddd;
+            color: #666;
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 20px;
+            padding-right: 40px;
+        }
+
         .error-message-container {
-            background-color: #f8d7da;
-            border: 2px solid #f5c6cb;
-            border-radius: 5px;
+            background-color: #fee;
+            border-left: 4px solid #e74c3c;
+            border-radius: 8px;
             padding: 15px;
             margin-bottom: 20px;
             display: none;
         }
+
         .error-message-container.show {
             display: block;
         }
+
         .error-message-container h3 {
-            color: #721c24;
-            margin-top: 0;
+            color: #c0392b;
             margin-bottom: 10px;
             font-size: 16px;
         }
+
         .error-message-container ul {
             list-style-position: inside;
-            margin: 0;
-            padding-left: 0;
-            color: #721c24;
+            color: #c0392b;
         }
+
         .error-message-container li {
             margin-bottom: 5px;
+            font-size: 14px;
         }
+
+        .warning-text {
+            color: #e67e22;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .interest-rate-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .interest-rate-box label {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 5px;
+        }
+
+        .interest-rate-value {
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 140px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background-color: #d0d0d0;
+        }
+
+        .area-search-container {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 1px solid #ddd;
+            display: none;
+        }
+
+        .area-search-container.show {
+            display: block;
+        }
+
+        .prefecture-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .prefecture-btn, .branch-btn, .back-btn {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background-color: #f0f0f0;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s ease;
+        }
+
+        .prefecture-btn:hover {
+            background-color: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .branch-btn:hover {
+            background-color: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .back-btn {
+            background-color: #95a5a6;
+            color: white;
+            border-color: #95a5a6;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .back-btn:hover {
+            background-color: #7f8c8d;
+        }
+
+        .branch-buttons-div {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        select:invalid {
+            color: #999999;
+        }
+
+        .flex-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .flex-row > div:first-child {
+            flex: 1;
+        }
+
+        .flex-row .btn {
+            min-width: auto;
+            padding: 12px 24px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                border-radius: 0;
+                max-width: 100%;
+            }
+
+            .header {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .content {
+                padding: 25px 20px;
+            }
+
+            .btn {
+                min-width: 100%;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🏦 ローン申込</h1>
+        <p>必要な情報をご入力ください</p>
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+    </div>
+
+    <div class="content">
+        <form action="#" th:action="@{/bankLoanConfirmation}" th:object="${bankLoanApplication}" method="post" onsubmit="return validateFormBeforeSubmit(event)">
+            <div id="errorMessageContainer" class="error-message-container">
+                <h3>⚠️ 入力エラー</h3>
+                <ul id="errorList"></ul>
+            </div>
+
+            <!-- 基本情報セクション -->
+            <div class="form-section">
+                <div class="form-section-title">基本情報</div>
+
+                <div class="form-group">
+                    <label>金融機関名</label>
+                    <input type="text" id="bankNameSelect" th:field="*{bankName}" class="form-control" value="かわらそば銀行" readonly/>
+                </div>
+
+                <div class="form-group">
+                    <label>支店名<span class="required" data-required-for="branchNameInput">※</span></label>
+                    <div class="flex-row">
+                        <div>
+                            <input type="text" id="branchNameInput" th:field="*{branchName}" class="form-control" placeholder="支店名を入力またはエリアで探す" list="branchNameList" autocomplete="off"/>
+                            <datalist id="branchNameList"></datalist>
+                            <span id="branchNameWarning" class="warning-text">該当する支店が見つかりません（警告）</span>
+                        </div>
+                        <button type="button" id="searchByAreaBtn" class="btn btn-secondary" style="min-width: auto; padding: 12px 18px; font-size: 13px;">探す</button>
+                    </div>
+                    <div id="areaSearchContainer" class="area-search-container">
+                        <h4 style="margin-bottom: 12px; font-size: 13px;">都道府県から探す</h4>
+                        <div id="prefectureButtonsContainer" class="prefecture-buttons"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>口座種別<span class="required" data-required-for="bankAccountTypeSelect">※</span></label>
+                    <select th:field="*{bankAccountType}" id="bankAccountTypeSelect" class="form-control" required>
+                        <option value="" disabled hidden>口座種別を選択してください</option>
+                        <option value="普通">普通</option>
+                        <option value="当座">当座</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>口座番号<span class="required" data-required-for="bankAccountNum">※</span></label>
+                    <input type="text" id="bankAccountNum" th:field="*{bankAccountNum}" class="form-control" placeholder="7桁の番号"/>
+                    <span id="bankAccountNumWarning" class="warning-text">口座番号が7桁ではありません（警告）</span>
+                </div>
+
+                <div class="form-group">
+                    <label>申込者名<span class="required" data-required-for="applicantName">※</span></label>
+                    <input type="text" id="applicantName" th:field="*{name}" class="form-control" placeholder="山田 太郎"/>
+                </div>
+            </div>
+
+            <!-- ローン条件セクション -->
+            <div class="form-section">
+                <div class="form-section-title">ローン条件</div>
+
+                <div class="form-group">
+                    <label>ローンの種類<span class="required" data-required-for="loanTypeSelect">※</span></label>
+                    <select th:field="*{loanType}" id="loanTypeSelect" class="form-control" required>
+                        <option value="" disabled hidden>ローンの種類を選択してください</option>
+                        <option value="住宅ローン">住宅ローン</option>
+                        <option value="マイカーローン">マイカーローン</option>
+                        <option value="教育ローン">教育ローン</option>
+                        <option value="フリーローン">フリーローン</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>借入金額(円)<span class="required" data-required-for="loanAmount">※</span></label>
+                    <input type="text" id="loanAmount" th:field="*{loanAmount}" class="form-control" placeholder="3000000"/>
+                </div>
+
+                <div class="form-group">
+                    <label>借入年収(円)<span class="required" data-required-for="annualIncome">※</span></label>
+                    <input type="text" id="annualIncome" th:field="*{annualIncome}" class="form-control" placeholder="5000000"/>
+                </div>
+
+                <div class="form-group">
+                    <label>借入期間(年)<span class="required" data-required-for="loanPeriod">※</span></label>
+                    <input type="number" id="loanPeriod" th:field="*{loanPeriod}" class="form-control" placeholder="20" min="1" max="50"/>
+                </div>
+            </div>
+
+            <!-- 金利表示 -->
+            <div class="interest-rate-box">
+                <label>予想金利</label>
+                <div class="interest-rate-value" id="displayInterestRate">---</div>
+                <small>% (年率)</small>
+            </div>
+
+            <!-- ボタングループ -->
+            <div class="button-group">
+                <input type="submit" value="確認" class="btn btn-primary"/>
+                <input type="reset" id="clearButton" value="クリア" class="btn btn-secondary"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- スクリプトは以下に配置 -->
+<script th:inline="javascript">
+
         /* 選択肢の「〜を選択してください」の文字色をplaceholder同様の薄いグレーに設定 */
         select {
             color: #333333;
@@ -265,121 +629,85 @@
         });
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function() {
-            const bankAccountTypeSelect = document.querySelector('[name="bankAccountType"]');
-            const loanTypeSelect = document.querySelector('[name="loanType"]');
+    function resetSelectToPlaceholder(selectEl) {
+        if (!selectEl) {
+            return;
+        }
+        selectEl.selectedIndex = 0;
+        selectEl.value = '';
+    }
 
-            if (!sessionStorage.getItem('bankLoanFormData')) {
-                if (bankAccountTypeSelect && bankAccountTypeSelect.value !== '') {
-                    bankAccountTypeSelect.value = '';
-                }
-                if (loanTypeSelect && loanTypeSelect.value !== '') {
-                    loanTypeSelect.value = '';
-                }
-                updateBranchOptions();
-            }
+    function resetFormSelections() {
+        document.getElementById('branchNameInput').value = '';
+        resetSelectToPlaceholder(document.getElementById('bankAccountTypeSelect'));
+        resetSelectToPlaceholder(document.getElementById('loanTypeSelect'));
 
-            const clearButton = document.getElementById('clearButton');
-            if (clearButton) {
-                clearButton.addEventListener('click', function() {
-                    setTimeout(function() {
-                        document.getElementById('branchNameInput').value = '';
+        if (typeof updateBankAccountNumWarning === 'function') {
+            updateBankAccountNumWarning();
+        }
 
-                        // 口座種別selectをリセット
-                        const bankAccountTypeSelect = document.getElementById('bankAccountTypeSelect');
-                        if (bankAccountTypeSelect) {
-                            bankAccountTypeSelect.value = '';
-                            bankAccountTypeSelect.selectedIndex = 0;
-                        }
+        sessionStorage.removeItem('bankLoanFormData');
 
-                        // ローンの種類selectをリセット
-                        const loanTypeSelect = document.getElementById('loanTypeSelect');
-                        if (loanTypeSelect) {
-                            loanTypeSelect.value = '';
-                            loanTypeSelect.selectedIndex = 0;
-                        }
+        const errorMessageContainer = document.getElementById('errorMessageContainer');
+        if (errorMessageContainer) {
+            errorMessageContainer.classList.remove('show');
+        }
 
-                        if (typeof updateBankAccountNumWarning === 'function') {
-                            updateBankAccountNumWarning();
-                        }
+        // すべての「※」を表示させる
+        updateRequiredMarks();
+    }
 
-                        sessionStorage.removeItem('bankLoanFormData');
+    function initializeFromSessionStorage() {
+        if (sessionStorage.getItem('bankLoanFormData')) {
+            return;
+        }
 
-                        const errorMessageContainer = document.getElementById('errorMessageContainer');
-                        if (errorMessageContainer) {
-                            errorMessageContainer.classList.remove('show');
-                        }
-
-                        // すべての「※」を表示させる
-                        updateRequiredMarks();
-                    }, 0);
-                });
-            }
-            attachRequiredMarkListeners();
-            updateRequiredMarks();
-
-            // エリアで探すボタンのイベントリスナー
-            const searchByAreaBtn = document.getElementById('searchByAreaBtn');
-            if (searchByAreaBtn) {
-                searchByAreaBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    toggleAreaSearch();
-                });
-            }
-        });
-    } else {
         const bankAccountTypeSelect = document.querySelector('[name="bankAccountType"]');
         const loanTypeSelect = document.querySelector('[name="loanType"]');
 
-        if (!sessionStorage.getItem('bankLoanFormData')) {
-            if (bankAccountTypeSelect && bankAccountTypeSelect.value !== '') {
-                bankAccountTypeSelect.value = '';
-            }
-            if (loanTypeSelect && loanTypeSelect.value !== '') {
-                loanTypeSelect.value = '';
-            }
-            updateBranchOptions();
+        if (bankAccountTypeSelect && bankAccountTypeSelect.value !== '') {
+            bankAccountTypeSelect.value = '';
+        }
+        if (loanTypeSelect && loanTypeSelect.value !== '') {
+            loanTypeSelect.value = '';
         }
 
+        updateBranchOptions();
+    }
+
+    function attachClearButtonHandler() {
         const clearButton = document.getElementById('clearButton');
-        if (clearButton) {
-            clearButton.addEventListener('click', function() {
-                setTimeout(function() {
-                    document.getElementById('branchNameInput').value = '';
-
-                    // 口座種別selectをリセット
-                    const bankAccountTypeSelect = document.getElementById('bankAccountTypeSelect');
-                    if (bankAccountTypeSelect) {
-                        bankAccountTypeSelect.value = '';
-                        bankAccountTypeSelect.selectedIndex = 0;
-                    }
-
-                    // ローンの種類selectをリセット
-                    const loanTypeSelect = document.getElementById('loanTypeSelect');
-                    if (loanTypeSelect) {
-                        loanTypeSelect.value = '';
-                        loanTypeSelect.selectedIndex = 0;
-                    }
-
-                    if (typeof updateBankAccountNumWarning === 'function') {
-                        updateBankAccountNumWarning();
-                    }
-
-                    sessionStorage.removeItem('bankLoanFormData');
-
-                    const errorMessageContainer = document.getElementById('errorMessageContainer');
-                    if (errorMessageContainer) {
-                        errorMessageContainer.classList.remove('show');
-                    }
-
-                    // すべての「※」を表示させる
-                    updateRequiredMarks();
-                }, 0);
-            });
+        if (!clearButton) {
+            return;
         }
+        clearButton.addEventListener('click', function() {
+            setTimeout(resetFormSelections, 0);
+        });
+    }
+
+    function attachAreaSearchHandler() {
+        const searchByAreaBtn = document.getElementById('searchByAreaBtn');
+        if (!searchByAreaBtn) {
+            return;
+        }
+        searchByAreaBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            toggleAreaSearch();
+        });
+    }
+
+    function initializeFormPage() {
+        initializeFromSessionStorage();
+        attachClearButtonHandler();
         attachRequiredMarkListeners();
         updateRequiredMarks();
+        attachAreaSearchHandler();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeFormPage);
+    } else {
+        initializeFormPage();
     }
 </script>
 <script src="/js/bankLoanConfirmation.js"></script>

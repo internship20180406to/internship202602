@@ -2,50 +2,323 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>ローン申込確認画面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 700px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.3);
+            margin-top: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: #f39c12;
+            width: 66%;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .info-section {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: 500;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .info-value {
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+            text-align: right;
+        }
+
+        .interest-rate-highlight {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .interest-rate-label {
+            font-size: 13px;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .interest-rate-value {
+            font-size: 40px;
+            font-weight: 700;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background-color: #d0d0d0;
+        }
+
+        .confirmation-badge {
+            display: inline-block;
+            background-color: #f39c12;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                border-radius: 0;
+                max-width: 100%;
+            }
+
+            .header {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .content {
+                padding: 25px 20px;
+            }
+
+            .btn {
+                flex: 1;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .info-row {
+                flex-direction: column;
+            }
+
+            .info-value {
+                text-align: left;
+                margin-top: 5px;
+            }
+        }
+    </style>
 </head>
 <body>
-<h1>ローン申込確認画面</h1>
-<form action="#" th:action="@{/bankLoanCompletion}" th:object="${bankLoanApplication}" method="post" id="confirmationForm">
-    <p>金融機関名: <span th:text="*{bankName}"></span></p>
-    <p>支店名: <span th:text="*{branchName}"></span></p>
-    <p>口座種別: <span th:text="*{bankAccountType}"></span></p>
-    <p>口座番号: <span th:text="*{bankAccountNum}"></span></p>
-    <p>申込者名: <span th:text="*{name}"></span></p>
-    <p>借入金額(円): <span id="displayLoanAmount" th:text="*{loanAmount}"></span></p>
-    <p>借入年収(円): <span id="displayAnnualIncome" th:text="*{annualIncome}"></span></p>
-    <p>借入期間(年): <span th:text="*{loanPeriod}"></span></p>
-    <p>金利(%): <span th:text="*{interestRate}"></span></p>
-    <input type="hidden" id="bankAccountNum" name="bankAccountNum" th:value="*{bankAccountNum}"/>
-    <input type="hidden" id="bankName" name="bankName" th:value="*{bankName}"/>
-    <input type="hidden" id="branchName" name="branchName" th:value="*{branchName}"/>
-    <input type="hidden" id="bankAccountType" name="bankAccountType" th:value="*{bankAccountType}"/>
-    <input type="hidden" id="applicantName" name="name" th:value="*{name}"/>
-    <input type="hidden" id="loanType" name="loanType" th:value="*{loanType}"/>
-    <input type="hidden" id="loanAmount" name="loanAmount" th:value="*{loanAmount}"/>
-    <input type="hidden" id="annualIncome" name="annualIncome" th:value="*{annualIncome}"/>
-    <input type="hidden" id="loanPeriod" name="loanPeriod" th:value="*{loanPeriod}"/>
-    <input type="hidden" id="interestRate" name="interestRate" th:value="*{interestRate}"/>
-    <p>
-        <input type="button" id="submitButton" value="申込"/>
-        <input type="button" value="キャンセル" onclick="window.location='/bankLoan';"/>
-    </p>
-</form>
+<div class="container">
+    <div class="header">
+        <h1>✓ 申込内容確認</h1>
+        <p>ご入力いただいた内容をご確認ください</p>
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="confirmation-badge">申込内容確認中</div>
+
+        <form action="#" th:action="@{/bankLoanCompletion}" th:object="${bankLoanApplication}" method="post" id="confirmationForm">
+
+            <!-- 基本情報 -->
+            <div class="info-section">
+                <div class="section-title">基本情報</div>
+                <div class="info-row">
+                    <span class="info-label">金融機関名</span>
+                    <span class="info-value" th:text="*{bankName}"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">支店名</span>
+                    <span class="info-value" th:text="*{branchName}"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">口座種別</span>
+                    <span class="info-value" th:text="*{bankAccountType}"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">口座番号</span>
+                    <span class="info-value" th:text="*{bankAccountNum}"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">申込者名</span>
+                    <span class="info-value" th:text="*{name}"></span>
+                </div>
+            </div>
+
+            <!-- ローン条件 -->
+            <div class="info-section">
+                <div class="section-title">ローン条件</div>
+                <div class="info-row">
+                    <span class="info-label">ローンの種類</span>
+                    <span class="info-value" th:text="*{loanType}"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">借入金額</span>
+                    <span class="info-value" id="displayLoanAmount" th:text="*{loanAmount}"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">借入年収</span>
+                    <span class="info-value" id="displayAnnualIncome" th:text="*{annualIncome}"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">借入期間</span>
+                    <span class="info-value"><span th:text="*{loanPeriod}"></span>年</span>
+                </div>
+            </div>
+
+            <!-- 金利 -->
+            <div class="interest-rate-highlight">
+                <div class="interest-rate-label">年利率</div>
+                <div class="interest-rate-value"><span th:text="*{interestRate}"></span>%</div>
+            </div>
+
+            <!-- Hidden Fields -->
+            <input type="hidden" id="bankAccountNum" name="bankAccountNum" th:value="*{bankAccountNum}"/>
+            <input type="hidden" id="bankName" name="bankName" th:value="*{bankName}"/>
+            <input type="hidden" id="branchName" name="branchName" th:value="*{branchName}"/>
+            <input type="hidden" id="bankAccountType" name="bankAccountType" th:value="*{bankAccountType}"/>
+            <input type="hidden" id="applicantName" name="name" th:value="*{name}"/>
+            <input type="hidden" id="loanType" name="loanType" th:value="*{loanType}"/>
+            <input type="hidden" id="loanAmount" name="loanAmount" th:value="*{loanAmount}"/>
+            <input type="hidden" id="annualIncome" name="annualIncome" th:value="*{annualIncome}"/>
+            <input type="hidden" id="loanPeriod" name="loanPeriod" th:value="*{loanPeriod}"/>
+            <input type="hidden" id="interestRate" name="interestRate" th:value="*{interestRate}"/>
+
+            <!-- ボタン -->
+            <div class="button-group">
+                <button type="button" id="submitButton" class="btn btn-primary">申込する</button>
+                <button type="button" onclick="window.location='/bankLoan';" class="btn btn-secondary">修正する</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script th:inline="javascript" src="/js/bankLoanConfirmation.js"></script>
 <script>
-    // 確認画面で数値をフォーマット表示
     document.addEventListener('DOMContentLoaded', function() {
         const loanAmountSpan = document.getElementById('displayLoanAmount');
         const annualIncomeSpan = document.getElementById('displayAnnualIncome');
 
         if (loanAmountSpan && loanAmountSpan.textContent) {
-            loanAmountSpan.textContent = formatNumberWithComma(loanAmountSpan.textContent);
+            loanAmountSpan.textContent = formatNumberWithComma(loanAmountSpan.textContent) + ' 円';
         }
 
         if (annualIncomeSpan && annualIncomeSpan.textContent) {
-            annualIncomeSpan.textContent = formatNumberWithComma(annualIncomeSpan.textContent);
+            annualIncomeSpan.textContent = formatNumberWithComma(annualIncomeSpan.textContent) + ' 円';
         }
     });
 </script>
 </body>
+
 </html>
+

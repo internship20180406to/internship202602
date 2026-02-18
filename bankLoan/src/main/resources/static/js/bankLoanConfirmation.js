@@ -329,9 +329,6 @@ function restoreFormDataFromSessionStorage() {
                 loanPeriodInput.value = formData.loanPeriod;
             }
             updateBankAccountNumWarning();
-            if (typeof updateRequiredMarks === 'function') {
-                updateRequiredMarks();
-            }
         } catch (e) {
             console.error('フォームデータの復元に失敗しました:', e);
         }

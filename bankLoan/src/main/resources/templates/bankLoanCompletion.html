@@ -2,11 +2,275 @@
 <html>
 <head>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>申込完了画面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 600px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 40px;
+        }
+
+        .header-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: slideInScale 0.6s ease-out;
+        }
+
+        @keyframes slideInScale {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 15px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.3);
+            margin-top: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: #4caf50;
+            width: 100%;
+        }
+
+        .content {
+            padding: 50px 40px;
+        }
+
+        .success-badge {
+            display: inline-block;
+            background-color: #4caf50;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 24px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-box {
+            background-color: #f0f7ff;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .info-box h3 {
+            color: #333;
+            font-size: 15px;
+            margin-bottom: 10px;
+        }
+
+        .info-box p {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .info-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 14px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            min-width: 180px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .footer {
+            background-color: #f9f9f9;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #e0e0e0;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .check-mark {
+            display: inline-block;
+            width: 60px;
+            height: 60px;
+            background-color: #4caf50;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                border-radius: 0;
+                max-width: 100%;
+            }
+
+            .header {
+                padding: 40px 25px;
+            }
+
+            .header-icon {
+                font-size: 60px;
+                margin-bottom: 15px;
+            }
+
+            .header h1 {
+                font-size: 26px;
+            }
+
+            .header p {
+                font-size: 14px;
+            }
+
+            .content {
+                padding: 30px 25px;
+            }
+
+            .btn {
+                padding: 12px 30px;
+                font-size: 14px;
+            }
+
+            .btn-primary {
+                min-width: 140px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn-primary {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
-<h1>申込完了</h1>
-<p><input type="button" value="申込に戻る" onclick="window.location='/bankLoan';"/></p>
+<div class="container">
+    <div class="header">
+        <div class="header-icon">🎉</div>
+        <h1>申込が完了しました</h1>
+        <p>ご利用いただきありがとうございました</p>
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="success-badge">✓ 完了</div>
+
+        <div class="info-box">
+            <h3>📋 次のステップ</h3>
+            <p>
+                ご申込いただきありがとうございます。<br>
+                当行で審査を進めさせていただきます。
+            </p>
+            <p>
+                <strong>3営業日以内</strong>にメールにて<br>
+                審査結果をお知らせいたします。
+            </p>
+        </div>
+
+        <div class="info-box">
+            <h3>ℹ️ ご確認ください</h3>
+            <p>
+                • 登録いただいたメールアドレスを<br>
+                &nbsp;&nbsp;ご確認ください
+            </p>
+            <p>
+                • ご不明な点はお気軽に<br>
+                &nbsp;&nbsp;カスタマーサポートまでお問い合わせください
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button onclick="window.location='/bankLoan';" class="btn btn-primary">新規申込</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2026 かわらそば銀行 - ローン申込サービス</p>
+    </div>
+</div>
 </body>
 
 </html>
+
