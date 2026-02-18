@@ -84,6 +84,10 @@
         margin: auto;
         text-align: center;
         }
+        .narrowPadding{
+        margin-block-start: 2px;
+        margin-block-end: 2px;
+        }
 
     </style>
 </head>
@@ -99,47 +103,46 @@
 </div>
 <br style="clear: both;">
 <div class="content">
-    <h1>ローン申込情報入力</h1>
+    <h1 style="margin: auto; text-align: center;">ローン申込情報入力</h1>
     <form action="#" th:action="@{/bankLoanConfirmation}" th:object="${bankLoanApplication}" method="post">
-        <p><label class="ml-1">金融機関名: <small class="text-danger ml-1">※</small></label><br>
+        <p class="narrowPadding"><label class="ml-1">金融機関名: <small class="text-danger ml-1">※</small></label><br>
             <select th:field="*{bankName}" class="form-control">
                 <option th:each="option : ${nameOptions}"
                         th:value="${option}"
                         th:text="${option}">選択肢
                 </option>
             </select></p>
-        <p><label class="ml-1">支店名: <small class="text-danger ml-1">※</small></label><br>
+        <p class="narrowPadding"><label class="ml-1">支店名: <small class="text-danger ml-1">※</small></label><br>
             <select th:field="*{branchName}" class="form-control">
                 <option th:each="option : ${nameOptions1}"
                         th:value="${option}"
                         th:text="${option}">選択肢
                 </option>
             </select></p>
-        </select></p>
-        <p><label class="ml-1">科目名: <small class="text-danger ml-1">※</small></label><br>
+        <p class="narrowPadding"><label class="ml-1">科目名: <small class="text-danger ml-1">※</small></label><br>
             <select th:field="*{bankAccountType}" class="form-control">
                 <option th:each="option : ${nameOptions2}"
                         th:value="${option}"
                         th:text="${option}">選択肢
                 </option>
             </select></p>
-        <p><label class="ml-1">口座番号(ハイフンなし): <small class="text-danger ml-1">※</small></label><br>
+        <p class="narrowPadding"><label class="ml-1">口座番号(ハイフンなし): <small class="text-danger ml-1">※</small></label><br>
             <input  id="inputBankAccountNum" type="text" oninput="validBankAccountNum(this,'inputBankAccountNum')"
                 th:field="*{bankAccountNum}" class="form-control backgroundRed" placeholder="1234567"/></p>
 
-        <p><label class="ml-1">債務者名: <small class="text-danger ml-1">※</small></label><br>
+        <p class="narrowPadding"><label class="ml-1">債務者名: <small class="text-danger ml-1">※</small></label><br>
             <input  id="name" type="text" oninput="validName(this,'name')"
                     th:field="*{name}" class="form-control backgroundRed" placeholder="山田太郎"/></p>
 
-        <p><label class="ml-1">借入金額（円）(数字のみ): <small class="text-danger ml-1">※</small></label><br>
+        <p class="narrowPadding"><label class="ml-1">借入金額（円）(数字のみ): <small class="text-danger ml-1">※</small></label><br>
             <input  id="loanAmount" type="text" oninput="validLoanAmount(this,'loanAmount')"
                     th:field="*{loanAmount}" class="form-control backgroundRed" placeholder="100000"/></p>
 
-        <p><label class="ml-1">借入年収（円）(数字のみ): <small class="text-danger ml-1">※</small></label><br>
+        <p class="narrowPadding"><label class="ml-1">借入年収（円）(数字のみ): <small class="text-danger ml-1">※</small></label><br>
             <input  id="annualIncome" type="text" oninput="validLoanAmount(this,'annualIncome')"
                     th:field="*{annualIncome}" class="form-control backgroundRed" placeholder="5000000"/></p>
 
-        <p><label class="ml-1">金利（%）（数字のみ、小数第二位まで入力）: <small class="text-danger ml-1">※</small></label><br>
+        <p class="narrowPadding"><label class="ml-1">金利（%）（数字のみ、小数第二位まで入力）: <small class="text-danger ml-1">※</small></label><br>
             <input  id="interestRate" type="text" oninput="validInterestRate(this,'interestRate')"
                     th:field="*{interestRate}" class="form-control backgroundRed" placeholder="5.0"/></p>
 

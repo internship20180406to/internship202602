@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <title>申込完了画面</title>
@@ -98,8 +98,50 @@
     </table>
 </div>
 <br style="clear: both;">
-<h1>申込完了</h1>
-<p><input type="button" value="申込に戻る" onclick="window.location='/bankLoan';"/></p>
+
+<div class="content" style="text-align: center; ">
+    <h1>申込が完了しました</h1>
+    <p>申込内容</p>
+        <table style="margin: auto; text-align: left;">
+            <tr>
+                <td><label class="ml-1">金融機関名</label></td>
+                <td style="width: 50px;"></td>
+                <td><span th:text="*{bankName}"></span></td>
+            </tr>
+            <tr>
+                <td>支店名</td>
+                <td></td>
+                <td><span th:text="*{branchName}"></span></td>
+            </tr>
+            <tr>
+                <td>科目名</td>
+                <td></td>
+                <td> <span th:text="*{bankAccountType}"></span>     </td>
+            </tr>
+            <tr>
+                <td> 口座番号    </td>
+                <td></td>
+                <td> <span th:text="*{bankAccountNum}"> </span>    </td>
+            </tr>
+            <tr>
+                <td>  債務者名</td>
+                <td></td>
+                <td>   <span th:text="*{name}"></span>  </td>
+            </tr>
+            <tr>
+                <td>  借入金額  </td>
+                <td></td>
+                <td>   <span th:text="*{loanAmount}"></span>   </td>
+            </tr>
+            <tr>
+                <td>  金利   </td>
+                <td></td>
+                <td>   <span th:text="*{interestRate}"></span>   </td>
+            </tr>
+        </table>
+
+</div>
+<p><input type="button" value="トップに戻る" onclick="window.location='/bankLoan';"/></p>
 </body>
 
 </html>

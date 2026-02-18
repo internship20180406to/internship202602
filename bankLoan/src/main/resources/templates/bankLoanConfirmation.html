@@ -17,7 +17,7 @@
         .content {
          background-color: #ffffff;
          width: 80%;
-         padding: 20px;
+         padding: 10px;
          border-radius: 10px;
          box-shadow: 0 4px 8px rgba(0,0,0,0.1);
          min-height: 50vh;
@@ -140,6 +140,14 @@
             </tr>
         </table>
 
+        <input type="hidden" name="bankAccountNum" th:value="*{bankAccountNum}"/>
+        <input type="hidden" name="branchName" th:value="*{branchName}"/>
+        <input type="hidden" name="bankAccountType" th:value="*{bankAccountType}"/>
+        <input type="hidden" name="bankName" th:value="*{bankName}"/>
+        <input type="hidden" name="name" th:value="*{name}"/>
+        <input type="hidden" name="loanAmount" th:value="*{loanAmount}"/>
+        <input type="hidden" name="annualIncome" th:value="*{annualIncome}"/>
+        <input type="hidden" name="interestRate" th:value="*{interestRate}"/>
 
         <p style="text-align: center;">    <input type="submit" id="submit" value="申込" class="form-control-button form-confirmation-button"/>
             <input type="button" value="キャンセル" onclick="window.location='/bankLoan';" class="form-control-buttonVer2 form-clear-button"/></p>
