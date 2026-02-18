@@ -88,8 +88,45 @@ public class BankLoanController {
 
     @PostMapping("/bankLoanCompletion")
     public String completion(@ModelAttribute BankLoanForm bankLoanForm, Model model) {
-        applyBankLoanService.applyBankLoan(bankLoanForm);
+        // データは保存せず、完了画面の表示のみ
+        model.addAttribute("bankLoanApplication", bankLoanForm);
         return "bankLoanCompletion";
+    }
+
+    @GetMapping("/bankLoanCompletion")
+    public String completionGet() {
+        // JavaScript経由で遷移された場合の完了画面表示
+        return "bankLoanCompletion";
+    }
+
+    @PostMapping("/saveBankLoan")
+    @ResponseBody
+    public Map<String, Object> saveBankLoan(@ModelAttribute BankLoanForm bankLoanForm) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            // デバッグ用ログ出力
+            System.out.println("保存データ:");
+            System.out.println("  銀行名: " + bankLoanForm.getBankName());
+            System.out.println("  支店名: " + bankLoanForm.getBranchName());
+            System.out.println("  口座種別: " + bankLoanForm.getBankAccountType());
+            System.out.println("  口座番号: " + bankLoanForm.getBankAccountNum());
+            System.out.println("  名前: " + bankLoanForm.getName());
+            System.out.println("  借入金額: " + bankLoanForm.getLoanAmount());
+            System.out.println("  借入年収: " + bankLoanForm.getAnnualIncome());
+            System.out.println("  借入期間: " + bankLoanForm.getLoanPeriod());
+            System.out.println("  金利: " + bankLoanForm.getInterestRate());
+
+            // ダイアログでOKが押された後にデータを保存
+            applyBankLoanService.applyBankLoan(bankLoanForm);
+            response.put("success", true);
+            System.out.println("データ保存成功");
+        } catch (Exception e) {
+            System.err.println("データ保存エラー: " + e.getMessage());
+            e.printStackTrace();
+            response.put("success", false);
+            response.put("error", e.getMessage());
+        }
+        return response;
     }
 
     @GetMapping("/calculateInterestRate")
