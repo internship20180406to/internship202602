@@ -27,6 +27,8 @@
     <p>購入者名: <span th:text="*{name}"></span></p>
     <p>購入銘柄: <span th:text="*{fundName}"></span></p>
     <p>購入金額: <span th:text="*{money}"></span><span>円</span></p>
+    <p>銘柄単価：<span th:text="${unitPrice}"></span> 円/口</p>
+    <p>購入予定口数：<span th:text="${computedQuantity}"></span> 口</p>
 
 
     <input type="hidden" name="bankAccountNum" th:value="*{bankAccountNum}"/>

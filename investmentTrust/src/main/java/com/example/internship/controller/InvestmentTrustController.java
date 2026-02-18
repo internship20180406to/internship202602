@@ -21,35 +21,55 @@ import java.util.List;
 import java.util.UUID;
 
 
+import java.util.LinkedHashMap; // 順番を保持するMap
+import java.util.Map;
+
 @Controller
 public class InvestmentTrustController {
 
-
     @Autowired
     private OrderInvestmentTrustService orderInvestmentTrustService;
+
     @GetMapping("/investmentTrust")
     public String bankTransfer(Model model) {
-        List<String> bankList = new ArrayList<>();
-        List<String> bankAccountTypeList = new ArrayList<>();
-        List<String> fundNameList = new ArrayList<>();
-        bankList.add("こめ銀行");
-        bankList.add("ぱん銀行");
-        bankList.add("麺銀行");
-        bankAccountTypeList.add("普通預金");
-        bankAccountTypeList.add("当座預金");
-        bankAccountTypeList.add("貯蓄預金");
-        fundNameList.add("ツナマヨ");
-        fundNameList.add("梅干し");
-        fundNameList.add("鮭");
+        // --- 既存のリスト ---
+        List<String> bankList = List.of("こめ銀行", "ぱん銀行", "麺銀行");
+        List<String> bankAccountTypeList = List.of("普通預金", "当座預金", "貯蓄預金");
+
+        // --- 修正ポイント：銘柄と単価をMapで管理する ---
+        Map<String, Integer> fundPrices = new LinkedHashMap<>();
+        fundPrices.put("ツナマヨ", 100); // 1口100円
+        fundPrices.put("梅干し", 200);  // 1口200円
+        fundPrices.put("鮭", 500);     // 1口500円
+
         model.addAttribute("investmentTrustApplication", new InvestmentTrustForm());
         model.addAttribute("nameOptions", bankList);
-        model.addAttribute("fundNameOptions", fundNameList);
         model.addAttribute("bankAccountTypeOptions", bankAccountTypeList);
+
+        // 銘柄名のリスト（選択肢用）と、単価データ（計算用）を両方渡す
+        model.addAttribute("fundNameOptions", fundPrices.keySet());
+        model.addAttribute("fundPrices", fundPrices);
+
         return "investmentTrustMain";
     }
 
     @PostMapping("/investmentTrustConfirmation")
     public String confirmation(@ModelAttribute InvestmentTrustForm investmentTrustForm, Model model) {
+        int unitPrice = 0;
+        String fundName = investmentTrustForm.getFundName();
+        if ("ツナマヨ".equals(fundName)) unitPrice = 100;
+        else if ("梅干し".equals(fundName)) unitPrice = 200;
+        else if ("鮭".equals(fundName)) unitPrice = 500;
+
+        // 口数を計算（金額 / 単価）
+        double computedQuantity = 0;
+        if (unitPrice > 0 && investmentTrustForm.getMoney() != null) {
+            computedQuantity = (double) investmentTrustForm.getMoney() / unitPrice;
+        }
+
+        model.addAttribute("investmentTrustApplication", investmentTrustForm);
+        model.addAttribute("unitPrice", unitPrice); // 1口あたりの円
+        model.addAttribute("computedQuantity", String.format("%.2f", computedQuantity)); // 小数点第2位まで
 
         System.out.println(investmentTrustForm);
         model.addAttribute("bankName", investmentTrustForm.getBankName());
