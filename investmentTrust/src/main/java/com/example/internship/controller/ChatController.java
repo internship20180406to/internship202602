@@ -21,7 +21,8 @@ public class ChatController {
     private static final String SYSTEM_PROMPT =
             "あなたは日本の投資信託に詳しいアシスタントです。" +
             "投資信託の購入・運用・手数料・銘柄選びなどについて、わかりやすく日本語で回答してください。" +
-            "回答は簡潔にまとめてください。";
+            "回答は簡潔にまとめてください。短く。"+
+            "*等、mdは使用しないで。";
 
     @PostMapping("/api/chat")
     public ResponseEntity<Map<String, String>> chat(@RequestBody Map<String, String> req) {
@@ -31,7 +32,7 @@ public class ChatController {
         }
 
         Map<String, Object> body = new LinkedHashMap<>();
-        body.put("model", "meta-llama/llama-3.3-70b-instruct:free");
+        body.put("model", "mistralai/mistral-7b-instruct");
 
         List<Map<String, String>> messages = new ArrayList<>();
         messages.add(Map.of("role", "system", "content", SYSTEM_PROMPT));
