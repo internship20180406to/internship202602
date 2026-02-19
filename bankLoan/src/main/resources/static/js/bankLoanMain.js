@@ -1,5 +1,6 @@
 const rates =[[2,4.60],[3,4.90],[5,5.20],[10,5.55],[15,5.85],[20,6.05],[35,6.30]]
 
+
 //全角数字を半角にする
 function toHalfWidth(str) {
     str=str.replace(/[^0-9０-９。]/g,'').replace(/。/g,".")
@@ -60,16 +61,15 @@ document.getElementById("submitButton").addEventListener("mouseover",function(){
 
 
 //口座番号入力修正
-    function changeNum(a){
-    console.log(a.value)
-    a.value=toHalfWidth(a.value)
-    //a.value=a.value.replace(/[^0-9０-９]/g,'').replace('０','0').replace('１','1').replace('２','2').replace('３','3').replace('４','4').replace('５','5').replace('６','6').replace('７','7').replace('８','8').replace('９','9')
-    if (a.value.length >=7){
-        a.value=a.value.slice(0,7)
-        }
-    return a
-    console.log(a.value)
+    function changeNum(a){//.valueありで引数入れる
+    let newA=a.replace(/[^0-9０-９]/g,'').replace(/０/g,'0').replace(/１/g,'1').replace(/２/g,'2').replace(/３/g,'3').replace(/４/g,'4').replace(/５/g,'5').replace(/６/g,'6').replace(/７/g,'7').replace(/８/g,'8').replace(/９/g,'9');
+    if (newA.length >=7){
+        newA=newA.slice(0,7)
     }
+    a = newA
+    return a
+    }
+
 //数字入力修正
     function changeNumNormal(a){
     a.value=a.value.replace(/[^0-9０-９]/g,'').replace('０','0').replace('１','1').replace('２','2').replace('３','3').replace('４','4').replace('５','5').replace('６','6').replace('７','7').replace('８','8').replace('９','9')
@@ -82,25 +82,16 @@ document.getElementById("submitButton").addEventListener("mouseover",function(){
     return a
     }
 
-// 口座番号
-    function validBankAccountNum(i,where) {
-        i=changeNum(i)
-        var input=i.value
-        //console.log(`inputBankAccountNum=${input},input.length=${input.length}`)
-
-        // バリデーション処理
-        if (input.length === 7) {
-        　　//ボタンを有効化
-            //document.getElementById("submitButton").disabled = false;
+// 口座番号バリデーション処理
+    function validBankAccountNum(i,where) {//iはvalueの値
+        //i=changeNum(i)
+        console.log(`validBankAccountNum_i=${i}`)
+        if (i.length === 7) {
             document.getElementById(where).classList.remove("backgroundRed")
-            //console.log("abled")
-            //changeAction(selectedName);
         } else {
-            //ボタンを無効化
-            //document.getElementById("submitButton").disabled = true;
             document.getElementById(where).classList.add("backgroundRed")
-            //console.log("disabled")
         }
+        //return i
     }
 
 //借入金額//借入金額

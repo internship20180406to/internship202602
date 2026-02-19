@@ -127,8 +127,9 @@
                 </option>
             </select></p>
         <p class="narrowPadding"><label class="ml-1">口座番号(ハイフンなし): <small class="text-danger ml-1">※</small></label><br>
-            <input  autocomplete="off" id="inputBankAccountNum" type="text" oninput="validBankAccountNum(this,'inputBankAccountNum')"
-                th:field="*{bankAccountNum}" class="form-control backgroundRed" placeholder="1234567"/></p>
+            <input  autocomplete="off" id="inputBankAccountNum" type="text" onchange="this.value=changeNum(this.value);validBankAccountNum(this.value,'inputBankAccountNum')"
+                    th:field="*{bankAccountNum}" class="form-control backgroundRed" placeholder="1234567"/></p>
+
 
         <p class="narrowPadding"><label class="ml-1">債務者名: <small class="text-danger ml-1">※</small></label><br>
             <input  autocomplete="off" id="name" type="text" oninput="validName(this,'name')"
