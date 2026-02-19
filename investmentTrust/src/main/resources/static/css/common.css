@@ -433,6 +433,50 @@ label {
     border-color: #c0c0c0;
 }
 
+.fab-mode-toggle {
+    display: flex;
+    background: #f0f0f0;
+    border-radius: 999px;
+    padding: 2px;
+    flex-shrink: 0;
+    gap: 1px;
+}
+
+.fab-mode-btn {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    color: #888;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+}
+
+.fab-mode-btn.active {
+    background: #4579FF;
+    color: #fff;
+}
+
+.chat-msg-staff {
+    align-self: flex-start;
+    background: #16a34a;
+    color: #fff;
+    border-bottom-left-radius: 4px;
+}
+
+.nav-staff-link {
+    font-size: 13px;
+    color: #4579FF;
+    text-decoration: none;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.nav-staff-link:hover {
+    text-decoration: underline;
+}
+
 .chat-fab-input {
     flex: 1;
     border: none;

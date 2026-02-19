@@ -50,6 +50,11 @@ public class InvestmentTrustController {
         model.addAttribute("orderHistory", orderInvestmentTrustService.getOrderHistory());
     }
 
+    @GetMapping("/")
+    public String root() {
+        return "redirect:/investmentTrust";
+    }
+
     @GetMapping("/investmentTrust")
     public String bankTransfer(Model model) {
         model.addAttribute("investmentTrustApplication", new InvestmentTrustForm());

@@ -1,0 +1,55 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>行員管理画面</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/staff.css}">
+</head>
+<body>
+<div class="content">
+    <nav class="nav-bar">
+        <div th:replace="~{fragments :: logo}"></div>
+        <span class="nav-title">行員管理画面</span>
+        <a href="/investmentTrust" class="nav-staff-link">← 客サイトに戻る</a>
+    </nav>
+
+    <div class="staff-layout">
+
+        <div class="staff-sessions">
+            <div class="staff-sessions-header">
+                チャット一覧
+                <span id="sessionCount" class="session-count"></span>
+            </div>
+            <div id="sessionList" class="session-list"></div>
+        </div>
+
+        <div class="staff-chat" id="staffChatPanel">
+            <div class="staff-chat-empty" id="staffChatEmpty">
+                セッションを選択してください
+            </div>
+            <div id="staffChatActive" style="display:none; height:100%; display:none; flex-direction:column;">
+                <div class="staff-chat-header" id="staffChatHeader"></div>
+                <div class="staff-chat-messages chat-messages" id="staffChatMessages"></div>
+                <div class="chat-input-area">
+                    <div class="chat-search-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                        </svg>
+                        <input type="text" id="staffInput" class="chat-input" placeholder="返信を入力してください…"/>
+                        <button id="staffSend" class="chat-send-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script th:src="@{/js/staff.js}"></script>
+</body>
+</html>

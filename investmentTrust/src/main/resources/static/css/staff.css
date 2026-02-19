@@ -1,0 +1,138 @@
+.staff-layout {
+    display: flex;
+    height: calc(100vh - 56px);
+    overflow: hidden;
+}
+
+/* === セッション一覧 === */
+
+.staff-sessions {
+    width: 280px;
+    flex-shrink: 0;
+    border-right: 1px solid #e5e5e5;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.staff-sessions-header {
+    padding: 14px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #111;
+    border-bottom: 1px solid #e5e5e5;
+    background: #fafafa;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.session-count {
+    background: #4579FF;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 999px;
+}
+
+.session-list {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.session-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.session-item:hover {
+    background: #f5f7ff;
+}
+
+.session-item.active {
+    background: #eef2ff;
+    border-left: 3px solid #4579FF;
+}
+
+.session-id {
+    font-size: 12px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.session-last-msg {
+    font-size: 11px;
+    color: #888;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.session-time {
+    font-size: 10px;
+    color: #bbb;
+    margin-top: 2px;
+}
+
+/* === チャットエリア === */
+
+.staff-chat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.staff-chat-empty {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #bbb;
+    font-size: 14px;
+}
+
+.staff-chat-header {
+    padding: 12px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    border-bottom: 1px solid #e5e5e5;
+    background: #fafafa;
+}
+
+.staff-chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+}
+
+/* === メッセージの送信者別スタイル === */
+
+.chat-msg-staff {
+    align-self: flex-start;
+    background: #16a34a;
+    color: #fff;
+    border-bottom-left-radius: 4px;
+}
+
+/* === ナビリンク === */
+
+.nav-staff-link {
+    font-size: 13px;
+    color: #4579FF;
+    text-decoration: none;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.nav-staff-link:hover {
+    text-decoration: underline;
+}

@@ -4,9 +4,29 @@ const chatClose = document.getElementById('chatClose');
 const chatInput = document.getElementById('chatInput');
 const chatSend = document.getElementById('chatSend');
 const chatMessages = document.getElementById('chatMessages');
-
 const chatFabInput = document.getElementById('chatFabInput');
 const chatFabSend = document.getElementById('chatFabSend');
+
+let chatSessionId = localStorage.getItem('chatSessionId');
+if (!chatSessionId) {
+    chatSessionId = 'session-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem('chatSessionId', chatSessionId);
+}
+
+// モード管理（AI / 行員）
+let chatMode = 'ai';
+let staffPollInterval = null;
+let lastSeenMessageId = 0;
+
+const fabModeBtns = document.querySelectorAll('.fab-mode-btn');
+fabModeBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+        fabModeBtns.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        chatMode = this.getAttribute('data-mode');
+        chatFabInput.placeholder = chatMode === 'staff' ? '行員に質問する…' : 'なにか聞きたいことはありますか？';
+    });
+});
 
 let isOpen = false;
 
@@ -40,10 +60,39 @@ chatClose.addEventListener('click', function () {
 
 function appendMessage(role, text) {
     const div = document.createElement('div');
-    div.className = 'chat-msg ' + (role === 'user' ? 'chat-msg-user' : 'chat-msg-ai');
+    const classMap = { user: 'chat-msg-user', ai: 'chat-msg-ai', staff: 'chat-msg-staff' };
+    div.className = 'chat-msg ' + (classMap[role] || 'chat-msg-ai');
     div.textContent = text;
     chatMessages.appendChild(div);
     chatMessages.scrollTop = chatMessages.scrollHeight;
+    return div;
+}
+
+function saveMessage(sender, content) {
+    return fetch('/api/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId: chatSessionId, sender: sender, content: content })
+    }).then(r => r.json());
+}
+
+// 行員返信ポーリング
+function startStaffPolling() {
+    if (staffPollInterval) return;
+    staffPollInterval = setInterval(function () {
+        fetch('/api/messages/' + chatSessionId)
+            .then(r => r.json())
+            .then(function (messages) {
+                messages.filter(m => m.id > lastSeenMessageId).forEach(function (m) {
+                    lastSeenMessageId = Math.max(lastSeenMessageId, m.id);
+                    if (m.sender === 'STAFF') {
+                        const waiting = chatMessages.querySelector('.chat-waiting');
+                        if (waiting) waiting.remove();
+                        appendMessage('staff', '【行員より】' + m.content);
+                    }
+                });
+            });
+    }, 3000);
 }
 
 function sendMessage() {
@@ -52,35 +101,48 @@ function sendMessage() {
 
     chatInput.value = '';
     appendMessage('user', text);
-
-    const loadingDiv = document.createElement('div');
-    loadingDiv.className = 'chat-msg chat-msg-ai chat-loading';
-    loadingDiv.textContent = '考え中…';
-    chatMessages.appendChild(loadingDiv);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+    saveMessage('USER', text).then(saved => {
+        if (saved.id) lastSeenMessageId = Math.max(lastSeenMessageId, saved.id);
+    });
 
     chatSend.disabled = true;
     chatInput.disabled = true;
 
-    fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text })
-    })
-        .then(res => res.json())
-        .then(data => {
-            loadingDiv.remove();
-            appendMessage('ai', data.reply || ('エラー: ' + (data.error || '不明なエラー')));
+    if (chatMode === 'staff') {
+        // 行員モード: 待機メッセージを表示してポーリング開始
+        const waitDiv = appendMessage('ai', '行員に送信しました。しばらくお待ちください…');
+        waitDiv.classList.add('chat-waiting', 'chat-loading');
+        startStaffPolling();
+        chatSend.disabled = false;
+        chatInput.disabled = false;
+        chatInput.focus();
+    } else {
+        // AIモード: OpenRouter に投げる
+        const loadingDiv = appendMessage('ai', '考え中…');
+        loadingDiv.classList.add('chat-loading');
+
+        fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: text })
         })
-        .catch(() => {
-            loadingDiv.remove();
-            appendMessage('ai', '通信エラーが発生しました');
-        })
-        .finally(() => {
-            chatSend.disabled = false;
-            chatInput.disabled = false;
-            chatInput.focus();
-        });
+            .then(res => res.json())
+            .then(data => {
+                loadingDiv.remove();
+                const reply = data.reply || ('エラー: ' + (data.error || '不明なエラー'));
+                appendMessage('ai', reply);
+                saveMessage('AI', reply);
+            })
+            .catch(() => {
+                loadingDiv.remove();
+                appendMessage('ai', '通信エラーが発生しました');
+            })
+            .finally(() => {
+                chatSend.disabled = false;
+                chatInput.disabled = false;
+                chatInput.focus();
+            });
+    }
 }
 
 chatSend.addEventListener('click', sendMessage);
@@ -91,6 +153,7 @@ chatInput.addEventListener('keydown', function (e) {
     }
 });
 
+// テキスト選択時のポップアップボタン
 const selectionAskBtn = document.getElementById('selectionAskBtn');
 
 document.addEventListener('mouseup', function (e) {
@@ -129,7 +192,7 @@ document.addEventListener('mousedown', function (e) {
 });
 
 selectionAskBtn.addEventListener('mousedown', function (e) {
-    e.preventDefault(); // クリック時に選択が解除されないようにする
+    e.preventDefault();
 });
 
 selectionAskBtn.addEventListener('click', function () {
