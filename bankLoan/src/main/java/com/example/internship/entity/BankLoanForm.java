@@ -29,6 +29,8 @@ public class BankLoanForm {
     private Integer years;
     @NonNull
     private BigDecimal interestRate;
+    @NonNull
+    private String rateType;
 
     public String getBankName() {return bankName;}
     public String getBranchName() {return branchName;}
@@ -41,6 +43,7 @@ public class BankLoanForm {
     }
     public Integer getLoanAmount() {return loanAmount;}
     public Integer getAnnualIncome() {return annualIncome;}
+    public String getRateType() {return rateType;}
     public Integer getyears(){return years;}
     public BigDecimal getInterestRate() {return interestRate;}
 

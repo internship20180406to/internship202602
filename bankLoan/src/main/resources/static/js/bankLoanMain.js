@@ -1,25 +1,43 @@
 
 //金利データ
-const rates =[[2,4.60],[3,4.90],[5,5.20],[10,5.55],[15,5.85],[20,6.05],[35,6.30]]
+const rateData={
+"0":[[2,4.60],[3,4.90],[5,5.20],[10,5.55],[15,5.85],[20,6.05],[35,6.30]],
+"1":[[10,null],[15,3.50],[20,3.65],[25,3.75],[30,4.10],[35,4.25]]
+}
+const flexRateData=2.90
 
 //金利の表を作成
-function displayRateTable(){
+function displayRateTable(number){
 
-    const yearsRow = document.getElementById('yearsRow');
-    const ratesRow = document.getElementById('ratesRow');
-    rates.forEach(item => {
-        const year = item[0];
-        const rate = item[1];
+    const yearsRow = document.getElementById('yearsRow'+number);
+    const ratesRow = document.getElementById('ratesRow'+number);
+    rateData[number].forEach(item => {
         const yearCell = document.createElement('td');
-        yearCell.textContent = `~${year}年`;
+        yearCell.textContent = `~${item[0]}年`;
         yearsRow.appendChild(yearCell);
         const rateCell = document.createElement('td');
-        rateCell.textContent = `${rate}%`;
+        rateCell.textContent = `${item[1]}%`;
         ratesRow.appendChild(rateCell);
     });
 }
+//変動金利の表を作成
+function displayFlexRateTable(number){
+    const yearsRow = document.getElementById('yearsRow'+number);
+    const ratesRow = document.getElementById('ratesRow'+number);
+    const rate = flexRateData
+    const yearCell = document.createElement('td');
+    yearCell.textContent = "-";
+    yearsRow.appendChild(yearCell);
+    const rateCell = document.createElement('td');
+    rateCell.textContent = `${rate}%`;
+    ratesRow.appendChild(rateCell);
+}
 //ページの読み込み時に上の関数を実行
-document.addEventListener('DOMContentLoaded', displayRateTable)
+document.addEventListener('DOMContentLoaded',() => {
+                                                 displayRateTable("0");
+                                                 displayRateTable("1");
+                                                 displayFlexRateTable("-1")
+                                             })
 
 //金利計算
 function calculateRate(a){
@@ -32,15 +50,27 @@ if (a<=rates[n][0]){
 return null
 }
 
-//金利表示
-function displayRate (i){//引数にvalueの値
-const yearsInputted = i;
-rate=calculateRate(yearsInputted)
-//console.log(`rate=${rate}`)
-document.getElementById("interestRate").value=rate
-if (rate===null){document.getElementById("DisplayedInterestRate").textContent=""}
-else{document.getElementById("DisplayedInterestRate").textContent=rate+"%"}
+//金利表示//返済総額表示
+function displayRate_RepaymentTotal_RepaymentPerMonth (i){//引数にvalueの値
+    const yearsInputted = i;
+    rate=calculateRate(yearsInputted)
+    //console.log(`rate=${rate}`)
+    document.getElementById("interestRate").value=rate
+    loanAmount=document.getElementById("loanAmount").value
+    if (rate===null){
+        document.getElementById("DisplayedInterestRate").textContent=""
+        document.getElementById("DisplayedRepaymentTotal").textContent=""
+        document.getElementById("DisplayedRepaymentPerMonth").textContent=""
+    }else{document.getElementById("DisplayedInterestRate").textContent=rate+"%"
+        if (loanAmount===null){
+            document.getElementById("DisplayedRepaymentTotal").textContent=""
+        }else{
+            document.getElementById("DisplayedRepaymentTotal").textContent=loanAmount*(100+(rate/100))+"円"
+            document.getElementById("DisplayedRepaymentPerMonth").textContent=(loanAmount*(rate/100))/(yearsInputted*12)+"円"
+        }
+    }
 }
+
 
 //確認ボタンを押せなくする
 document.getElementById("submitButton").addEventListener("mouseover",function(){
@@ -52,6 +82,7 @@ document.getElementById("submitButton").addEventListener("mouseover",function(){
     && document.getElementById("name").matches(".backgroundRed, .default")===false
     && document.getElementById("loanAmount").matches(".backgroundRed, .default")===false
     && document.getElementById("annualIncome").matches(".backgroundRed, .default")===false
+    && document.getElementById("rateType").matches(".backgroundRed, .default")===false
     && document.getElementById("years").matches(".backgroundRed, .default")===false){
         document.getElementById("submitButton").disabled = false;
         console.log("abled")
@@ -122,7 +153,7 @@ document.getElementById("submitButton").addEventListener("mouseover",function(){
 //選択肢バリデーション処理
     function validOptions(i,where){
         document.getElementById(where).classList.remove("default")
-        if (i!=="-"){//日本語だけで構成されている
+        if (i!=="-"){
             document.getElementById(where).classList.remove("backgroundRed")
         }else{
             document.getElementById(where).classList.add("backgroundRed")

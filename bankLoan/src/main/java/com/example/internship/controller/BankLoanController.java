@@ -22,6 +22,7 @@ public class BankLoanController {
         model.addAttribute("nameOptions", List.of("-","A銀行", "B銀行", "C銀行"));//modelの中に、""nameOptions""という名前のリストを作成する
         model.addAttribute("nameOptions1", List.of("-","a支店", "b支店", "c支店"));
         model.addAttribute("nameOptions2", List.of("-","普通預金", "当座預金","定期預金","貯蓄預金"));
+        model.addAttribute("rateOptions", List.of("-","変動金利","特約固定金利", "長期固定金利"));
         return "bankLoanMain";
     }
 
@@ -35,6 +36,7 @@ public class BankLoanController {
         model.addAttribute("name", bankLoanForm.getName());
         model.addAttribute("loanAmount", bankLoanForm.getLoanAmount());
         model.addAttribute("annualIncome", bankLoanForm.getAnnualIncome());
+        model.addAttribute("rateType", bankLoanForm.getRateType());
         model.addAttribute("interestRate", bankLoanForm.getInterestRate());
         model.addAttribute("years", bankLoanForm.getyears());
         model.addAttribute("bankLoanApplication", bankLoanForm);
@@ -49,6 +51,7 @@ public class BankLoanController {
         model.addAttribute("name", bankLoanForm.getName());
         model.addAttribute("loanAmount", bankLoanForm.getLoanAmount());
         model.addAttribute("annualIncome", bankLoanForm.getAnnualIncome());
+        model.addAttribute("rateType", bankLoanForm.getAnnualIncome());
         model.addAttribute("years", bankLoanForm.getyears());
         model.addAttribute("interestRate", bankLoanForm.getInterestRate());
         model.addAttribute("bankLoanApplication", bankLoanForm);
