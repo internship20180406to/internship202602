@@ -1,13 +1,7 @@
+
+//金利データ
 const rates =[[2,4.60],[3,4.90],[5,5.20],[10,5.55],[15,5.85],[20,6.05],[35,6.30]]
 
-
-//全角数字を半角にする
-function toHalfWidth(str) {
-    str=str.replace(/[^0-9０-９。]/g,'').replace(/。/g,".")
-    return str.replace(/[０-９]/g, function(s) {
-        return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
-    });
-}
 
 //金利計算
 function calculateRate(a){
@@ -22,17 +16,17 @@ return 6.50}
 return null
 }
 
-document.getElementById("years").addEventListener("input",function(){
-console.log (this.value)
-const yearsInputted = this.value;
+//金利表示
+function displayRate (i){//引数にvalueの値
+const yearsInputted = i;
 rate=calculateRate(yearsInputted)
-console.log(`rate=${rate}`)
+//console.log(`rate=${rate}`)
 document.getElementById("interestRate").value=rate
 if (rate===null){document.getElementById("DisplayedInterestRate").textContent=""}
 else{document.getElementById("DisplayedInterestRate").textContent=rate+"%"}
+}
 
-});
-
+//確認ボタンを押せなくする
 document.getElementById("submitButton").addEventListener("mouseover",function(){
     if (document.getElementById("inputBankAccountNum").classList.contains("backgroundRed")===false
     && document.getElementById("loanAmount").classList.contains("backgroundRed")===false
@@ -72,7 +66,8 @@ document.getElementById("submitButton").addEventListener("mouseover",function(){
 
 //数字入力修正
     function changeNumNormal(a){
-    a.value=a.value.replace(/[^0-9０-９]/g,'').replace('０','0').replace('１','1').replace('２','2').replace('３','3').replace('４','4').replace('５','5').replace('６','6').replace('７','7').replace('８','8').replace('９','9')
+    let newA=a.replace(/[^0-9０-９]/g,'').replace(/０/g,'0').replace(/１/g,'1').replace(/２/g,'2').replace(/３/g,'3').replace(/４/g,'4').replace(/５/g,'5').replace(/６/g,'6').replace(/７/g,'7').replace(/８/g,'8').replace(/９/g,'9');
+    a = newA
     return a
     }
 
@@ -94,33 +89,16 @@ document.getElementById("submitButton").addEventListener("mouseover",function(){
         //return i
     }
 
-//借入金額//借入金額
+//借入金額//借入金額//返済期間バリデーション処理
     function validLoanAmount(i,where){
-        i=changeNumNormal(i)
-        var input=i.value
-        if (input) {
-            document.getElementById(where).classList.remove("backgroundRed")
-            //console.log("kariireok")
-        }else{
-            document.getElementById(where).classList.add("backgroundRed")
-            //console.log("kariireno")
-        }
-    }
-
-//金利
-    function validInterestRate(i,where){
-        i=changeNumDecimal(i)
-        var input=i.value
-        //.console.log(typeof input);
-        if (input !=="" && 0<=input && input<=100 && input.search(/[^\.]+\.[0-9][0-9]$/)!==-1) {//0以上100以下かつ小数第二位まで入力されている
+        if (i) {
             document.getElementById(where).classList.remove("backgroundRed")
         }else{
             document.getElementById(where).classList.add("backgroundRed")
         }
     }
 
-
-//債務者名
+//債務者名バリデーション処理
     function validName(i,where){
         var input=i.value
         if (/^[ぁ-んァ-ヶ一-龠々ー]+$/.test(input)===true){//日本語だけで構成されている

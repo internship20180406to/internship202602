@@ -136,15 +136,15 @@
                     th:field="*{name}" class="form-control backgroundRed" placeholder="山田太郎"/></p>
 
         <p class="narrowPadding"><label class="ml-1">借入金額（円）(数字のみ): <small class="text-danger ml-1">※</small></label><br>
-            <input  autocomplete="off" id="loanAmount" type="text" oninput="validLoanAmount(this,'loanAmount')"
+            <input  autocomplete="off" id="loanAmount" type="text" onchange="this.value=changeNumNormal(this.value);validLoanAmount(this.value,'loanAmount')"
                     th:field="*{loanAmount}" class="form-control backgroundRed" placeholder="100000"/></p>
 
         <p class="narrowPadding"><label class="ml-1">借入年収（円）(数字のみ): <small class="text-danger ml-1">※</small></label><br>
-            <input  autocomplete="off" id="annualIncome" type="text" oninput="validLoanAmount(this,'annualIncome')"
+            <input  autocomplete="off" id="annualIncome" type="text" onchange="this.value=changeNumNormal(this.value);validLoanAmount(this.value,'annualIncome')"
                     th:field="*{annualIncome}" class="form-control backgroundRed" placeholder="5000000"/></p>
 
         <p class="narrowPadding"><label class="ml-1">返済期間（年）: <small class="text-danger ml-1">※</small></label><br>
-            <input  autocomplete="off" id="years" type="text"
+            <input  autocomplete="off" id="years" type="text" onchange="this.value=changeNumNormal(this.value);validLoanAmount(this.value,'years');displayRate(this.value)"
                     th:field="*{years}" class="form-control backgroundRed" placeholder="10"/></p>
 
         <p class="narrowPadding"><label class="ml-1">金利: <small class="text-danger ml-1">※</small></label><br>
