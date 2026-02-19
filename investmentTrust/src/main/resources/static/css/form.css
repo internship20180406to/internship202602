@@ -328,3 +328,111 @@
 .account-history-row.selected {
     background-color: #E0E8FF;
 }
+
+/* === 詳しくモード トグル === */
+
+.section-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 0 12px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #4579FF;
+}
+
+.section-title-row .form-section-title {
+    margin: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.detail-toggle-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.detail-toggle-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #ccc;
+    border-radius: 22px;
+    transition: 0.3s;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: #fff;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background-color: #4579FF;
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+    transform: translateX(18px);
+}
+
+/* === レスポンシブ === */
+
+@media (max-width: 768px) {
+    .form-grid-2col {
+        grid-template-columns: 1fr;
+    }
+
+    .fund-top-layout {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .fund-selector-col {
+        flex: none;
+        width: 100%;
+    }
+
+    .fund-info-card.fee-calc-center {
+        width: auto;
+        margin: 16px 20px;
+    }
+
+    .fund-detail-rows {
+        grid-template-columns: 1fr;
+    }
+
+    .fund-detail-row:nth-last-child(-n+2) {
+        border-bottom: 1px solid #E8E8E8;
+    }
+
+    .fund-detail-row:last-child {
+        border-bottom: none;
+    }
+}

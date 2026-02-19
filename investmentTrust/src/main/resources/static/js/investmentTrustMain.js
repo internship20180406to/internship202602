@@ -349,6 +349,21 @@ document.querySelector('input[type="reset"]').addEventListener('click', function
     }, 0);
 });
 
+// 詳しくモード
+let detailMode = false;
+const detailModeToggle = document.getElementById('detailModeToggle');
+const detailRows = document.querySelectorAll('[data-detail]');
+
+detailModeToggle.addEventListener('change', function () {
+    detailMode = this.checked;
+    detailRows.forEach(el => { el.style.display = detailMode ? '' : 'none'; });
+    const fund = document.getElementById('fundName').value;
+    if (fund) {
+        showFundInfo(fund);
+        updateChart(fund);
+    }
+});
+
 // ファンド情報の動的表示
 const fundNameSelect = document.getElementById('fundName');
 const fundInfoCard = document.getElementById('fundInfoCard');
@@ -386,6 +401,19 @@ function showFundInfo(fund) {
         document.getElementById('fundChangeRateMonth').textContent = (changeRate >= 0 ? '+' : '') + changeRate + '%';
         document.getElementById('fundFee').textContent = info.fee + '%';
 
+        // ラベル切り替え
+        document.getElementById('labelChangeRateMonth').textContent = detailMode ? 'トータルリターン(1M)' : '騰落率(1ヶ月)';
+        document.getElementById('labelFee').textContent = detailMode ? '信託報酬率(税込)' : '手数料';
+
+        // 詳しくモード専用のダミー値
+        if (detailMode) {
+            const seed = Math.abs(parseFloat(info.changeRate)) || 1;
+            document.getElementById('fundSharpe').textContent = (0.8 + seed * 0.12).toFixed(2);
+            document.getElementById('fundStddev').textContent = (11.5 + seed * 0.6).toFixed(1) + '%';
+            document.getElementById('fundBeta').textContent = (0.82 + seed * 0.025).toFixed(2);
+            document.getElementById('fundMaxDD').textContent = '-' + (14.5 + seed * 0.9).toFixed(1) + '%';
+        }
+
         fundInfoCard.style.display = 'block';
     } else {
         fundInfoCard.style.display = 'none';
@@ -416,6 +444,15 @@ function updateChart(fund) {
         stockChart.destroy();
     }
 
+    // 移動平均線の計算
+    function calcMA(period) {
+        return prices.map(function(_, i) {
+            if (i < period - 1) return { x: new Date(dates[i]).getTime(), y: null };
+            const sum = prices.slice(i - period + 1, i + 1).reduce(function(a, b) { return a + b; }, 0);
+            return { x: new Date(dates[i]).getTime(), y: Math.round(sum / period * 10) / 10 };
+        });
+    }
+
     // 終値からOHLCを擬似生成（日付は "yyyy-MM-dd" 形式）
     const ohlcData = dates.map(function(date, i) {
         const c = prices[i];
@@ -433,23 +470,47 @@ function updateChart(fund) {
         };
     });
 
+    const datasets = [{
+        label: fund,
+        data: ohlcData,
+        color: { up: '#00B53C', down: '#dc2626', unchanged: '#888888' }
+    }];
+
+    if (detailMode) {
+        datasets.push({
+            type: 'line',
+            label: 'MA25',
+            data: calcMA(25),
+            borderColor: '#F59E0B',
+            borderWidth: 1.5,
+            pointRadius: 0,
+            spanGaps: true,
+            fill: false,
+            yAxisID: 'y'
+        });
+        datasets.push({
+            type: 'line',
+            label: 'MA75',
+            data: calcMA(75),
+            borderColor: '#8B5CF6',
+            borderWidth: 1.5,
+            pointRadius: 0,
+            spanGaps: true,
+            fill: false,
+            yAxisID: 'y'
+        });
+    }
+
     stockChart = new Chart(stockChartCanvas, {
         type: 'candlestick',
-        data: {
-            datasets: [{
-                label: fund,
-                data: ohlcData,
-                color: {
-                    up: '#00B53C',
-                    down: '#dc2626',
-                    unchanged: '#888888'
-                }
-            }]
-        },
+        data: { datasets },
         options: {
             responsive: true,
             plugins: {
-                legend: { display: false },
+                legend: {
+                    display: detailMode,
+                    labels: { font: { size: 11 }, boxWidth: 20 }
+                },
                 tooltip: {
                     backgroundColor: 'rgba(0,0,0,0.75)',
                     padding: 10,
@@ -509,6 +570,45 @@ function restoreState() {
 }
 
 restoreState();
+
+// ニュースティッカー
+(function initTicker() {
+    const items = [];
+
+    Object.entries(fundInfoMap).forEach(function([name, info]) {
+        const rate = parseFloat(info.changeRate);
+        if (rate >= 2) {
+            items.push({ text: '📈 ' + name + '  前日比 +' + rate + '%  急騰中', color: '#16a34a' });
+        } else if (rate <= -2) {
+            items.push({ text: '📉 ' + name + '  前日比 ' + rate + '%  急落中', color: '#dc2626' });
+        } else if (rate > 0) {
+            items.push({ text: '▲ ' + name + '  前日比 +' + rate + '%', color: '#15803d' });
+        } else {
+            items.push({ text: '▼ ' + name + '  前日比 ' + rate + '%', color: '#b91c1c' });
+        }
+    });
+
+    const dummyNews = [
+        { text: '📰 日経平均株価  前日比 +0.62%  続伸', color: '#16a34a' },
+        { text: '🌐 米FRB 政策金利据え置きを発表', color: '#374151' },
+        { text: '💴 円相場  1ドル＝148円台  小幅上昇', color: '#374151' },
+        { text: '🏦 国内投資信託  今月の資金流入  過去最高水準に', color: '#4579FF' },
+        { text: '📊 新興国株式ファンド  今週の平均騰落率 +1.8%', color: '#15803d' },
+    ];
+
+    const allItems = [...items, ...dummyNews];
+    const sep = '<span class="ticker-sep">  ｜  </span>';
+    const html = allItems.map(function(item) {
+        return '<span class="ticker-item" style="color:' + item.color + '">' + item.text + '</span>' + sep;
+    }).join('');
+
+    const el = document.getElementById('tickerContent');
+    el.innerHTML = html + html;
+
+    // コンテンツ幅に合わせてアニメーション速度を調整（約80px/秒）
+    const duration = (el.scrollWidth / 2) / 40;
+    el.style.animationDuration = duration + 's';
+})();
 
 window.addEventListener('pageshow', function(event) {
     if (event.persisted) {

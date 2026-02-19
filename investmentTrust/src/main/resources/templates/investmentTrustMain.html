@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>投資信託注文情報入力画面</title>
     <link rel="stylesheet" th:href="@{/css/common.css}">
     <link rel="stylesheet" th:href="@{/css/form.css}">
@@ -16,6 +17,12 @@
         <div th:replace="~{fragments :: logo}"></div>
         <span class="nav-title">投資信託注文情報</span>
     </nav>
+    <div class="news-ticker">
+        <div class="ticker-label">MARKET</div>
+        <div class="ticker-wrapper">
+            <div class="ticker-content" id="tickerContent"></div>
+        </div>
+    </div>
     <div th:replace="~{fragments :: stepBar(1)}"></div>
     <form action="#" th:action="@{/investmentTrustConfirmation}" th:object="${investmentTrustApplication}" method="post">
 
@@ -114,7 +121,16 @@
 
         <div class="fund-with-sidebar">
         <div class="form-section fund-section">
-            <h2 class="form-section-title">投資先情報</h2>
+            <div class="section-title-row">
+                <h2 class="form-section-title">投資先情報</h2>
+                <label class="detail-toggle-wrap">
+                    <span class="detail-toggle-label">詳しく</span>
+                    <span class="toggle-switch">
+                        <input type="checkbox" id="detailModeToggle">
+                        <span class="toggle-slider"></span>
+                    </span>
+                </label>
+            </div>
 
             <div class="fund-top-layout">
                 <div class="fund-selector-col">
@@ -164,12 +180,28 @@
                             <span id="fundNetAssets" class="fund-detail-value"></span>
                         </div>
                         <div class="fund-detail-row">
-                            <span class="fund-detail-label">騰落率(1ヶ月)</span>
+                            <span id="labelChangeRateMonth" class="fund-detail-label">騰落率(1ヶ月)</span>
                             <span id="fundChangeRateMonth" class="fund-detail-value"></span>
                         </div>
                         <div class="fund-detail-row">
-                            <span class="fund-detail-label">手数料</span>
+                            <span id="labelFee" class="fund-detail-label">手数料</span>
                             <span id="fundFee" class="fund-detail-value"></span>
+                        </div>
+                        <div class="fund-detail-row" style="display:none" data-detail>
+                            <span class="fund-detail-label">シャープレシオ</span>
+                            <span id="fundSharpe" class="fund-detail-value"></span>
+                        </div>
+                        <div class="fund-detail-row" style="display:none" data-detail>
+                            <span class="fund-detail-label">標準偏差</span>
+                            <span id="fundStddev" class="fund-detail-value"></span>
+                        </div>
+                        <div class="fund-detail-row" style="display:none" data-detail>
+                            <span class="fund-detail-label">ベータ値</span>
+                            <span id="fundBeta" class="fund-detail-value"></span>
+                        </div>
+                        <div class="fund-detail-row" style="display:none" data-detail>
+                            <span class="fund-detail-label">最大DD</span>
+                            <span id="fundMaxDD" class="fund-detail-value"></span>
                         </div>
                     </div>
                 </div>

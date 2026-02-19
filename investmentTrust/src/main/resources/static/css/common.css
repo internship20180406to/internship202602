@@ -10,7 +10,7 @@ body {
 .content {
     width: 100%;
     min-height: 100vh;
-    padding: 0 0 40px 0;
+    padding: 0 0 100px 0;
     box-sizing: border-box;
 }
 
@@ -623,4 +623,92 @@ label {
 
 .selection-ask-btn:hover {
     background: #3060e0;
+}
+
+/* === ニュースティッカー === */
+
+.news-ticker {
+    display: flex;
+    align-items: center;
+    background: white;
+    border-bottom: 1px solid #dde5ff;
+    height: 32px;
+    overflow: hidden;
+}
+
+.ticker-label {
+    flex-shrink: 0;
+    background: #4579FF;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 0 14px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.ticker-wrapper {
+    flex: 1;
+    overflow: hidden;
+    height: 100%;
+    position: relative;
+}
+
+.ticker-content {
+    display: inline-flex;
+    align-items: center;
+    height: 100%;
+    white-space: nowrap;
+    will-change: transform;
+    animation: ticker-scroll 40s linear infinite;
+}
+
+.ticker-item {
+    font-size: 12px;
+    padding: 0 20px;
+    font-family: 'Noto Sans JP', sans-serif;
+}
+
+.ticker-sep {
+    color: #4579FF;
+    font-size: 12px;
+    opacity: 0.4;
+}
+
+@keyframes ticker-scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* === レスポンシブ === */
+
+@media (max-width: 768px) {
+    .account-with-sidebar,
+    .fund-with-sidebar {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        margin: 0 20px 16px;
+    }
+
+    .step-label {
+        font-size: 13px;
+    }
+
+    .chat-window {
+        width: calc(100vw - 32px);
+        right: 16px;
+        left: 16px;
+        bottom: 80px;
+    }
+
+    .chat-fab {
+        left: 16px;
+        right: 16px;
+        transform: none;
+        min-width: unset;
+    }
 }
