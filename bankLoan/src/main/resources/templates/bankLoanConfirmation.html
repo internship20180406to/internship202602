@@ -40,30 +40,39 @@
 
         .header-logo {
             position: absolute;
-            top: 20px;
-            left: 30px;
+            top: -6px;
+            left: -6px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 0px;
         }
 
         .header-logo-icon {
-            font-size: 32px;
-            background: white;
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
+            background-color: transparent;
+            width: 64px;
+            height: 64px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border: none;
+            box-shadow: none;
+            overflow: hidden;
+        }
+
+        .header-logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
         }
 
         .header-logo-text {
             font-size: 18px;
             font-weight: 700;
-            color: white;
+            color: brown;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            margin-left: -12px;
         }
 
         .header h1 {
@@ -361,7 +370,9 @@
 <div class="container">
     <div class="header">
         <div class="header-logo">
-            <div class="header-logo-icon">🏦</div>
+            <div class="header-logo-icon">
+                <img src="/images/bank_logo.png" alt="かわらそば銀行ロゴ" />
+            </div>
             <div class="header-logo-text">かわらそば銀行</div>
         </div>
         <h1>✓ 申込内容確認</h1>
