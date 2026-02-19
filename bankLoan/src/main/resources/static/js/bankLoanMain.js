@@ -13,9 +13,11 @@ function displayRateTable(number){
     const ratesRow = document.getElementById('ratesRow'+number);
     rateData[number].forEach(item => {
         const yearCell = document.createElement('td');
+        yearCell.style.border="1px solid #DAE7F2"
         yearCell.textContent = `~${item[0]}年`;
         yearsRow.appendChild(yearCell);
         const rateCell = document.createElement('td');
+        rateCell.style.border="1px solid #DAE7F2"
         if (item[1]){
         rateCell.textContent = `${item[1].toFixed(2)}%`;
         }else{
@@ -30,9 +32,11 @@ function displayFlexRateTable(number){
     const ratesRow = document.getElementById('ratesRow'+number);
     const rate = flexRateData
     const yearCell = document.createElement('td');
+    yearCell.style.border="1px solid #DAE7F2"
     yearCell.textContent = "-";
     yearsRow.appendChild(yearCell);
     const rateCell = document.createElement('td');
+    rateCell.style.border="1px solid #DAE7F2"
     rateCell.textContent = `${rate.toFixed(2)}%`;
     ratesRow.appendChild(rateCell);
 }
@@ -57,9 +61,9 @@ console.log("returnedNull")
 }
 
 //金利表示//返済総額表示
-function displayRate_RepaymentTotal_RepaymentPerMonth (i){//引数にvalueの値
+function displayRate_RepaymentTotal_RepaymentPerMonth (){
     console.log("functioned displayRate_RepaymentTotal_RepaymentPerMonth")
-    const yearsInputted = i;
+    const yearsInputted = document.getElementById("years").value;
     const rateType=document.getElementById("rateType").value
     console.log(rateType)
     let number=""

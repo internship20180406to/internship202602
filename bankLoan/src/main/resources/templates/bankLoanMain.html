@@ -94,6 +94,10 @@
         width:100%;
         margin: auto;
         text-align: center;
+
+        }
+        .tableBackground{
+        background-color:#E6F3FF
         }
 
     </style>
@@ -114,11 +118,11 @@
     <form action="#" th:action="@{/bankLoanConfirmation}" th:object="${bankLoanApplication}" method="post" autocomplete="off">
 
         <p class="narrowPadding"><label class="ml-1">借入金額 <small>(円) </small><small class="text-danger ml-1">※</small></label><br>
-            <input  autocomplete="off" id="loanAmount" type="text" onchange="this.value=changeNumNormal(this.value);validLoanAmount(this.value,'loanAmount')"
+            <input  autocomplete="off" id="loanAmount" type="text" onchange="this.value=changeNumNormal(this.value);validLoanAmount(this.value,'loanAmount'); displayRate_RepaymentTotal_RepaymentPerMonth();"
                     th:field="*{loanAmount}" class="form-control default" placeholder="100000"/></p>
 
         <p class="narrowPadding"><label class="ml-1"> 金利タイプ<small class="text-danger ml-1">※</small></label><br>
-            <select  id="rateType" th:field="*{rateType}" class="form-control default" onchange="validOptions(this.value,'rateType')">
+            <select  id="rateType" th:field="*{rateType}" class="form-control default" onchange="validOptions(this.value,'rateType'); displayRate_RepaymentTotal_RepaymentPerMonth();">
                 <option th:each="option : ${rateOptions}"
                         th:value="${option}"
                         th:text="${option}"
@@ -128,7 +132,7 @@
         <p class="narrowPadding"><label class="ml-1">返済期間 <small>(年)</small> <small class="text-danger ml-1">※</small></label><br>
             <input  autocomplete="off" id="years" type="text" onchange="this.value=changeNumNormal(this.value);
                         validLoanAmount(this.value,'years');
-                        displayRate_RepaymentTotal_RepaymentPerMonth(this.value)"
+                        displayRate_RepaymentTotal_RepaymentPerMonth()"
                     th:field="*{years}" class="form-control default" placeholder="10"/></p>
 
         <p class="narrowPadding"><label class="ml-1">金利</label></p>
@@ -139,28 +143,28 @@
         <p class="narrowPadding" style="font-syze=16px;" id ="DisplayedRepaymentPerMonth">-</p>
         <p class="narrowPadding"><label class="ml-1">返済総額</label>
         <p class="narrowPadding" style="font-syze=16px;" id ="DisplayedRepaymentTotal">-</p>
-        <div><table style="border-spacing:0px" class="rateTable"><caption>変動金利</caption>
+        <div><table style="border-spacing:0px" class="rateTable tableBackground"><caption>変動金利</caption>
             <tr id ="yearsRow-1">
-                <th >借入年数</th>
+                <th style="width:20%; border: 1px solid #DAE7F2;">借入年数</th>
             </tr>
             <tr id="ratesRow-1">
-                <th>金利（％）</th>
+                <th style="border: 1px solid #DAE7F2;">金利（％）</th>
             </tr>
         </table></div>
-        <div><table style="border-spacing:0px" class="rateTable"><caption>特約固定金利</caption>
+        <div><table style="border-spacing:0px" class="rateTable tableBackground"><caption>特約固定金利</caption>
             <tr id ="yearsRow0">
-                <th>借入年数</th>
+                <th style="width:20% border: 1px solid #DAE7F2;">借入年数</th>
             </tr>
             <tr id="ratesRow0">
-                <th>金利（％）</th>
+                <th style="border: 1px solid #DAE7F2;">金利（％）</th>
             </tr>
         </table></div>
-        <div><table style="border-spacing:0px" class="rateTable"><caption>長期固定金利</caption>
+        <div><table style="border-spacing:0px" class="rateTable tableBackground"><caption>長期固定金利</caption>
             <tr id ="yearsRow1">
-                <th>借入年数</th>
+                <th style="width:20% border: 1px solid #DAE7F2;">借入年数</th>
             </tr>
             <tr id="ratesRow1">
-                <th>金利（％）</th>
+                <th style="border: 1px solid #DAE7F2;">金利（％）</th>
             </tr>
         </table></div>
 
