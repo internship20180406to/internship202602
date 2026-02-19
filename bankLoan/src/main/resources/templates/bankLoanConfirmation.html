@@ -219,14 +219,15 @@
         }
 
         .interest-rate-label {
-            font-size: 13px;
+            font-size: 14px;
             opacity: 0.9;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
         }
 
         .interest-rate-value {
-            font-size: 40px;
+            font-size: 28px;
             font-weight: 700;
+            line-height: 1.2;
         }
 
         .button-group {
@@ -439,7 +440,7 @@
 
             <!-- 金利 -->
             <div class="interest-rate-highlight">
-                <div class="interest-rate-label">年利率</div>
+                <div class="interest-rate-label">予想金利(年率)</div>
                 <div class="interest-rate-value"><span th:text="*{interestRate}"></span>%</div>
             </div>
 
@@ -482,4 +483,3 @@
 </body>
 
 </html>
-

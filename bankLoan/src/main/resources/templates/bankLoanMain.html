@@ -317,13 +317,49 @@
         }
 
         .interest-rate-box label {
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 5px;
+            display: block;
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 6px;
         }
 
         .interest-rate-value {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .repayment-simulation {
+            background-color: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 0 0 20px;
+        }
+
+        .repayment-simulation h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .repayment-simulation-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #eaeaea;
+            font-size: 14px;
+        }
+
+        .repayment-simulation-row:last-child {
+            border-bottom: none;
+        }
+
+        .repayment-simulation-note {
+            font-size: 11px;
+            color: #777;
+            margin-top: 8px;
         }
 
         .button-group {
@@ -598,7 +634,7 @@
                                 <datalist id="branchNameList"></datalist>
                                 <span id="branchNameWarning" class="warning-text">該当する支店が見つかりません（警告）</span>
                             </div>
-                            <button type="button" id="searchByAreaBtn" class="btn btn-secondary" style="min-width: auto; padding: 12px 18px; font-size: 13px;">探す</button>
+                            <button type="button" id="searchByAreaBtn" class="btn btn-secondary" style="min-width: auto; padding: 12px 18px; font-size: 13px;">エリアで探す</button>
                         </div>
                         <div id="areaSearchContainer" class="area-search-container">
                             <h4 style="margin-bottom: 12px; font-size: 13px;">都道府県から探す</h4>
@@ -671,9 +707,25 @@
 
             <!-- 金利表示 -->
             <div class="interest-rate-box">
-                <label>予想金利</label>
-                <div class="interest-rate-value" id="displayInterestRate">---</div>
-                <small>% (年率)</small>
+                <label>予想金利(年率)</label>
+                <div class="interest-rate-value" id="displayInterestRate"></div>
+            </div>
+
+            <div class="repayment-simulation">
+                <h3>返済シミュレーション</h3>
+                <div class="repayment-simulation-row">
+                    <span>毎月の返済額</span>
+                    <span id="displayMonthlyPayment">---</span>
+                </div>
+                <div class="repayment-simulation-row">
+                    <span>総返済額</span>
+                    <span id="displayTotalPayment">---</span>
+                </div>
+                <div class="repayment-simulation-row">
+                    <span>利息総額</span>
+                    <span id="displayTotalInterest">---</span>
+                </div>
+                <div class="repayment-simulation-note">※ 元利均等・月々返済の概算です。</div>
             </div>
 
             <!-- ボタングループ -->
@@ -689,6 +741,5 @@
 </body>
 
 </html>
-
 
 

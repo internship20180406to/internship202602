@@ -4,6 +4,104 @@ function formatNumberWithComma(num) {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
+function setRepaymentSimulationPlaceholder() {
+    const monthly = document.getElementById('displayMonthlyPayment');
+    const total = document.getElementById('displayTotalPayment');
+    const interest = document.getElementById('displayTotalInterest');
+    if (monthly) monthly.textContent = '---';
+    if (total) total.textContent = '---';
+    if (interest) interest.textContent = '---';
+}
+
+const repaymentAnimationState = {
+    monthly: null,
+    total: null,
+    interest: null
+};
+
+function animateCurrencyValue(element, targetValue, stateKey, durationMs = 350) {
+    if (!element) return;
+
+    if (repaymentAnimationState[stateKey]) {
+        cancelAnimationFrame(repaymentAnimationState[stateKey]);
+        repaymentAnimationState[stateKey] = null;
+    }
+
+    const existingText = (element.textContent || '').replace(/[円,\s]/g, '');
+    const startValue = parseFloat(existingText);
+    const fromValue = isNaN(startValue) ? 0 : startValue;
+    const toValue = Math.max(0, Math.round(targetValue));
+
+    if (fromValue === toValue) {
+        element.textContent = `${formatNumberWithComma(toValue)} 円`;
+        return;
+    }
+
+    const startTime = performance.now();
+
+    const step = (currentTime) => {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / durationMs, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const currentValue = Math.round(fromValue + (toValue - fromValue) * eased);
+        element.textContent = `${formatNumberWithComma(currentValue)} 円`;
+        if (progress < 1) {
+            repaymentAnimationState[stateKey] = requestAnimationFrame(step);
+        }
+    };
+
+    repaymentAnimationState[stateKey] = requestAnimationFrame(step);
+}
+
+function updateRepaymentSimulation() {
+    const loanAmountInput = document.getElementById('loanAmount');
+    const loanPeriodInput = document.getElementById('loanPeriod');
+    const interestRateDisplay = document.getElementById('displayInterestRate');
+    const monthly = document.getElementById('displayMonthlyPayment');
+    const total = document.getElementById('displayTotalPayment');
+    const interest = document.getElementById('displayTotalInterest');
+
+    if (!loanAmountInput || !loanPeriodInput || !interestRateDisplay || !monthly || !total || !interest) {
+        return;
+    }
+
+    const principalValue = (loanAmountInput.value || '').replace(/,/g, '').trim();
+    const yearsValue = (loanPeriodInput.value || '').trim();
+    const rateValue = (interestRateDisplay.textContent || '').replace('%', '').trim();
+
+    const principal = parseFloat(principalValue);
+    const years = parseInt(yearsValue, 10);
+    const annualRate = parseFloat(rateValue);
+
+    if (!principalValue || !yearsValue || isNaN(principal) || isNaN(years) || isNaN(annualRate)) {
+        setRepaymentSimulationPlaceholder();
+        return;
+    }
+
+    const months = years * 12;
+    if (months <= 0) {
+        setRepaymentSimulationPlaceholder();
+        return;
+    }
+
+    const monthlyRate = annualRate / 100 / 12;
+    let monthlyPayment = 0;
+
+    if (monthlyRate === 0) {
+        monthlyPayment = principal / months;
+    } else {
+        const factor = Math.pow(1 + monthlyRate, months);
+        monthlyPayment = principal * monthlyRate * factor / (factor - 1);
+    }
+
+    const totalPayment = monthlyPayment * months;
+    const totalInterest = totalPayment - principal;
+
+    animateCurrencyValue(monthly, monthlyPayment, 'monthly');
+    animateCurrencyValue(total, totalPayment, 'total');
+    animateCurrencyValue(interest, totalInterest, 'interest');
+}
+
 // 全角数字を半角数字に変換する関数
 function convertToHalfWidth(str) {
     if (!str) return '';
@@ -341,6 +439,7 @@ function resetFormSelections() {
     updateRequiredMarks();
     hasValidationAttempt = false;
     clearInputErrorStates();
+    updateRepaymentSimulation();
 }
 
 // クリアボタンのイベントリスナーを設定
@@ -520,6 +619,7 @@ function calculateAndDisplayInterestRate() {
         if (displayInterestRate) {
             displayInterestRate.textContent = '---';
         }
+        updateRepaymentSimulation();
         return;
     }
 
@@ -530,6 +630,7 @@ function calculateAndDisplayInterestRate() {
         if (displayInterestRate) {
             displayInterestRate.textContent = '---';
         }
+        updateRepaymentSimulation();
         return;
     }
 
@@ -538,14 +639,16 @@ function calculateAndDisplayInterestRate() {
         .then(response => response.json())
         .then(data => {
             if (displayInterestRate && data.interestRate) {
-                displayInterestRate.textContent = data.interestRate;
+                displayInterestRate.textContent = formatInterestRateForDisplay(data.interestRate);
             }
+            updateRepaymentSimulation();
         })
         .catch(error => {
             console.error('金利計算エラー:', error);
             if (displayInterestRate) {
                 displayInterestRate.textContent = '---';
             }
+            updateRepaymentSimulation();
         });
 }
 
@@ -566,6 +669,7 @@ function setupNumberFormatting() {
             // リアルタイムで保存
             saveFormDataToSessionStorage();
             updateRequiredMarks();
+            updateRepaymentSimulation();
         });
     }
 
@@ -593,6 +697,7 @@ function setupNumberFormatting() {
             saveFormDataToSessionStorage();
             calculateAndDisplayInterestRate();
             updateRequiredMarks();
+            updateRepaymentSimulation();
         });
     }
 
@@ -626,6 +731,7 @@ function setupNumberFormatting() {
             saveFormDataToSessionStorage();
             calculateAndDisplayInterestRate();
             updateRequiredMarks();
+            updateRepaymentSimulation();
         });
     }
     if (bankName) {
@@ -911,6 +1017,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // 2. その後セッションストレージからデータを復元
             restoreFormDataFromSessionStorage();
 
+            // 復元値から金利・返済シミュレーションを再計算
+            calculateAndDisplayInterestRate();
+
             // 3. 残りの初期化処理
             setupNumberFormatting();
             updateBankAccountNumWarning();
@@ -919,8 +1028,17 @@ document.addEventListener('DOMContentLoaded', function() {
             attachRequiredMarkListeners(); // ※マークのリスナーを設定
             attachClearButtonHandler(); // クリアボタンのハンドラーを設定
             updateRequiredMarks(); // 初期状態の※マークを更新
+            updateRepaymentSimulation();
         }, 0);
     }
 
     // 確認画面の場合は既存の処理を継続
 });
+
+// 金利表示用のフォーマットヘルパー
+function formatInterestRateForDisplay(rateText) {
+    if (rateText === null || rateText === undefined) return '---';
+    const trimmed = String(rateText).trim();
+    if (!trimmed || trimmed === '---') return '---';
+    return trimmed.endsWith('%') ? trimmed : `${trimmed}%`;
+}
