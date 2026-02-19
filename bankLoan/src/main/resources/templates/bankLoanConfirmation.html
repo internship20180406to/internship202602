@@ -104,6 +104,32 @@
 
         <table style="margin: auto; text-align: left;">
             <tr>
+                <td>  借入金額  </td>
+                <td></td>
+                <td>   <span th:text="*{loanAmount}"></span>   </td>
+            </tr>
+            <tr>
+                <td>  金利タイプ  </td>
+                <td></td>
+                <td>   <span th:text="*{rateType}"></span>   </td>
+            </tr>
+            <tr>
+                <td>  債務者名</td>
+                <td></td>
+                <td>   <span th:text="*{name}"></span>  </td>
+            </tr>
+            <tr>
+                <td>  金利   </td>
+                <td></td>
+                <td>   <span th:text="*{interestRate}"></span>   </td>
+            </tr>
+            <tr>
+                <td>  年収  </td>
+                <td></td>
+                <td>   <span th:text="*{annualIncome}"></span>   </td>
+            </tr>
+
+            <tr>
                 <td><label class="ml-1">金融機関名</label></td>
                 <td style="width: 50px;"></td>
                 <td><span th:text="*{bankName}"></span></td>
@@ -123,26 +149,7 @@
                 <td></td>
                 <td> <span th:text="*{bankAccountNum}"> </span>    </td>
             </tr>
-            <tr>
-                <td>  債務者名</td>
-                <td></td>
-                <td>   <span th:text="*{name}"></span>  </td>
-            </tr>
-            <tr>
-                <td>  借入金額  </td>
-                <td></td>
-                <td>   <span th:text="*{loanAmount}"></span>   </td>
-            </tr>
-            <tr>
-                <td>  借入年収  </td>
-                <td></td>
-                <td>   <span th:text="*{annualIncome}"></span>   </td>
-            </tr>
-            <tr>
-                <td>  金利   </td>
-                <td></td>
-                <td>   <span th:text="*{interestRate}"></span>   </td>
-            </tr>
+
         </table>
 
         <input type="hidden" name="bankAccountNum" th:value="*{bankAccountNum}"/>
@@ -153,6 +160,7 @@
         <input type="hidden" name="loanAmount" th:value="*{loanAmount}"/>
         <input type="hidden" name="annualIncome" th:value="*{annualIncome}"/>
         <input type="hidden" name="interestRate" th:value="*{interestRate}"/>
+        <input type="hidden" name="rateType" th:value="*{rateType}"/>
 
         <p style="text-align: center;">
             <input type="submit" id="submit" value="申込" class="form-control-button form-confirmation-button"/>
