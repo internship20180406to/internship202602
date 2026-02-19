@@ -19,9 +19,9 @@ public class BankLoanController {
     @GetMapping("/bankLoan")//ブラウザで http://.../bankLoan にアクセスしたとき
     public String bankTransfer(Model model) {
         model.addAttribute("bankLoanApplication", new BankLoanForm());//modelの中に、BankLoanFormの型で"bankLoanApplication"という名前の空の箱を作成する
-        model.addAttribute("nameOptions", List.of("A銀行", "B銀行", "C銀行"));//modelの中に、""nameOptions""という名前のリストを作成する
-        model.addAttribute("nameOptions1", List.of("a支店", "b支店", "c支店"));
-        model.addAttribute("nameOptions2", List.of("普通預金", "当座預金","定期預金","貯蓄預金"));
+        model.addAttribute("nameOptions", List.of("-","A銀行", "B銀行", "C銀行"));//modelの中に、""nameOptions""という名前のリストを作成する
+        model.addAttribute("nameOptions1", List.of("-","a支店", "b支店", "c支店"));
+        model.addAttribute("nameOptions2", List.of("-","普通預金", "当座預金","定期預金","貯蓄預金"));
         return "bankLoanMain";
     }
 

@@ -8,11 +8,9 @@ function calculateRate(a){
 a=Number.parseInt(a)//intにする
 for (let n = 0; n < rates.length; n++){
 if (a<=rates[n][0]){
-return rates[n][1]
-}
-}
+    return rates[n][1]}}
 if (a>=35){
-return 6.50}
+    return 6.50}
 return null
 }
 
@@ -102,6 +100,15 @@ document.getElementById("submitButton").addEventListener("mouseover",function(){
     function validName(i,where){
         var input=i.value
         if (/^[ぁ-んァ-ヶ一-龠々ー]+$/.test(input)===true){//日本語だけで構成されている
+            document.getElementById(where).classList.remove("backgroundRed")
+        }else{
+            document.getElementById(where).classList.add("backgroundRed")
+        }
+    }
+
+//選択肢バリデーション処理
+    function validOptions(i,where){
+        if (i!=="-"){//日本語だけで構成されている
             document.getElementById(where).classList.remove("backgroundRed")
         }else{
             document.getElementById(where).classList.add("backgroundRed")

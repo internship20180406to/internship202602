@@ -69,6 +69,9 @@
         .backgroundRed{
         background-color:#FADBDA;
         }
+        .backgroundWhite{
+        background-color:#FFFFFF;
+        }
 
         .backgroundPaleBlue{
         padding:15px;
@@ -106,26 +109,30 @@
     <h1 style="margin: auto; text-align: center;">ローン申込情報入力</h1>
     <form action="#" th:action="@{/bankLoanConfirmation}" th:object="${bankLoanApplication}" method="post" autocomplete="off">
         <p class="narrowPadding"><label class="ml-1">金融機関名: <small class="text-danger ml-1">※</small></label><br>
-            <select th:field="*{bankName}" class="form-control">
+            <select  id="bankName" th:field="*{bankName}" class="form-control backgroundRed" onchange="validOptions(this.value,'bankName')">
                 <option th:each="option : ${nameOptions}"
                         th:value="${option}"
-                        th:text="${option}">選択肢
+                        th:text="${option}"
+                        style="background-color: white;">選択肢
                 </option>
             </select></p>
         <p class="narrowPadding"><label class="ml-1">支店名: <small class="text-danger ml-1">※</small></label><br>
-            <select th:field="*{branchName}" class="form-control">
+            <select id = "branchName" th:field="*{branchName}" class="form-control backgroundRed" onchange="validOptions(this.value,'branchName')">
                 <option th:each="option : ${nameOptions1}"
                         th:value="${option}"
-                        th:text="${option}">選択肢
+                        th:text="${option}"
+                        style="background-color: white;">選択肢
                 </option>
             </select></p>
         <p class="narrowPadding"><label class="ml-1">科目名: <small class="text-danger ml-1">※</small></label><br>
-            <select th:field="*{bankAccountType}" class="form-control">
+            <select id ="bankAccountType" th:field="*{bankAccountType}" class="form-control backgroundRed" onchange="validOptions(this.value,'bankAccountType')">
                 <option th:each="option : ${nameOptions2}"
                         th:value="${option}"
-                        th:text="${option}">選択肢
+                        th:text="${option}"
+                        style="background-color: white;">選択肢
                 </option>
             </select></p>
+
         <p class="narrowPadding"><label class="ml-1">口座番号(ハイフンなし): <small class="text-danger ml-1">※</small></label><br>
             <input  autocomplete="off" id="inputBankAccountNum" type="text" onchange="this.value=changeNum(this.value);validBankAccountNum(this.value,'inputBankAccountNum')"
                     th:field="*{bankAccountNum}" class="form-control backgroundRed" placeholder="1234567"/></p>
@@ -147,7 +154,7 @@
             <input  autocomplete="off" id="years" type="text" onchange="this.value=changeNumNormal(this.value);validLoanAmount(this.value,'years');displayRate(this.value)"
                     th:field="*{years}" class="form-control backgroundRed" placeholder="10"/></p>
 
-        <p class="narrowPadding"><label class="ml-1">金利: <small class="text-danger ml-1">※</small></label><br>
+        <p class="narrowPadding"><label class="ml-1">金利: <small class="text-danger ml-1"></small></label><br>
             <p id ="DisplayedInterestRate"></p>
             <input  type="hidden" id="interestRate"
                     th:field="*{interestRate}" class="form-control" placeholder="5.0"/></p>
