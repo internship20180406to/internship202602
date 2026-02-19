@@ -143,7 +143,7 @@
 
 
         <p class="narrowPadding"><label class="ml-1">債務者名<small class="text-danger ml-1">※</small></label><br>
-            <input  autocomplete="off" id="name" type="text" onchange="validName(this,'name')"
+            <input  autocomplete="off" id="name" type="text" onchange="validName(this.value,'name')"
                     th:field="*{name}" class="form-control default" placeholder="山田太郎"/></p>
 
         <p class="narrowPadding"><label class="ml-1">借入金額 <small>(円) </small><small class="text-danger ml-1">※</small></label><br>
@@ -166,30 +166,7 @@
                         validLoanAmount(this.value,'years');
                         displayRate_RepaymentTotal_RepaymentPerMonth(this.value)"
                     th:field="*{years}" class="form-control default" placeholder="10"/></p>
-        <div><table style="border-spacing:0px" class="rateTable"><caption>表のタイトル</caption>
-            <tr id ="yearsRow-1">
-                <th>借入年数</th>
-            </tr>
-            <tr id="ratesRow-1">
-                <th>金利（％）</th>
-            </tr>
-        </table></div>
-        <div><table style="border-spacing:0px" class="rateTable"><caption>表のタイトル</caption>
-            <tr id ="yearsRow0">
-                <th>借入年数</th>
-            </tr>
-            <tr id="ratesRow0">
-                <th>金利（％）</th>
-            </tr>
-            </table></div>
-        <div><table style="border-spacing:0px" class="rateTable"><caption>表のタイトル</caption>
-            <tr id ="yearsRow1">
-                <th>借入年数</th>
-            </tr>
-            <tr id="ratesRow1">
-                <th>金利（％）</th>
-            </tr>
-        </table></div>
+
         <p class="narrowPadding"><label class="ml-1">金利</label></p>
             <p class="narrowPadding" style="font-syze=16px;" id ="DisplayedInterestRate">-</p>
             <input  type="hidden" id="interestRate"
@@ -198,6 +175,30 @@
         <p class="narrowPadding" style="font-syze=16px;" id ="DisplayedRepaymentPerMonth">-</p>
         <p class="narrowPadding"><label class="ml-1">返済総額</label>
             <p class="narrowPadding" style="font-syze=16px;" id ="DisplayedRepaymentTotal">-</p>
+        <div><table style="border-spacing:0px" class="rateTable"><caption>変動金利</caption>
+            <tr id ="yearsRow-1">
+                <th>借入年数</th>
+            </tr>
+            <tr id="ratesRow-1">
+                <th>金利（％）</th>
+            </tr>
+        </table></div>
+        <div><table style="border-spacing:0px" class="rateTable"><caption>特約固定金利</caption>
+            <tr id ="yearsRow0">
+                <th>借入年数</th>
+            </tr>
+            <tr id="ratesRow0">
+                <th>金利（％）</th>
+            </tr>
+        </table></div>
+        <div><table style="border-spacing:0px" class="rateTable"><caption>長期固定金利</caption>
+            <tr id ="yearsRow1">
+                <th>借入年数</th>
+            </tr>
+            <tr id="ratesRow1">
+                <th>金利（％）</th>
+            </tr>
+        </table></div>
         <p style="text-align: center;"><input type="submit" value="確認" id="submitButton" disabled
                                               class="form-control-button form-confirmation-button"/>
             <input type="reset" value="クリア" class="form-control-button form-clear-button"/></p>

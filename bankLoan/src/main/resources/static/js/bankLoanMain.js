@@ -16,7 +16,11 @@ function displayRateTable(number){
         yearCell.textContent = `~${item[0]}年`;
         yearsRow.appendChild(yearCell);
         const rateCell = document.createElement('td');
-        rateCell.textContent = `${item[1]}%`;
+        if (item[1]){
+        rateCell.textContent = `${item[1].toFixed(2)}%`;
+        }else{
+        rateCell.textContent ="-"
+        }
         ratesRow.appendChild(rateCell);
     });
 }
@@ -29,7 +33,7 @@ function displayFlexRateTable(number){
     yearCell.textContent = "-";
     yearsRow.appendChild(yearCell);
     const rateCell = document.createElement('td');
-    rateCell.textContent = `${rate}%`;
+    rateCell.textContent = `${rate.toFixed(2)}%`;
     ratesRow.appendChild(rateCell);
 }
 //ページの読み込み時に上の関数を実行
@@ -40,40 +44,57 @@ document.addEventListener('DOMContentLoaded',() => {
                                              })
 
 //金利計算
-function calculateRate(a){
+function calculateRate(a,rateType){
 a=Number.parseInt(a)//intにする
-for (let n = 0; n < rates.length; n++){
-if (a<=rates[n][0]){
-    return rates[n][1]}}
-//if (a>=35){
-  //  return 6.50}
+if (rateType==="-1"){return flexRateData}//変動
+if (rateType==="0"||rateType==="1"){
+for (let n = 0; n < rateData[rateType].length; n++){
+if (a<=rateData[rateType][n][0]){
+    return rateData[rateType][n][1]}}
+}
 return null
+console.log("returnedNull")
 }
 
 //金利表示//返済総額表示
 function displayRate_RepaymentTotal_RepaymentPerMonth (i){//引数にvalueの値
+    console.log("functioned displayRate_RepaymentTotal_RepaymentPerMonth")
     const yearsInputted = i;
-    rate=calculateRate(yearsInputted)
-    //console.log(`rate=${rate}`)
+    const rateType=document.getElementById("rateType").value
+    console.log(rateType)
+    let number=""
+    if (rateType==="変動金利"){number="-1"}
+    if (rateType==="特約固定金利"){number="0"}
+    if (rateType==="長期固定金利"){number="1"}
+    rate=calculateRate(yearsInputted,number)
+
+    console.log(`rate=${rate}`)
     document.getElementById("interestRate").value=rate
     loanAmount=document.getElementById("loanAmount").value
     if (rate===null){
-        document.getElementById("DisplayedInterestRate").textContent=""
-        document.getElementById("DisplayedRepaymentTotal").textContent=""
-        document.getElementById("DisplayedRepaymentPerMonth").textContent=""
+        document.getElementById("DisplayedInterestRate").textContent="-"
+        document.getElementById("DisplayedRepaymentTotal").textContent="-"
+        document.getElementById("DisplayedRepaymentPerMonth").textContent="-"
     }else{document.getElementById("DisplayedInterestRate").textContent=rate+"%"
         if (loanAmount===null){
-            document.getElementById("DisplayedRepaymentTotal").textContent=""
+            document.getElementById("DisplayedRepaymentTotal").textContent="-"
+            document.getElementById("DisplayedRepaymentPerMonth").textContent="-"
         }else{
-            document.getElementById("DisplayedRepaymentTotal").textContent=loanAmount*(100+(rate/100))+"円"
-            document.getElementById("DisplayedRepaymentPerMonth").textContent=(loanAmount*(rate/100))/(yearsInputted*12)+"円"
+            const repaymentPerMonth=(Math.ceil((loanAmount*((100+rate)/100))/(yearsInputted*12)))
+            document.getElementById("DisplayedRepaymentPerMonth").textContent=repaymentPerMonth.toLocaleString()+"円"
+            document.getElementById("DisplayedRepaymentTotal").textContent=(repaymentPerMonth*12*yearsInputted).toLocaleString()+"円"
+
         }
     }
 }
 
 
+
+
+
 //確認ボタンを押せなくする
 document.getElementById("submitButton").addEventListener("mouseover",function(){
+    validAll();
     //console.log(document.getElementById("bankName").matches(".backgroundRed, .default"))
     if (document.getElementById("bankName").matches(".backgroundRed, .default")===false
     && document.getElementById("branchName").matches(".backgroundRed, .default")===false
@@ -96,9 +117,7 @@ document.getElementById("submitButton").addEventListener("mouseover",function(){
 //口座番号入力修正
     function changeNum(a){//.valueありで引数入れる
     let newA=a.replace(/[^0-9０-９]/g,'').replace(/０/g,'0').replace(/１/g,'1').replace(/２/g,'2').replace(/３/g,'3').replace(/４/g,'4').replace(/５/g,'5').replace(/６/g,'6').replace(/７/g,'7').replace(/８/g,'8').replace(/９/g,'9');
-    if (newA.length >=7){
-        newA=newA.slice(0,7)
-    }
+    if (newA.length >=7){newA=newA.slice(0,7)}
     a = newA
     return a
     }
@@ -142,7 +161,7 @@ document.getElementById("submitButton").addEventListener("mouseover",function(){
 //債務者名バリデーション処理
     function validName(i,where){
         document.getElementById(where).classList.remove("default")
-        var input=i.value
+        var input=i
         if (/^[ぁ-んァ-ヶ一-龠々ー]+$/.test(input)===true){//日本語だけで構成されている
             document.getElementById(where).classList.remove("backgroundRed")
         }else{
@@ -159,3 +178,15 @@ document.getElementById("submitButton").addEventListener("mouseover",function(){
             document.getElementById(where).classList.add("backgroundRed")
         }
     }
+
+function validAll(){
+    validOptions(document.getElementById("bankName").value,'bankName')
+    validOptions(document.getElementById("branchName").value,'branchName')
+    validOptions(document.getElementById("bankAccountType").value,'bankAccountType')
+    validOptions(document.getElementById("rateType").value,'rateType')
+    validName(document.getElementById("name").value,'name')
+    validLoanAmount(document.getElementById("loanAmount").value,'loanAmount')
+    validLoanAmount(document.getElementById("annualIncome").value,'annualIncome')
+    validLoanAmount(document.getElementById("years").value,'years')
+    validBankAccountNum(document.getElementById("inputBankAccountNum").value,'inputBankAccountNum')
+}
