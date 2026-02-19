@@ -2,6 +2,24 @@
 //金利データ
 const rates =[[2,4.60],[3,4.90],[5,5.20],[10,5.55],[15,5.85],[20,6.05],[35,6.30]]
 
+//金利の表を作成
+function displayRateTable(){
+
+    const yearsRow = document.getElementById('yearsRow');
+    const ratesRow = document.getElementById('ratesRow');
+    rates.forEach(item => {
+        const year = item[0];
+        const rate = item[1];
+        const yearCell = document.createElement('td');
+        yearCell.textContent = `~${year}年`;
+        yearsRow.appendChild(yearCell);
+        const rateCell = document.createElement('td');
+        rateCell.textContent = `${rate}%`;
+        ratesRow.appendChild(rateCell);
+    });
+}
+//ページの読み込み時に上の関数を実行
+document.addEventListener('DOMContentLoaded', displayRateTable)
 
 //金利計算
 function calculateRate(a){
@@ -9,8 +27,8 @@ a=Number.parseInt(a)//intにする
 for (let n = 0; n < rates.length; n++){
 if (a<=rates[n][0]){
     return rates[n][1]}}
-if (a>=35){
-    return 6.50}
+//if (a>=35){
+  //  return 6.50}
 return null
 }
 
@@ -26,31 +44,23 @@ else{document.getElementById("DisplayedInterestRate").textContent=rate+"%"}
 
 //確認ボタンを押せなくする
 document.getElementById("submitButton").addEventListener("mouseover",function(){
-    if (document.getElementById("inputBankAccountNum").classList.contains("backgroundRed")===false
-    && document.getElementById("loanAmount").classList.contains("backgroundRed")===false
-    && document.getElementById("annualIncome").classList.contains("backgroundRed")===false
-    && document.getElementById("interestRate").classList.contains("backgroundRed")===false
-    && document.getElementById("name").classList.contains("backgroundRed")===false){
+    //console.log(document.getElementById("bankName").matches(".backgroundRed, .default"))
+    if (document.getElementById("bankName").matches(".backgroundRed, .default")===false
+    && document.getElementById("branchName").matches(".backgroundRed, .default")===false
+    && document.getElementById("bankAccountType").matches(".backgroundRed, .default")===false
+    && document.getElementById("inputBankAccountNum").matches(".backgroundRed, .default")===false
+    && document.getElementById("name").matches(".backgroundRed, .default")===false
+    && document.getElementById("loanAmount").matches(".backgroundRed, .default")===false
+    && document.getElementById("annualIncome").matches(".backgroundRed, .default")===false
+    && document.getElementById("years").matches(".backgroundRed, .default")===false){
         document.getElementById("submitButton").disabled = false;
         console.log("abled")
-        //console.log(document.getElementById("submitButton").classList)
-        console.log(document.getElementById("inputBankAccountNum").classList.contains("backgroundRed")
-        ,document.getElementById("loanAmount").classList.contains("backgroundRed")
-        ,document.getElementById("annualIncome").classList.contains("backgroundRed")
-        ,document.getElementById("interestRate").classList.contains("backgroundRed")
-        ,document.getElementById("name").classList.contains("backgroundRed"))
+
     }else{
         document.getElementById("submitButton").disabled = true;
         console.log("disabled")
-        console.log(document.getElementById("inputBankAccountNum").classList.contains("backgroundRed")
-        ,document.getElementById("loanAmount").classList.contains("backgroundRed")
-        ,document.getElementById("annualIncome").classList.contains("backgroundRed")
-        ,document.getElementById("interestRate").classList.contains("backgroundRed")
-        ,document.getElementById("name").classList.contains("backgroundRed"))
     }
 });
-
-
 
 //口座番号入力修正
     function changeNum(a){//.valueありで引数入れる
@@ -79,6 +89,7 @@ document.getElementById("submitButton").addEventListener("mouseover",function(){
     function validBankAccountNum(i,where) {//iはvalueの値
         //i=changeNum(i)
         console.log(`validBankAccountNum_i=${i}`)
+        document.getElementById(where).classList.remove("default")
         if (i.length === 7) {
             document.getElementById(where).classList.remove("backgroundRed")
         } else {
@@ -89,6 +100,7 @@ document.getElementById("submitButton").addEventListener("mouseover",function(){
 
 //借入金額//借入金額//返済期間バリデーション処理
     function validLoanAmount(i,where){
+        document.getElementById(where).classList.remove("default")
         if (i) {
             document.getElementById(where).classList.remove("backgroundRed")
         }else{
@@ -98,6 +110,7 @@ document.getElementById("submitButton").addEventListener("mouseover",function(){
 
 //債務者名バリデーション処理
     function validName(i,where){
+        document.getElementById(where).classList.remove("default")
         var input=i.value
         if (/^[ぁ-んァ-ヶ一-龠々ー]+$/.test(input)===true){//日本語だけで構成されている
             document.getElementById(where).classList.remove("backgroundRed")
@@ -108,6 +121,7 @@ document.getElementById("submitButton").addEventListener("mouseover",function(){
 
 //選択肢バリデーション処理
     function validOptions(i,where){
+        document.getElementById(where).classList.remove("default")
         if (i!=="-"){//日本語だけで構成されている
             document.getElementById(where).classList.remove("backgroundRed")
         }else{

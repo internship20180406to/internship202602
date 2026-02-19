@@ -70,9 +70,8 @@
         background-color:#FADBDA;
         }
         .backgroundWhite{
-        background-color:#FFFFFF;
+        background-color:white;
         }
-
         .backgroundPaleBlue{
         padding:15px;
         color:grey;
@@ -90,6 +89,11 @@
         .narrowPadding{
         margin-block-start: 2px;
         margin-block-end: 2px;
+        }
+        .rateTable{
+        width:100%;
+        margin: auto;
+        text-align: center;
         }
 
     </style>
@@ -109,7 +113,7 @@
     <h1 style="margin: auto; text-align: center;">ローン申込情報入力</h1>
     <form action="#" th:action="@{/bankLoanConfirmation}" th:object="${bankLoanApplication}" method="post" autocomplete="off">
         <p class="narrowPadding"><label class="ml-1">金融機関名: <small class="text-danger ml-1">※</small></label><br>
-            <select  id="bankName" th:field="*{bankName}" class="form-control backgroundRed" onchange="validOptions(this.value,'bankName')">
+            <select  id="bankName" th:field="*{bankName}" class="form-control default" onchange="validOptions(this.value,'bankName')">
                 <option th:each="option : ${nameOptions}"
                         th:value="${option}"
                         th:text="${option}"
@@ -117,7 +121,7 @@
                 </option>
             </select></p>
         <p class="narrowPadding"><label class="ml-1">支店名: <small class="text-danger ml-1">※</small></label><br>
-            <select id = "branchName" th:field="*{branchName}" class="form-control backgroundRed" onchange="validOptions(this.value,'branchName')">
+            <select id = "branchName" th:field="*{branchName}" class="form-control default" onchange="validOptions(this.value,'branchName')">
                 <option th:each="option : ${nameOptions1}"
                         th:value="${option}"
                         th:text="${option}"
@@ -125,7 +129,7 @@
                 </option>
             </select></p>
         <p class="narrowPadding"><label class="ml-1">科目名: <small class="text-danger ml-1">※</small></label><br>
-            <select id ="bankAccountType" th:field="*{bankAccountType}" class="form-control backgroundRed" onchange="validOptions(this.value,'bankAccountType')">
+            <select id ="bankAccountType" th:field="*{bankAccountType}" class="form-control default" onchange="validOptions(this.value,'bankAccountType')">
                 <option th:each="option : ${nameOptions2}"
                         th:value="${option}"
                         th:text="${option}"
@@ -133,31 +137,38 @@
                 </option>
             </select></p>
 
-        <p class="narrowPadding"><label class="ml-1">口座番号(ハイフンなし): <small class="text-danger ml-1">※</small></label><br>
+        <p class="narrowPadding"><label class="ml-1">口座番号 <small>7桁の数字</small> <small class="text-danger ml-1">※</small></label><br>
             <input  autocomplete="off" id="inputBankAccountNum" type="text" onchange="this.value=changeNum(this.value);validBankAccountNum(this.value,'inputBankAccountNum')"
-                    th:field="*{bankAccountNum}" class="form-control backgroundRed" placeholder="1234567"/></p>
+                    th:field="*{bankAccountNum}" class="form-control default" placeholder="1234567"/></p>
 
 
-        <p class="narrowPadding"><label class="ml-1">債務者名: <small class="text-danger ml-1">※</small></label><br>
-            <input  autocomplete="off" id="name" type="text" oninput="validName(this,'name')"
-                    th:field="*{name}" class="form-control backgroundRed" placeholder="山田太郎"/></p>
+        <p class="narrowPadding"><label class="ml-1">債務者名<small class="text-danger ml-1">※</small></label><br>
+            <input  autocomplete="off" id="name" type="text" onchange="validName(this,'name')"
+                    th:field="*{name}" class="form-control default" placeholder="山田太郎"/></p>
 
-        <p class="narrowPadding"><label class="ml-1">借入金額（円）(数字のみ): <small class="text-danger ml-1">※</small></label><br>
+        <p class="narrowPadding"><label class="ml-1">借入金額 <small>(円) </small><small class="text-danger ml-1">※</small></label><br>
             <input  autocomplete="off" id="loanAmount" type="text" onchange="this.value=changeNumNormal(this.value);validLoanAmount(this.value,'loanAmount')"
-                    th:field="*{loanAmount}" class="form-control backgroundRed" placeholder="100000"/></p>
+                    th:field="*{loanAmount}" class="form-control default" placeholder="100000"/></p>
 
-        <p class="narrowPadding"><label class="ml-1">借入年収（円）(数字のみ): <small class="text-danger ml-1">※</small></label><br>
+        <p class="narrowPadding"><label class="ml-1">借入年収 <small>(円)</small> <small class="text-danger ml-1">※</small></label><br>
             <input  autocomplete="off" id="annualIncome" type="text" onchange="this.value=changeNumNormal(this.value);validLoanAmount(this.value,'annualIncome')"
-                    th:field="*{annualIncome}" class="form-control backgroundRed" placeholder="5000000"/></p>
+                    th:field="*{annualIncome}" class="form-control default" placeholder="5000000"/></p>
 
-        <p class="narrowPadding"><label class="ml-1">返済期間（年）: <small class="text-danger ml-1">※</small></label><br>
+        <p class="narrowPadding"><label class="ml-1">返済期間 <small>(年)</small> <small class="text-danger ml-1">※</small></label><br>
             <input  autocomplete="off" id="years" type="text" onchange="this.value=changeNumNormal(this.value);validLoanAmount(this.value,'years');displayRate(this.value)"
-                    th:field="*{years}" class="form-control backgroundRed" placeholder="10"/></p>
-
-        <p class="narrowPadding"><label class="ml-1">金利: <small class="text-danger ml-1"></small></label><br>
-            <p id ="DisplayedInterestRate"></p>
+                    th:field="*{years}" class="form-control default" placeholder="10"/></p>
+        <div><table style="border-spacing:0px" class="rateTable">
+            <tr id ="yearsRow">
+                <th>借入年数</th>
+            </tr>
+            <tr id="ratesRow">
+                <th>金利（％）</th>
+            </tr>
+            </table></div>
+        <p class="narrowPadding"><label class="ml-1">金利 <small class="text-danger ml-1"></small></label><br>
+            <p class="narrowPadding" style="font-syze=16px;" id ="DisplayedInterestRate"></p>
             <input  type="hidden" id="interestRate"
-                    th:field="*{interestRate}" class="form-control" placeholder="5.0"/></p>
+                    th:field="*{interestRate}" class="form-control"/></p>
 
         <p style="text-align: center;"><input type="submit" value="確認" id="submitButton" disabled
                                               class="form-control-button form-confirmation-button"/>
