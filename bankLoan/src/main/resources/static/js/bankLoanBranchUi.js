@@ -64,6 +64,11 @@
             return;
         }
 
+        if (!Array.isArray(bankLoanState.flatBranchList) || bankLoanState.flatBranchList.length === 0) {
+            warning.style.display = 'none';
+            return;
+        }
+
         const isValid = bankLoanState.flatBranchList.includes(inputValue);
         warning.style.display = isValid ? 'none' : 'inline';
     }
@@ -221,4 +226,3 @@
     global.showBranchesForPrefecture = showBranchesForPrefecture;
     global.initializeBranchNameField = initializeBranchNameField;
 })(window);
-

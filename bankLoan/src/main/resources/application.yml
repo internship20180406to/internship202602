@@ -5,3 +5,7 @@ spring:
     url: jdbc:mysql://localhost:3306/internship
     username: root
     password: root_password
+screening:
+  api:
+    base-url: http://localhost:8000
+    path: /screening

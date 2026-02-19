@@ -2,6 +2,8 @@ package com.example.internship.controller;
 
 import com.example.internship.entity.BankLoanForm;
 import com.example.internship.service.ApplyBankLoanService;
+import com.example.internship.dto.ScreeningResponse;
+import com.example.internship.service.ScreeningService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +25,9 @@ public class BankLoanController {
 
     @Autowired
     private ApplyBankLoanService applyBankLoanService;
+
+    @Autowired
+    private ScreeningService screeningService;
 
     private static final String FIXED_BANK_NAME = "かわらそば銀行";
 
@@ -165,6 +170,16 @@ public class BankLoanController {
     public Map<String, Object> getAllBranches() {
         Map<String, Object> response = new HashMap<>();
         response.put("branches", BRANCH_NAMES);
+        return response;
+    }
+
+    @PostMapping("/screening")
+    @ResponseBody
+    public Map<String, Object> screening(@ModelAttribute BankLoanForm bankLoanForm) {
+        Map<String, Object> response = new HashMap<>();
+        ScreeningResponse screeningResponse = screeningService.screen(bankLoanForm);
+        response.put("success", true);
+        response.put("screening", screeningResponse);
         return response;
     }
 

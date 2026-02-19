@@ -240,10 +240,114 @@
         }
     }
 
+    function readValueByIdList(idList) {
+        for (let i = 0; i < idList.length; i++) {
+            const el = document.getElementById(idList[i]);
+            if (el) {
+                return el.value || '';
+            }
+        }
+        return '';
+    }
+
+    function setValueById(id, value) {
+        const el = document.getElementById(id);
+        if (el && value !== undefined && value !== null) {
+            el.value = value;
+        }
+    }
+
+    function normalizeNumberForInput(value) {
+        if (value === undefined || value === null) {
+            return '';
+        }
+        const cleaned = String(value).replace(/,/g, '').trim();
+        if (!cleaned) {
+            return '';
+        }
+        if (typeof global.formatNumberWithComma === 'function') {
+            return global.formatNumberWithComma(cleaned);
+        }
+        return cleaned;
+    }
+
+    function saveFormDataToSessionStorage() {
+        const formData = {
+            bankName: readValueByIdList(['bankNameSelect', 'bankName']),
+            branchName: readValueByIdList(['branchNameInput', 'branchName']),
+            bankAccountType: readValueByIdList(['bankAccountTypeSelect', 'bankAccountType']),
+            bankAccountNum: readValueByIdList(['bankAccountNum']),
+            name: readValueByIdList(['applicantName']),
+            loanType: readValueByIdList(['loanTypeSelect', 'loanType']),
+            loanAmount: readValueByIdList(['loanAmount']),
+            annualIncome: readValueByIdList(['annualIncome']),
+            loanPeriod: readValueByIdList(['loanPeriod'])
+        };
+
+        try {
+            sessionStorage.setItem('bankLoanFormData', JSON.stringify(formData));
+        } catch (e) {
+            console.error('Failed to save form data to sessionStorage:', e);
+        }
+    }
+
+    function restoreFormDataFromSessionStorage() {
+        const savedData = sessionStorage.getItem('bankLoanFormData');
+        if (!savedData) {
+            return;
+        }
+
+        let formData = null;
+        try {
+            formData = JSON.parse(savedData);
+        } catch (e) {
+            console.error('Error parsing session data:', e);
+            return;
+        }
+
+        if (!formData) {
+            return;
+        }
+
+        setValueById('bankNameSelect', formData.bankName);
+        setValueById('branchNameInput', formData.branchName);
+        setValueById('bankAccountTypeSelect', formData.bankAccountType);
+        setValueById('bankAccountNum', formData.bankAccountNum);
+        setValueById('applicantName', formData.name);
+        setValueById('loanTypeSelect', formData.loanType);
+        setValueById('loanAmount', normalizeNumberForInput(formData.loanAmount));
+        setValueById('annualIncome', normalizeNumberForInput(formData.annualIncome));
+        setValueById('loanPeriod', formData.loanPeriod);
+
+        if (typeof global.updateBranchDataList === 'function') {
+            global.updateBranchDataList((formData.branchName || '').trim());
+        }
+        if (typeof global.checkBranchNameValidity === 'function') {
+            global.checkBranchNameValidity();
+        }
+        if (typeof global.calculateAndDisplayInterestRate === 'function') {
+            global.calculateAndDisplayInterestRate();
+        }
+        if (typeof global.updateBankAccountNumWarning === 'function') {
+            global.updateBankAccountNumWarning();
+        }
+        if (typeof global.updateRequiredMarks === 'function') {
+            global.updateRequiredMarks();
+        }
+        if (typeof global.clearInputErrorStates === 'function') {
+            global.clearInputErrorStates();
+        }
+        if (typeof global.updateRepaymentSimulation === 'function') {
+            global.updateRepaymentSimulation();
+        }
+    }
+
     global.resetSelectToPlaceholder = resetSelectToPlaceholder;
     global.resetFormSelections = resetFormSelections;
     global.attachClearButtonHandler = attachClearButtonHandler;
     global.initializeSelectFields = initializeSelectFields;
     global.setupNumberFormatting = setupNumberFormatting;
+    global.saveFormDataToSessionStorage = saveFormDataToSessionStorage;
+    global.restoreFormDataFromSessionStorage = restoreFormDataFromSessionStorage;
 })(window);
 

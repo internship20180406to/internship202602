@@ -239,6 +239,63 @@
             line-height: 1.2;
         }
 
+        .screening-section {
+            border-left-color: #ff9800;
+        }
+
+        .screening-status {
+            display: inline-block;
+            margin-bottom: 12px;
+            padding: 6px 14px;
+            border-radius: 18px;
+            background-color: #f5f5f5;
+            color: #333;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .screening-status.pass {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .screening-status.review {
+            background-color: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .screening-score-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed #e0e0e0;
+            font-size: 14px;
+        }
+
+        .screening-score-value {
+            font-weight: 700;
+            color: #333;
+        }
+
+        .screening-reasons {
+            margin: 12px 0 0;
+            padding-left: 18px;
+            color: #555;
+            font-size: 13px;
+        }
+
+        .screening-reason-mark {
+            display: inline-block;
+            margin-right: 6px;
+            font-weight: 700;
+        }
+
+        .screening-note {
+            margin-top: 12px;
+            font-size: 12px;
+            color: #777;
+        }
+
         .button-group {
             display: flex;
             gap: 12px;
@@ -367,8 +424,8 @@
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="header">
+<div class="container" data-screening-api-base="http://localhost:8000">
+<div class="header">
         <div class="header-logo">
             <div class="header-logo-icon">
                 <img src="/images/bank_logo.png" alt="かわらそば銀行ロゴ" />
@@ -455,6 +512,20 @@
                 <div class="interest-rate-value"><span th:text="*{interestRate}"></span>%</div>
             </div>
 
+            <!-- 簡易審査結果 -->
+            <div class="info-section screening-section" id="screeningSection">
+                <div class="section-title">簡易審査結果</div>
+                <div class="screening-status" id="screeningStatus">取得中</div>
+                <div class="screening-score-row">
+                    <span>スコア</span>
+                    <span class="screening-score-value" id="screeningScore">-</span>
+                </div>
+                <ul class="screening-reasons" id="screeningReasons">
+                    <li>取得結果を表示します。</li>
+                </ul>
+                <div class="screening-note" id="screeningNote">※ 簡易審査のため、最終結果は別途ご連絡します。</div>
+            </div>
+
             <!-- Hidden Fields -->
             <input type="hidden" id="bankAccountNum" name="bankAccountNum" th:value="*{bankAccountNum}"/>
             <input type="hidden" id="bankName" name="bankName" th:value="*{bankName}"/>
@@ -470,7 +541,7 @@
             <!-- ボタン -->
             <div class="button-group">
                 <button type="button" id="submitButton" class="btn btn-primary">申込する</button>
-                <button type="button" onclick="window.location='/bankLoan';" class="btn btn-secondary">修正する</button>
+                <button type="button" id="editButton" class="btn btn-secondary">修正する</button>
             </div>
         </form>
     </div>

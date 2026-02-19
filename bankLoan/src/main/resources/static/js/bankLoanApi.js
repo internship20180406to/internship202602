@@ -38,10 +38,22 @@
         });
     }
 
+    function fetchScreeningResult(payload, options) {
+        const baseUrl = options && options.baseUrl ? options.baseUrl.replace(/\/+$/, '') : '';
+        const url = baseUrl ? baseUrl + '/screening' : '/screening';
+        return fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload || {})
+        });
+    }
+
     global.bankLoanApi = {
         fetchAllBranches: fetchAllBranches,
         calculateInterestRate: calculateInterestRate,
-        saveBankLoan: saveBankLoan
+        saveBankLoan: saveBankLoan,
+        fetchScreeningResult: fetchScreeningResult
     };
 })(window);
-
