@@ -19,12 +19,19 @@ let staffPollInterval = null;
 let lastSeenMessageId = 0;
 
 const fabModeBtns = document.querySelectorAll('.fab-mode-btn');
+
+function setMode(mode) {
+    chatMode = mode;
+    // 全トグルを同期
+    fabModeBtns.forEach(b => b.classList.toggle('active', b.getAttribute('data-mode') === mode));
+    const placeholder = mode === 'staff' ? '行員に質問する…' : 'なにか聞きたいことはありますか？';
+    chatFabInput.placeholder = placeholder;
+    chatInput.placeholder = placeholder;
+}
+
 fabModeBtns.forEach(function (btn) {
     btn.addEventListener('click', function () {
-        fabModeBtns.forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-        chatMode = this.getAttribute('data-mode');
-        chatFabInput.placeholder = chatMode === 'staff' ? '行員に質問する…' : 'なにか聞きたいことはありますか？';
+        setMode(this.getAttribute('data-mode'));
     });
 });
 
@@ -207,6 +214,10 @@ selectionAskBtn.addEventListener('click', function () {
         chatWindow.style.display = 'flex';
     }
 
+    // 「AIに聞く」なので常にAIモードで送信
+    const prevMode = chatMode;
+    chatMode = 'ai';
     chatInput.value = '「' + selectedText + '」について教えてください';
     sendMessage();
+    chatMode = prevMode;
 });

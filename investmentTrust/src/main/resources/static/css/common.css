@@ -436,17 +436,17 @@ label {
 .fab-mode-toggle {
     display: flex;
     background: #f0f0f0;
-    border-radius: 999px;
-    padding: 2px;
+    border-radius: 6px;
+    padding: 3px;
     flex-shrink: 0;
-    gap: 1px;
+    gap: 2px;
 }
 
 .fab-mode-btn {
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 600;
-    padding: 3px 10px;
-    border-radius: 999px;
+    padding: 6px 18px;
+    border-radius: 4px;
     color: #888;
     cursor: pointer;
     transition: all 0.2s;
@@ -585,9 +585,15 @@ label {
 }
 
 .chat-input-area {
-    padding: 10px 12px;
+    padding: 8px 12px 10px;
     border-top: 1px solid #e5e5e5;
     flex-shrink: 0;
+}
+
+.chat-mode-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 8px;
 }
 
 .chat-search-wrapper {

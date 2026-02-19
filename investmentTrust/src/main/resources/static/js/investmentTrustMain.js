@@ -85,7 +85,6 @@ accountHistoryRows.forEach(function(row) {
 const moneyDisplay = document.getElementById('moneyDisplay');
 const moneyHidden = document.getElementById('moneyHidden');
 
-// 計算ロジック
 const feeCalcCard = document.getElementById('feeCalcCard');
 const calcMoney = document.getElementById('calcMoney');
 const calcUnits = document.getElementById('calcUnits');
@@ -117,7 +116,6 @@ function updateFeeCalc() {
     updateSidebarSim(actual);
 }
 
-// サイドバー
 const sidebarBank = document.getElementById('sidebarBank');
 const sidebarName = document.getElementById('sidebarName');
 const sidebarBalance = document.getElementById('sidebarBalance');
@@ -178,7 +176,6 @@ function updateAssetChart(currentTotal, remainingCash) {
     const num = parseInt(bankAccountNumInput.value);
     const currentFund = fundNameSelect.value;
 
-    // 過去の投資を銘柄別に集計
     const fundTotals = {};
     if (!isNaN(num)) {
         orderHistory
@@ -187,7 +184,7 @@ function updateAssetChart(currentTotal, remainingCash) {
                 fundTotals[o.fundName] = (fundTotals[o.fundName] || 0) + Number(o.money);
             });
     }
-    // 今回の投資を加算
+
     if (currentFund && currentTotal > 0) {
         fundTotals[currentFund] = (fundTotals[currentFund] || 0) + currentTotal;
     }
@@ -201,7 +198,7 @@ function updateAssetChart(currentTotal, remainingCash) {
     const data = [...fundAmounts, remainingCash];
     const bgColors = [...fundNames.map((_, i) => FUND_COLORS[i % FUND_COLORS.length]), CASH_COLOR];
 
-    // 比率バー更新
+
     const investPct = ((totalInvested / grandTotal) * 100).toFixed(1);
     const cashPct = ((remainingCash / grandTotal) * 100).toFixed(1);
     document.getElementById('assetInvestPct').textContent = '投資 ' + investPct + '%';
@@ -212,7 +209,6 @@ function updateAssetChart(currentTotal, remainingCash) {
         return `<div style="width:${pct}%;background:${FUND_COLORS[i % FUND_COLORS.length]};height:100%"></div>`;
     }).join('') + `<div style="width:${cashPct}%;background:${CASH_COLOR};height:100%"></div>`;
 
-    // 内訳リスト更新
     const breakdown = document.getElementById('assetBreakdown');
     breakdown.innerHTML = [...fundNames.map((name, i) => {
         const pct = ((fundTotals[name] / grandTotal) * 100).toFixed(1);
@@ -233,7 +229,7 @@ function updateAssetChart(currentTotal, remainingCash) {
         </span>
     </div>`].join('');
 
-    // グラフ更新
+
     if (assetPieChart) {
         assetPieChart.data.labels = labels;
         assetPieChart.data.datasets[0].data = data;
@@ -364,7 +360,6 @@ detailModeToggle.addEventListener('change', function () {
     }
 });
 
-// ファンド情報の動的表示
 const fundNameSelect = document.getElementById('fundName');
 const fundInfoCard = document.getElementById('fundInfoCard');
 const stockChartContainer = document.getElementById('stockChartContainer');
@@ -400,12 +395,9 @@ function showFundInfo(fund) {
         document.getElementById('fundNetAssets').textContent = Number(String(info.netAssets).replace(/,/g, '')).toLocaleString() + '億円';
         document.getElementById('fundChangeRateMonth').textContent = (changeRate >= 0 ? '+' : '') + changeRate + '%';
         document.getElementById('fundFee').textContent = info.fee + '%';
-
-        // ラベル切り替え
         document.getElementById('labelChangeRateMonth').textContent = detailMode ? 'トータルリターン(1M)' : '騰落率(1ヶ月)';
         document.getElementById('labelFee').textContent = detailMode ? '信託報酬率(税込)' : '手数料';
 
-        // 詳しくモード専用のダミー値
         if (detailMode) {
             const seed = Math.abs(parseFloat(info.changeRate)) || 1;
             document.getElementById('fundSharpe').textContent = (0.8 + seed * 0.12).toFixed(2);
@@ -444,7 +436,6 @@ function updateChart(fund) {
         stockChart.destroy();
     }
 
-    // 移動平均線の計算
     function calcMA(period) {
         return prices.map(function(_, i) {
             if (i < period - 1) return { x: new Date(dates[i]).getTime(), y: null };
@@ -571,7 +562,6 @@ function restoreState() {
 
 restoreState();
 
-// ニュースティッカー
 (function initTicker() {
     const items = [];
 
@@ -605,7 +595,6 @@ restoreState();
     const el = document.getElementById('tickerContent');
     el.innerHTML = html + html;
 
-    // コンテンツ幅に合わせてアニメーション速度を調整（約80px/秒）
     const duration = (el.scrollWidth / 2) / 40;
     el.style.animationDuration = duration + 's';
 })();
