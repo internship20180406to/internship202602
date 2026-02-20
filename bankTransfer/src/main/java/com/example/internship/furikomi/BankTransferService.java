@@ -21,7 +21,7 @@ public class BankTransferService {
     @Transactional
     public boolean transfer(BankTransferForm form) {//振込処理メソッド
         //引き落とし
-        int totalAmount = form.getMoney()　;
+        int totalAmount = form.getMoney();
         String withdrawSql = "UPDATE bank_table " +
                 "SET money = money - ? " +
                 "WHERE bankAccountNum = 1234567 " +
