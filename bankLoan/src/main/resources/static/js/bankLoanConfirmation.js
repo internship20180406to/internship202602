@@ -125,7 +125,8 @@ function renderScreeningResult(result) {
         statusEl.classList.add('review');
     }
 
-    scoreEl.textContent = score !== undefined && score !== null ? score : '-';
+    const scoreNumber = typeof score === 'number' ? score : Number(score);
+    scoreEl.textContent = Number.isFinite(scoreNumber) ? scoreNumber.toFixed(3) : '-';
 
     reasonsEl.innerHTML = '';
     const reasonList = Array.isArray(reasons) ? reasons : [reasons];
