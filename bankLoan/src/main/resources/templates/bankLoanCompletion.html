@@ -106,12 +106,18 @@
         <tr>
             <td>  借入金額  </td>
             <td></td>
-            <td>   <span th:text="*{loanAmount}"></span>   </td>
+            <td>   <span th:text="${#numbers.formatInteger(loanAmount, 1, 'COMMA')}"></span>   </td>
         </tr>
         <tr>
             <td>  金利タイプ  </td>
             <td></td>
             <td>   <span th:text="*{rateType}"></span>   </td>
+        </tr>
+
+        <tr>
+            <td>  金利   </td>
+            <td></td>
+            <td>   <span th:text="*{interestRate}"></span>   </td>
         </tr>
         <tr>
             <td>  債務者名</td>
@@ -119,14 +125,9 @@
             <td>   <span th:text="*{name}"></span>  </td>
         </tr>
         <tr>
-            <td>  金利   </td>
-            <td></td>
-            <td>   <span th:text="*{interestRate}"></span>   </td>
-        </tr>
-        <tr>
             <td>  年収  </td>
             <td></td>
-            <td>   <span th:text="*{annualIncome}"></span>   </td>
+            <td>   <span th:text="${#numbers.formatInteger(annualIncome, 1, 'COMMA')}"></span>   </td>
         </tr>
 
         <tr>
@@ -153,7 +154,7 @@
     </table>
 
 </div>
-<p><input type="button" value="トップに戻る" onclick="window.location='/bankLoan';"/></p>
+<p style="padding-left:10%;"><input type="button" value="トップに戻る" onclick="window.location='/bankLoan';"  class="form-control-buttonVer2 form-clear-button"/></p>
 </body>
 
 </html>
